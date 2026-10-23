@@ -8,8 +8,9 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 # RENDERER=vulkan exercises Forward+ (Vulkan via Mesa lavapipe) instead of the GL fallback.
 RENDERER="${RENDERER:-opengl3}"
-OUT="build/smoke_windows_wine_${RENDERER}"
-rm -rf "$OUT" && mkdir -p "$OUT"
+# A fresh directory per run: Docker Desktop's file sharing can lose a bind
+# mount whose host directory was just deleted and recreated.
+OUT=$(mktemp -d "build/smoke_windows_wine_${RENDERER}.XXXX")
 IMG=rft-smoke-wine
 docker build --platform linux/amd64 -t "$IMG" -f - . <<'DOCKER'
 FROM debian:bookworm-slim@sha256:7ff6ba31527b9e336162fa061746c366c4b2032f4d2cff2078bea43f78efe3f8

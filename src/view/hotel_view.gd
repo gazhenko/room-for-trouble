@@ -654,7 +654,8 @@ func _sync_entities(alpha: float, dt: float) -> void:
 		var cn: Node3D = cloud_nodes[key2]
 		var life := float(c.get("life", 18)) / float(SimC.STEAM_LIFE_S)
 		cn.position = Vector3(float(c["x"]) / 1e6, 0.7 + 0.05 * sin(Time.get_ticks_msec() / 500.0 + key2), float(c["z"]) / 1e6)
-		var sc := clampf(0.6 + life * 0.5, 0.6, 1.1)
+		# Big enough to read as a warning at 360 lines (§17.6), shrinking as it fades.
+		var sc := clampf(0.9 + life * 0.6, 0.9, 1.5)
 		cn.scale = cn.scale.lerp(Vector3(sc, sc, sc), minf(1.0, dt * 4.0))
 		cn.rotation.y += dt * 0.3
 	for key2 in cloud_nodes.keys():

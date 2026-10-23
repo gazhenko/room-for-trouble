@@ -205,6 +205,12 @@ func _draw_room_plaques() -> void:
 		draw_style_box(UiKit._box(col.lerp(Color.WHITE, 0.15), UiKit.INK, 2, 5, 0), rect)
 		var txt := "%s %d" % [letter, int(g["number"])]
 		UiKit.draw_text_outlined(self, p + Vector2(0, 7), txt, 18, UiKit.INK, Color(1, 1, 1, 0))
+		# A frozen door keeps a visible marker until someone clears it.
+		if r.get("frost", false):
+			var fp := p + Vector2(w * 0.5 + 16, -1)
+			var fpulse := 1.0 + (0.0 if Settings.g("reduced_motion") else 0.1 * sin(_t * 6.0))
+			UiKit.draw_bubble(self, fp, 14 * fpulse, Color("#E9F6FF"), Color("#5F9CC9"))
+			UiKit.draw_icon(self, "sys_frost", fp, 20)
 		# Status chip under the plaque: guest family, request, comfort, readiness.
 		var chip := p + Vector2(0, 26)
 		var gid: int = int(r["guest"]) if int(r["guest"]) != 0 else int(r["reserved"])
@@ -361,6 +367,18 @@ func _draw_incidents() -> void:
 		UiKit.draw_bubble(self, p, 16 * pulse, Color("#FFF1C9"), Art.CORAL)
 		UiKit.draw_icon(self, _incident_icon(inc["kind"]), p, 24)
 		UiKit.draw_ring(self, p, 20, clampf(left / total, 0, 1), Art.CORAL, 3.0)
+	# Hall hazards have no room plaque, so they get their own markers: a pulsing
+	# steam bubble over each cloud and a small drop over each puddle.
+	var pulse2 := 1.0 + (0.0 if Settings.g("reduced_motion") else 0.1 * sin(_t * 6.0))
+	for cid in s.get("clouds", {}):
+		var c: Dictionary = s["clouds"][cid]
+		var cp := _w2s(Vector3(float(c["x"]) / 1e6, 1.9, float(c["z"]) / 1e6))
+		UiKit.draw_bubble(self, cp, 15 * pulse2, Color("#FFF1C9"), Art.CORAL)
+		UiKit.draw_icon(self, "sys_steam", cp, 22)
+	for pid in s.get("puddles", {}):
+		var pd: Dictionary = s["puddles"][pid]
+		var pp := _w2s(Vector3(float(pd["x"]) / 1e6, 0.55, float(pd["z"]) / 1e6))
+		UiKit.draw_icon(self, "sys_puddle", pp, 16)
 	for p2 in d.get("pending", []):
 		var room2: String = p2.get("room", "")
 		if room2 != "" and view.L.rooms.has(room2):

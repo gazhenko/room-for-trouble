@@ -8,6 +8,7 @@ extends Node
 var main
 var out_dir := "user://smoke"
 var endpoint := ""
+var timeout_s := 120   # wall-clock guard for the L01 run; raise for software renderers
 var report := {"ok": false, "steps": [], "errors": []}
 var _t0 := 0
 
@@ -16,6 +17,7 @@ func setup(m) -> void:
 	for a in OS.get_cmdline_user_args():
 		if a.begins_with("--smoke-out="): out_dir = a.substr(12)
 		elif a.begins_with("--smoke-endpoint="): endpoint = a.substr(17)
+		elif a.begins_with("--smoke-timeout="): timeout_s = int(a.substr(16))
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -77,7 +79,7 @@ func run() -> void:
 	await shot("02_shift")
 	Engine.time_scale = 12.0
 	var guard := Time.get_ticks_msec()
-	while Session.screen == sh and Time.get_ticks_msec() - guard < 120_000:
+	while Session.screen == sh and Time.get_ticks_msec() - guard < timeout_s * 1000:
 		await get_tree().process_frame
 	Engine.time_scale = 1.0
 	var res_ok := Session.screen is ResultsScreen

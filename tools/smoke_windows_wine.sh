@@ -22,6 +22,6 @@ ENV WINEDEBUG=-all WINEPREFIX=/home/player/.wine
 RUN wineboot --init 2>/dev/null || true
 DOCKER
 docker run --rm --platform linux/amd64 -v "$PWD/build/windows:/game:ro" -v "$PWD/$OUT:/out" "$IMG" \
-  bash -c 'xvfb-run -a -s "-screen 0 1280x720x24" timeout 900 wine /game/RoomForTrouble.exe $( [ "'"$RENDERER"'" = vulkan ] && echo "--rendering-method forward_plus --rendering-driver vulkan" || echo "--rendering-method gl_compatibility --rendering-driver opengl3" ) --audio-driver Dummy -- --smoke-test "--smoke-out=Z:\\out\\game" > /out/game.log 2>&1; echo "exit=$?" >> /out/game.log'
+  bash -c 'xvfb-run -a -s "-screen 0 1280x720x24" timeout 2400 wine /game/RoomForTrouble.exe $( [ "'"$RENDERER"'" = vulkan ] && echo "--rendering-method forward_plus --rendering-driver vulkan" || echo "--rendering-method gl_compatibility --rendering-driver opengl3" ) --audio-driver Dummy -- --smoke-test --smoke-timeout=2000 "--smoke-out=Z:\\out\\game" > /out/game.log 2>&1; echo "exit=$?" >> /out/game.log'
 grep -E '\[smoke\]|exit=' "$OUT/game.log" || tail -20 "$OUT/game.log"
 grep -q '\[smoke\] OK' "$OUT/game.log" && echo "WINDOWS (WINE, $RENDERER) SMOKE: PASS" || { echo "WINDOWS (WINE) SMOKE: FAIL"; exit 1; }

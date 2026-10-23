@@ -20,7 +20,9 @@ fi
 run linux tools/smoke_linux.sh
 run linux_gamepads tools/smoke_linux_gamepads.sh
 run windows_wine_gl env RENDERER=opengl3 tools/smoke_windows_wine.sh
-run windows_wine_vulkan env RENDERER=vulkan tools/smoke_windows_wine.sh
+# Wine + software Vulkan under x86 emulation occasionally crashes at device
+# creation (1 of 3 runs on 2026-10-23); one retry tells that apart from a bug.
+run windows_wine_vulkan bash -c 'RENDERER=vulkan tools/smoke_windows_wine.sh || { echo "retrying once"; RENDERER=vulkan tools/smoke_windows_wine.sh; }'
 run online_netem tests/net/run_netem.sh
 echo
 printf '%s\n' "${results[@]}" | tee build/verify_summary.txt

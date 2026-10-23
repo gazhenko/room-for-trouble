@@ -18,7 +18,7 @@ RUN dpkg --add-architecture i386 && apt-get update && apt-get install -y --no-in
     && rm -rf /var/lib/apt/lists/* && useradd -m player
 USER player
 WORKDIR /home/player
-ENV WINEDEBUG=-all WINEPREFIX=/home/player/.wine
+ENV WINEDEBUG=-all WINEPREFIX=/home/player/.wine WINEDLLOVERRIDES=winedbg.exe=d
 RUN wineboot --init 2>/dev/null || true
 DOCKER
 docker run --rm --platform linux/amd64 -v "$PWD/build/windows:/game:ro" -v "$PWD/$OUT:/out" "$IMG" \

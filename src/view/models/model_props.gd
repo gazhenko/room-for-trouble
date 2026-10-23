@@ -407,12 +407,15 @@ static func _mini_trunk(mk: MeshKit) -> void:
 
 static func _moon_stand(mk: MeshKit) -> void:
 	mk.cyl(Vector3.ZERO, 0.17, 0.05, Art.WALNUT.darkened(0.1), 10, Art.WALNUT.lightened(0.12))
-	mk.cyl(Vector3(0, 0.05, 0), 0.025, 0.3, Art.BRASS, 6)
-	mk.push_at(Vector3(0, 0.2, 0))
+	mk.cyl(Vector3(0, 0.05, 0), 0.025, 0.24, Art.BRASS, 6)
+	# Moon and ring lean back so the face reads from the high camera.
+	mk.push_at(Vector3(0, 0.5, 0), Vector3(-25, 0, 0))
+	mk.push_at(Vector3(0, -0.3, 0))
 	_paper_moon(mk, 0.3, false)
 	mk.pop()
-	mk.push_at(Vector3(0, 0.5, -0.02), Vector3(90, 0, 0))
-	mk.torus(Vector3.ZERO, 0.36, 0.02, Art.GOLD, 16, 3)
+	mk.push_at(Vector3(0, 0, -0.02), Vector3(90, 0, 0))
+	mk.torus(Vector3.ZERO, 0.36, 0.022, Art.GOLD, 16, 4)
+	mk.pop()
 	mk.pop()
 
 static func _garland(mk: MeshKit) -> void:

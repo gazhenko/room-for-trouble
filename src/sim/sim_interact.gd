@@ -67,7 +67,10 @@ static func _best(sim: HotelSim, st: Dictionary, cands: Array, current: String) 
 		if d > reach + (SimC.HYSTERESIS if sticky else 0):
 			continue
 		var dot := 1000
-		if d > 450_000:
+		var is_staff: bool = str(c["key"]).begins_with("staff:")
+		if is_staff and d < 250_000:
+			continue   # a teammate standing on you is never an ambiguous handoff target
+		if d > 450_000 or is_staff:
 			dot = (st["fx"] * (c["ax"] - st["x"]) + st["fz"] * (c["az"] - st["z"])) / maxi(1, d)
 			if dot < SimC.CONE_COS_MILLI and not c.get("no_cone", false):
 				continue

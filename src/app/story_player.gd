@@ -10,9 +10,9 @@ const CAMERAS := {
 	"wide_hotel": {"pos": [13.5, 21.0, 34.0], "look": [13.5, 0.0, 9.0], "fov": 30},
 	"lobby_group": {"pos": [6.0, 5.0, 15.5], "look": [5.0, 0.7, 9.4], "fov": 32},
 	"desk_close": {"pos": [3.4, 2.5, 12.6], "look": [2.4, 0.9, 9.3], "fov": 30},
-	"guest_close": {"pos": [0.0, 2.6, 4.0], "look": [0.0, 0.8, 0.0], "fov": 30, "relative": true},
-	"room_door": {"pos": [0.0, 3.0, 5.0], "look": [0.0, 0.8, 0.0], "fov": 30, "relative": true},
-	"fixture_close": {"pos": [0.0, 2.6, 3.6], "look": [0.0, 0.7, 0.0], "fov": 30, "relative": true},
+	"guest_close": {"pos": [0.0, 2.1, 4.8], "look": [0.0, 0.9, 0.0], "fov": 30, "relative": true},
+	"room_door": {"pos": [0.0, 2.6, 4.2], "look": [0.0, 0.8, 0.0], "fov": 30, "relative": true},
+	"fixture_close": {"pos": [0.0, 2.2, 3.4], "look": [0.0, 0.7, 0.0], "fov": 30, "relative": true},
 	"festival_wide": {"pos": [17.0, 9.0, 20.0], "look": [17.0, 0.6, 9.5], "fov": 34},
 	"postcard_still": {"pos": [0.0, 3.2, 6.4], "look": [0.0, 0.8, 0.0], "fov": 28, "relative": true},
 }
@@ -47,7 +47,7 @@ func setup(p_stage: PixelStage, p_captions: Captions, p_scene: Dictionary, p_the
 	panels = scene.get("panels", [])
 	then = p_then
 	seen_before = SaveService.story_seen(scene.get("id", ""))
-	set_anchors_preset(Control.PRESET_FULL_RECT)
+	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	mouse_filter = Control.MOUSE_FILTER_STOP
 
 func _ready() -> void:
@@ -60,6 +60,7 @@ func _ready() -> void:
 	_next()
 
 func _exit_tree() -> void:
+	captions.clear()
 	for pair in [[InputRouter.menu_accept, _on_accept], [InputRouter.menu_back, _on_skip], [InputRouter.menu_pause, _on_skip]]:
 		if pair[0].is_connected(pair[1]):
 			pair[0].disconnect(pair[1])
@@ -130,6 +131,32 @@ func _finish() -> void:
 	done.emit()
 	queue_free()
 
+const PHOTO_ORIGIN := Vector3(200, 0, 200)
+var _photo_set: Node3D
+
+func _ensure_photo_set() -> void:
+	if _photo_set != null and is_instance_valid(_photo_set):
+		return
+	_photo_set = Node3D.new()
+	_photo_set.position = PHOTO_ORIGIN
+	var mk := MeshKit.new()
+	mk.jitter = 0.0
+	var night: bool = scene.get("id", "") in ["E00"]
+	mk.flat(Vector3(0, 0, 0.5), Vector2(10, 7), Color("#B98F6E"))
+	mk.box(Vector3(0, 1.5, -2.4), Vector3(10, 3.0, 0.3), Art.CREAM)
+	mk.box(Vector3(0, 0.06, -2.22), Vector3(10, 0.12, 0.08), Art.WALNUT)
+	var cols := [Art.CORAL, Art.GOLD, Art.SKY, Art.SAGE, Art.PLUM]
+	for i in 17:
+		mk.cone(Vector3(-4.8 + i * 0.6, 2.55, -2.2), 0.14, -0.3, cols[i % 5], 3)
+	mk.box(Vector3(3.0, 1.7, -2.22), Vector3(1.3, 1.0, 0.05), Art.WALNUT)
+	mk.box(Vector3(3.0, 1.7, -2.19), Vector3(1.1, 0.82, 0.04), Color("#3E4C7A") if night else Color("#BFE0EA"))
+	mk.sphere(Vector3(3.25, 1.9, -2.16), 0.16, Color("#FFF3C8"), 3, 6, Vector3(1, 1, 0.3))
+	mk.box(Vector3(-2.8, 1.95, -2.22), Vector3(2.0, 0.55, 0.05), Art.GOLD)
+	mk.box(Vector3(-2.8, 1.95, -2.19), Vector3(1.8, 0.4, 0.03), Art.INK)
+	mk.flat(Vector3(0, 0.01, 0.2), Vector2(6.0, 2.6), Art.CORAL.lerp(Art.CREAM, 0.4))
+	_photo_set.add_child(Art.mesh_instance(mk.commit()))
+	set_root.add_child(_photo_set)
+
 func _stage(p: Dictionary) -> void:
 	var layout: String = p.get("layout", scene.get("layout", "P1"))
 	if layout != _layout or set_root == null:
@@ -175,6 +202,18 @@ func _stage(p: Dictionary) -> void:
 		node.set_meta("prop", true)
 		set_root.add_child(node)
 	# Camera preset (+ optional focus for relative presets).
+	var photo: bool = p.get("set", "") == "photo"
+	if photo:
+		_ensure_photo_set()
+		for aid in actors:
+			var rig: ActorRig = actors[aid]
+			if not rig.has_meta("photo_placed"):
+				rig.position += PHOTO_ORIGIN
+				rig.set_meta("photo_placed", true)
+		for c in set_root.get_children():
+			if c.has_meta("prop") and not c.has_meta("photo_placed"):
+				c.position += PHOTO_ORIGIN
+				c.set_meta("photo_placed", true)
 	var preset: Dictionary = CAMERAS.get(p.get("camera", "wide_hotel"), CAMERAS["wide_hotel"])
 	var focus := Vector3.ZERO
 	if p.has("focus"):
@@ -191,7 +230,10 @@ func _stage(p: Dictionary) -> void:
 	if p.has("cam_look"):
 		var cl: Array = p["cam_look"]
 		look = Vector3(cl[0], cl[1], cl[2])
-	stage.camera.fov = float(preset.get("fov", 30))
+	if photo:
+		pos = PHOTO_ORIGIN + Vector3(0, 1.7, 9.6)
+		look = PHOTO_ORIGIN + Vector3(0, 0.8, -0.2)
+	stage.camera.fov = float(preset.get("fov", 30)) if not photo else 27.0
 	cam_to = Transform3D(Basis(), pos).looking_at(look, Vector3.UP)
 	var drift := Vector3(-0.35, 0.12, -0.25) if not Settings.g("reduced_motion") else Vector3.ZERO
 	cam_from = Transform3D(cam_to.basis, cam_to.origin - drift)
@@ -223,6 +265,8 @@ func _place_actor(a: Dictionary, staff_char: String) -> void:
 		actors[aid] = rig
 	var pos: Array = a.get("pos", [5, 9.5])
 	rig.position = Vector3(float(pos[0]), float(a.get("y", 0.0)), float(pos[1]))
+	if rig.has_meta("photo_placed"):
+		rig.remove_meta("photo_placed")
 	rig.face_dir = deg_to_rad(float(a.get("face", 0)))
 	rig.set_anim(a.get("pose", "idle"))
 	rig.speed = 0.0
@@ -270,11 +314,12 @@ func _draw() -> void:
 	var seat0: int = InputRouter.active_seats()[0] if not InputRouter.active_seats().is_empty() else 0
 	if hint != "":
 		var g := InputRouter.glyph(seat0, "carry")
-		UiKit.draw_glyph(self, Vector2(size.x - 170, size.y - 17), g, 22)
+		UiKit.draw_glyph(self, Vector2(size.x - 160 - UiKit.glyph_width(g, 22) * 0.5, size.y - 17), g, 22)
 		draw_string(f, Vector2(size.x - 150, size.y - 11), hint, HORIZONTAL_ALIGNMENT_LEFT, -1, 16, UiKit.CREAM)
 	var g2 := InputRouter.glyph(seat0, "step")
-	UiKit.draw_glyph(self, Vector2(26, size.y - 17), g2, 22)
-	draw_string(f, Vector2(46, size.y - 11), Loc.t("ui.story.skip"), HORIZONTAL_ALIGNMENT_LEFT, -1, 16, UiKit.CREAM)
+	var gw := UiKit.glyph_width(g2, 22)
+	UiKit.draw_glyph(self, Vector2(16 + gw * 0.5, size.y - 17), g2, 22)
+	draw_string(f, Vector2(24 + gw, size.y - 11), Loc.t("ui.story.skip"), HORIZONTAL_ALIGNMENT_LEFT, -1, 16, UiKit.CREAM)
 	if skip_prompt:
 		var c := Vector2(size.x * 0.5, size.y * 0.5)
 		var r2 := Rect2(c - Vector2(200, 46), Vector2(400, 92))

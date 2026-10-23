@@ -23,6 +23,10 @@ var target_lines := 360
 var bounds_min := Vector3(-1.6, 0.0, -1.4)
 var bounds_max := Vector3(28.6, 0.6, 20.6)
 var dynamic_offset := Vector3.ZERO
+var pitch_deg := PITCH_DEG
+var fov_deg := FOV_DEG
+var safe_top := SAFE_TOP
+var safe_bottom := SAFE_BOTTOM
 var _base_xf := Transform3D()
 var _last_size := Vector2i.ZERO
 
@@ -30,7 +34,7 @@ func _init() -> void:
 	stretch = true
 	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
-	set_anchors_preset(Control.PRESET_FULL_RECT)
+	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	viewport = SubViewport.new()
 	viewport.own_world_3d = true
@@ -148,8 +152,9 @@ func fit_camera() -> void:
 	if vs.x <= 0 or vs.y <= 0:
 		return
 	var aspect := float(vs.x) / float(vs.y)
-	var tan_v := tan(deg_to_rad(FOV_DEG) * 0.5)
-	var pitch := deg_to_rad(PITCH_DEG)
+	camera.fov = fov_deg
+	var tan_v := tan(deg_to_rad(fov_deg) * 0.5)
+	var pitch := deg_to_rad(pitch_deg)
 	var back := Vector3(0, sin(pitch), cos(pitch))
 	var target := Vector3((bounds_min.x + bounds_max.x) * 0.5, 0.0, (bounds_min.z + bounds_max.z) * 0.5)
 	var pts := _corners()
@@ -169,7 +174,7 @@ func fit_camera() -> void:
 					ok = false
 				ymin = minf(ymin, n.y)
 				ymax = maxf(ymax, n.y)
-			if ymax - ymin > SAFE_TOP - SAFE_BOTTOM:
+			if ymax - ymin > safe_top - safe_bottom:
 				ok = false
 			if ok:
 				hi = mid
@@ -184,7 +189,7 @@ func fit_camera() -> void:
 			var n2 := _project(xf2, p, tan_v, aspect)
 			y0 = minf(y0, n2.y)
 			y1 = maxf(y1, n2.y)
-		var want_mid := (SAFE_TOP + SAFE_BOTTOM) * 0.5
+		var want_mid := (safe_top + safe_bottom) * 0.5
 		var cur_mid := (y0 + y1) * 0.5
 		target.z += (want_mid - cur_mid) * dist * tan_v * 0.9
 	_base_xf = _cam_xf(target, back, dist)

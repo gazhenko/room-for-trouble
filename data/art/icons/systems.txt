@@ -188,19 +188,19 @@ icon sys_mess 16
 .............k..
 ............knk.
 ............knk.
-............knk.
 ...........knk..
 ...........knk..
-........k..knk..
-..kk...ktkkknkk.
-.kctkkktttccccck
-.ktttttttkgggggk
-.kttnttntkccccCk
-.ktttNtttkcCcCck
-.ktnttnttkcCcCck
-ktttttttk.kkkkk.
-.ktkkkkk........
-..k.............
+.k........knk...
+ktk..k....knk...
+.k..ktk..knk....
+..k..k...kgkkk..
+.ktkkkkkkccccck.
+.kktttttkccccck.
+ktttNttkcCkCkCk.
+knnnnnnNkkkkkk..
+.kknnnnnnnkk....
+...kkkkkkk......
+................
 end
 
 # Made bed, side view: walnut headboard left, white pillow, sky blanket with cream fold-back.
@@ -386,21 +386,21 @@ end
 # Luggage lift: coral suitcase standing on a round sage pad, small up arrow.
 icon sys_lift 16
 ............k...
-...........kgk..
-..........kgggk.
-.........kgggggk
-....kkkk..kkgkk.
-...kkkkkk..kgk..
-..krnrrnRk..k...
-.krqgrrgrRk.....
-.krqnrrnrRk.....
-.kRrnrrnrRk.....
-..kRnRRnRkkk....
-..kksssssssSkk..
-.kssaaaaaaassSk.
-.kSSssssssssSSk.
-..kkSSSSSSSSkk..
-....kkkkkkkk....
+...........khk..
+..........khgGk.
+....kkk..khgggGk
+...k...k..khgGk.
+...kkkkk..khgGk.
+..krnrnrk.khgGk.
+.krrnrnrRkkhgGk.
+.krrnrnrRkkGGGk.
+.krrnrnrRk.kkk..
+..kRnRnRRkk.....
+.kkkkkkkksskkk..
+ksssssssssssssk.
+ksSSSSSSSSSSSsk.
+.kkssssssssskk..
+...kkkkkkkkk....
 end
 
 # Shutter: walnut roll housing, ribbed stone panel half-way down between rails.
@@ -408,18 +408,18 @@ icon sys_shutter 16
 ................
 ..kkkkkkkkkkkk..
 .kttttttttttttk.
-ktnnnnnnnnnnnntk
+knnnnnnnnnnnnnnk
 .kNNNNNNNNNNNNk.
-.kekffffffffkek.
-.kekEEEEEEEEkek.
-.kekffffffffkek.
-.kekEEEEEEEEkek.
-.kekffGGGGffkek.
-.kekkkkkkkkkkek.
-.kek........kek.
-.kek........kek.
-.kek........kek.
-..k..........k..
+.keffffffffffek.
+.keEEEEEEEEEEek.
+.keffffffffffek.
+.keEEEEEEEEEEek.
+.keffffffffffek.
+.keeeeeeeeeeeek.
+.kedddGGGGdddek.
+.keddddddddddek.
+.keddddddddddek.
+..kkkkkkkkkkkk..
 ................
 end
 
@@ -465,22 +465,22 @@ end
 
 # Needs floor room: cream floor tile with a parcel on it and a set-down arrow.
 icon sys_need_room 16
-............k...
-...........kgk..
-..........kkgkk.
-.........kgggggk
-....kkkkk.kgggk.
-...kqqgqqk.kgk..
-...kkkgkkk..k...
-...krrgrRk......
-...krrgrRkk.....
-...krrgrRtnkk...
-.kktCtttttttnkk.
-knnttttttttttnnk
-.kknnttttttnnkk.
-...kknnttnnkk...
+...........kkk..
+..........khgGk.
+..........khgGk.
+..........khgGk.
+....kkkk.khhggGk
+...kqgqqk.kggGk.
+..krrgrrRk.kGk..
+..krrgrrRk..k...
+..krrgrrRk......
+..krrgrrRkk.....
+..kRRGRRRttkk...
+.kkkkkkkkktttkk.
+kttttttttttttttk
+.kknnnnnnnnnnkk.
+...kknnnnnnkk...
 .....kknnkk.....
-.......kk.......
 end
 
 # Festival: coral paper lantern with gold caps and a warm glowing middle.

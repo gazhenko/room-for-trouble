@@ -88,16 +88,19 @@ func _place(n: Node3D, pos: Vector3, yaw := 0.0) -> Node3D:
 	n.position = pos
 	n.rotation_degrees.y = yaw
 	stage.world.add_child(n)
-	if n is StationNode:
-		(n as StationNode).set_auto_tick(true)
 	return n
 
+## Builds, applies and deterministically poses a station: settle transitions
+## with fixed ticks, then show blinking parts at a fixed "on" phase.
 func _st(kind: String, pos: Vector3, state: Dictionary = {}, opts: Dictionary = {}) -> StationNode:
 	var s := ModelStations.build(kind, opts)
 	_place(s, pos)
 	if not state.is_empty():
 		s.apply(state)
-	s.tick(0.45)
+	for i in 20:
+		s.tick(0.05)
+	s.t = 0.2
+	s.tick(0.0)
 	return s
 
 func _wall_chunk(pos: Vector3, size: Vector3) -> void:
@@ -165,6 +168,14 @@ func _station_rows(page: String) -> Array:
 		"c": rows = c
 		"room": rows = room
 		"all": return a + b + c + room
+	if page.begins_with("solo="):
+		# Every gallery state of one kind, side by side.
+		var only: Array = []
+		for row in a + b + c + room:
+			for e in row:
+				if e[0] == page.substr(5):
+					only.append(e)
+		rows = [only]
 	# Close-up sheets: at most four models per row.
 	var out: Array = []
 	for row in rows:
@@ -178,7 +189,9 @@ func _station_width(kind: String) -> float:
 	match kind:
 		"bed": return 1.9
 		"goal_pad": return 2.2
-		"shutter", "curtain_rail", "vent_gate": return 1.25
+		"shutter": return 1.25
+		"curtain_rail": return 3.0
+		"vent_gate": return 1.6
 	return 1.05
 
 func _gallery_stations(parts: Array) -> void:
@@ -207,7 +220,7 @@ func _gallery_stations(parts: Array) -> void:
 				_wall_chunk(pos + Vector3(0, 0, -1.0 * f), Vector3(1.0, 0.95 if f > 0 else 0.62, 1.0))
 			if kind == "curtain_rail":
 				for s in [-1.0, 1.0]:
-					_wall_chunk(pos + Vector3(s * 0.98, 0, 0), Vector3(0.96, 0.95, 1.0))
+					_wall_chunk(pos + Vector3(s * 1.0, 0, 0), Vector3(1.0, 0.95, 1.0))
 			var sn := _st(kind, pos, e[1], opts)
 			if kind == "pedestal" and e[1].get("occupied", false):
 				_place(ModelItems.build("ticket", {"family": "dragon"}), pos + Vector3(0, sn.get_meta("top_y"), 0))
@@ -217,7 +230,9 @@ func _gallery_stations(parts: Array) -> void:
 				_place(ModelItems.build("mop"), pos)
 			if kind == "bed" or kind == "goal_pad":
 				depth = 2.2
-			x += w + 0.25
+			if kind == "vent_gate" or kind == "curtain_rail":
+				depth = 2.8
+			x += w + (0.05 if kind == "curtain_rail" else 0.25)
 		max_x = maxf(max_x, x)
 		z += depth
 	await get_tree().process_frame
@@ -307,72 +322,116 @@ func _stations_hotel(tpl: String, hall: bool) -> void:
 		await get_tree().process_frame
 		stage.set_bounds(Vector3(0.6, 0, 7.0), Vector3(27.0, 1.0, 12.4))
 
-func _gallery_items(parts: Array) -> void:
-	_floor_plate(40, 30)
-	var kinds := ModelItems.kinds()
-	var x := 2.0
-	var z := 3.6
+func _item_grid(kinds: Array, per_row: int, cell: float, origin: Vector3, extra_of: Callable) -> Vector3:
+	var x := origin.x
+	var z := origin.z
+	var maxx := x
 	var col := 0
 	for kind in kinds:
-		var extra := {}
-		if kind == "ticket":
-			extra = {"family": "moonwolf"}
-		var n := ModelItems.build(kind, extra)
-		var w := 2.2 if kind == "festival_trunk" else (1.3 if kind == "mop" else 0.85)
-		_place(n, Vector3(x + w * 0.5, 0, z))
+		var w := cell
+		if kind == "festival_trunk":
+			w = 2.2
+		elif kind == "mop":
+			w = cell * 1.5
+		_place(ModelItems.build(kind, extra_of.call(kind)), Vector3(x + w * 0.5, 0, z))
 		x += w
+		maxx = maxf(maxx, x)
 		col += 1
-		if col % 8 == 0:
-			x = 2.0
-			z += 1.0
-	# Variants: open trunk, tickets per family, can charges, parcels.
-	z += 1.1
-	x = 2.0
-	var tr := ModelItems.build("festival_trunk") as StationNode
-	tr.apply({"open": true})
-	_place(tr, Vector3(x + 1.0, 0, z))
-	x += 2.3
-	for fam in ["slime", "yeti", "dragon", "ghost", "moonwolf", "sprout"]:
-		_place(ModelItems.build("ticket", {"family": fam}), Vector3(x, 0, z))
-		x += 0.55
-	for c in 4:
-		_place(ModelItems.build("watering_can", {"charges": c}), Vector3(x + 0.1, 0, z))
-		x += 0.6
-	z += 0.9
-	x = 2.0
-	for i in 6:
-		_place(ModelItems.build("festival_parcel", {"index": i}), Vector3(x + 0.3, 0, z))
-		x += 0.6
-	# Held aloft by staff.
-	var cos_d := {"cap": "#E88D79", "scarf": "#E8BF66", "trim": "#F7EAD6"}
-	var held := ["ticket", "linen_clean", "linen_dirty", "towel", "snack", "welcome_slime", "welcome_ghost", "curtain_roll", "breezer", "festival_parcel"]
-	x += 0.4
-	for i in held.size():
-		var r := ModelActors.staff(["pip", "pebble", "moss", "button"][i % 4], cos_d)
-		_place(r, Vector3(x, 0, z + 0.2))
-		r.carrying = true
-		r.tick(0.2)
-		var it := ModelItems.build(held[i], {"family": "dragon"})
-		it.scale = Vector3.ONE / ModelActors.ACTOR_SCALE
-		r.hold.add_child(it)
-		x += 0.8
+		if col % per_row == 0:
+			x = origin.x
+			z += cell
+	return Vector3(maxx, 0, z)
+
+func _gallery_items(parts: Array) -> void:
+	_floor_plate(40, 30)
+	var page := String(parts[1]) if parts.size() > 1 else "all"
+	var kinds: Array = Array(ModelItems.kinds())
+	var fam := func(kind: String) -> Dictionary:
+		return {"family": "moonwolf", "charges": 2} if kind in ["ticket", "watering_can"] else {}
+	var lo := Vector3(1.6, 0, 2.9)
+	var hi := Vector3(15.5, 1.2, 9.0)
+	match page:
+		"a", "b":
+			var half: Array = kinds.slice(0, 9) if page == "a" else kinds.slice(9, 18)
+			var end := _item_grid(half, 5, 0.9, Vector3(2.0, 0, 3.6), fam)
+			lo = Vector3(1.9, 0, 3.0)
+			hi = Vector3(end.x + 0.1, 0.8, end.z + 0.4)
+		"held":
+			var cos_d := {"cap": "#E88D79", "scarf": "#E8BF66", "trim": "#F7EAD6"}
+			var x := 2.0
+			var z := 3.8
+			for i in kinds.size():
+				var kind: String = kinds[i]
+				var r := ModelActors.staff(["pip", "pebble", "moss", "button"][i % 4], cos_d)
+				_place(r, Vector3(x, 0, z))
+				r.carrying = true
+				r.tick(0.2)
+				var it := ModelItems.build(kind, fam.call(kind))
+				it.scale = Vector3.ONE / ModelActors.ACTOR_SCALE
+				r.hold.add_child(it)
+				x += 1.1
+				if i % 6 == 5:
+					x = 2.0
+					z += 1.7
+			lo = Vector3(1.3, 0, 3.0)
+			hi = Vector3(8.2, 1.6, z - 0.6)
+		"var":
+			var x2 := 2.0
+			var z2 := 3.8
+			var tr := ModelItems.build("festival_trunk") as StationNode
+			tr.apply({"open": true})
+			_place(tr, Vector3(x2 + 1.0, 0, z2))
+			_place(ModelItems.build("festival_trunk"), Vector3(x2 + 3.2, 0, z2))
+			z2 += 1.0
+			for f in ["slime", "yeti", "dragon", "ghost", "moonwolf", "sprout"]:
+				_place(ModelItems.build("ticket", {"family": f}), Vector3(x2, 0, z2))
+				x2 += 0.5
+			x2 += 0.2
+			for c in 4:
+				_place(ModelItems.build("watering_can", {"charges": c}), Vector3(x2, 0, z2))
+				x2 += 0.55
+			z2 += 0.8
+			x2 = 2.0
+			for i in 6:
+				_place(ModelItems.build("festival_parcel", {"index": i}), Vector3(x2, 0, z2))
+				x2 += 0.55
+			var br := ModelItems.build("breezer", {"active": true}) as StationNode
+			br.set_auto_tick(true)
+			_place(br, Vector3(x2 + 0.2, 0, z2))
+			lo = Vector3(1.6, 0, 3.1)
+			hi = Vector3(6.4, 0.8, z2 + 0.4)
+		_:
+			var end2 := _item_grid(kinds, 9, 0.85, Vector3(2.0, 0, 3.6), fam)
+			lo = Vector3(1.8, 0, 3.0)
+			hi = Vector3(end2.x, 0.8, end2.z + 0.4)
 	await get_tree().process_frame
-	stage.set_bounds(Vector3(1.6, 0, 2.9), Vector3(maxf(x, 15.5), 1.2, z + 0.6))
+	stage.set_bounds(lo, hi)
 
 func _gallery_props(parts: Array) -> void:
 	_floor_plate(40, 30)
+	var page := String(parts[1]) if parts.size() > 1 else "all"
+	var kinds: Array = Array(ModelProps.kinds())
+	var per_row := 8
+	if page == "a":
+		kinds = kinds.slice(0, 11)
+		per_row = 4
+	elif page == "b":
+		kinds = kinds.slice(11, 22)
+		per_row = 4
 	var x := 2.0
 	var z := 3.8
+	var maxx := x
 	var col := 0
-	for kind in ModelProps.kinds():
+	for kind in kinds:
 		var w := 1.0
 		if kind in ["checklist", "paper_moon", "thank_you_garland"]:
 			w = 1.5
 		_place(ModelProps.build(kind), Vector3(x + w * 0.5, 0, z))
 		x += w
+		maxx = maxf(maxx, x)
 		col += 1
-		if col % 8 == 0:
+		if col % per_row == 0:
 			x = 2.0
 			z += 1.4
 	await get_tree().process_frame
-	stage.set_bounds(Vector3(1.6, 0, 3.0), Vector3(11.2, 1.3, z + 0.7))
+	stage.set_bounds(Vector3(1.8, 0, 3.0), Vector3(maxx, 1.3, z + (0.7 if col % per_row != 0 else -0.7)))

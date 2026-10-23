@@ -32,9 +32,10 @@ var families: Array = []
 var _t := 0.0
 var _font: Font
 var palette := "default"
+var show_clock := true
 
 func _ready() -> void:
-	set_anchors_preset(Control.PRESET_FULL_RECT)
+	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_font = UiKit.font()
 	palette = Settings.g("palette")
@@ -181,7 +182,7 @@ func _any_inspect() -> bool:
 	for st in s.get("staff", []):
 		if st.get("inspect", false) and local_seats.has(st["seat"]):
 			return true
-	return s.get("phase", "") == "planning" and Settings.g("hints")
+	return false
 
 func _room_screen(letter: String, y := 1.75) -> Vector2:
 	var g: Dictionary = view.L.rooms[letter]
@@ -238,6 +239,8 @@ func _open_req(g: Dictionary) -> Dictionary:
 	return {}
 
 func _req_frac(rq: Dictionary) -> float:
+	if rq.is_empty():
+		return 0.0
 	var hq := float(s.get("hotel_q", 0))
 	if s.get("cozy", false):
 		return 1.0
@@ -285,6 +288,8 @@ func _draw_guests() -> void:
 		var icon := ""
 		match need:
 			"service":
+				if _open_req(g).is_empty():
+					continue
 				icon = ITEM_ICON.get(_open_req(g).get("k", ""), "sys_help")
 			"comfort":
 				icon = _comfort_icon(g)
@@ -532,6 +537,8 @@ func _draw_top() -> void:
 	var W := size.x
 	# Clock (top centre).
 	var phase: String = s.get("phase", "")
+	if not show_clock:
+		return
 	var cx := W * 0.5
 	var dur := int(level.get("duration_hotel_s", 0))
 	var hs := float(s.get("hotel_q", 0)) / SimC.HOTEL_Q_PER_S
@@ -685,8 +692,8 @@ func _draw_center() -> void:
 		var txt := Loc.t("ui.plan.title")
 		var sub := Loc.t("ui.plan.sub")
 		_draw_card(c, txt, sub, "sys_inspect")
-		# Per-seat ready hints with glyphs.
-		var y := c.y + 58
+		# Per-seat ready hints with glyphs, just above the staff portraits.
+		var y := size.y - 82.0
 		var parts: Array = []
 		for seat in local_seats:
 			parts.append(seat)
@@ -709,7 +716,8 @@ func _draw_center() -> void:
 func _draw_card(c: Vector2, text: String, sub: String, icon: String) -> void:
 	var w := maxf(_font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, 26).x, minf(560.0, _font.get_string_size(sub, HORIZONTAL_ALIGNMENT_LEFT, -1, 17).x)) + 90
 	w = minf(w, 680.0)
-	var h := 76.0 if sub != "" else 54.0
+	var sub_lines := 1 if _font.get_string_size(sub, HORIZONTAL_ALIGNMENT_LEFT, -1, 17).x <= w - 70 else 2
+	var h := (54.0 + 22.0 * sub_lines) if sub != "" else 54.0
 	var r := Rect2(c - Vector2(w * 0.5, h * 0.5), Vector2(w, h))
 	draw_rect(Rect2(r.position + Vector2(0, 5), r.size), UiKit.SHADOW)
 	draw_style_box(UiKit._box(UiKit.PAPER, UiKit.WALNUT, 3, 12, 0), r)
@@ -717,9 +725,17 @@ func _draw_card(c: Vector2, text: String, sub: String, icon: String) -> void:
 		UiKit.draw_icon(self, icon, r.position + Vector2(32, h * 0.5), 34)
 	draw_string(_font, r.position + Vector2(58, 32), text, HORIZONTAL_ALIGNMENT_LEFT, w - 70, 26, UiKit.INK)
 	if sub != "":
-		draw_string(_font, r.position + Vector2(58, 60), sub, HORIZONTAL_ALIGNMENT_LEFT, w - 70, 17, Color("#5B5148"))
+		draw_multiline_string(_font, r.position + Vector2(58, 60), sub, HORIZONTAL_ALIGNMENT_LEFT, w - 70, 17, 2, Color("#5B5148"))
 
 func _draw_tutorial() -> void:
+	for c in tutorial.get("circles", []):
+		var pc := _w2s(Vector3(float(c[0]) / 1e6, 0.05, float(c[1]) / 1e6))
+		var pulse := 1.0 if Settings.g("reduced_motion") else 1.0 + 0.1 * sin(_t * 5.0)
+		var col := Color("#8BD17C") if c[2] else UiKit.GOLD
+		draw_arc(pc, 30.0 * pulse, 0, TAU, 32, UiKit.INK, 7.0)
+		draw_arc(pc, 30.0 * pulse, 0, TAU, 32, col, 4.0)
+		if c[2]:
+			UiKit.draw_icon(self, "sys_check", pc, 22)
 	var cap: String = tutorial.get("caption", "")
 	var speaker: String = tutorial.get("speaker", "nana")
 	var y := size.y - 150.0

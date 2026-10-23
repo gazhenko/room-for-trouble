@@ -465,7 +465,36 @@ func _job_ticket(st: Dictionary) -> Dictionary:
 			best = _task("ped:%d" % slot, "carry", _um(p) + Vector2i(0, 150_000), "ticket:%d" % gid, func(): return sim.guest(gid).get("state", "") == "lobby", 800_000)
 	return best
 
+## What teammates already carry or are fetching: {"towel": n, "snack": n, "gift_<fam>": n}.
+func _intent(st: Dictionary) -> Dictionary:
+	var out := {}
+	for o in sim.s["staff"]:
+		if o["seat"] == st["seat"]:
+			continue
+		var k := SimInteract.held_kind(sim, o)
+		if k == "towel" or k == "snack":
+			out[k] = int(out.get(k, 0)) + 1
+		elif k.begins_with("welcome_"):
+			out["gift_" + k.substr(8)] = int(out.get("gift_" + k.substr(8), 0)) + 1
+		var t: Dictionary = tasks.get(o["seat"], {})
+		match t.get("key", ""):
+			"st:towels": out["towel"] = int(out.get("towel", 0)) + 1
+			"st:snacks": out["snack"] = int(out.get("snack", 0)) + 1
+			"st:kiosk", "kiosk_cycle":
+				var f: String = t.get("fam", "")
+				if f != "":
+					out["gift_" + f] = int(out.get("gift_" + f, 0)) + 1
+	return out
+
 func _job_request(st: Dictionary) -> Dictionary:
+	var intent := _intent(st)
+	var open := {"towel": 0, "snack": 0}
+	for gid0 in sim.s["guests"]:
+		var g0: Dictionary = sim.s["guests"][gid0]
+		if g0["state"] == "staying":
+			for rq0 in g0["reqs"]:
+				if rq0["st"] == "open":
+					open[rq0["k"]] += 1
 	for gid in sim.s["guests"]:
 		var g: Dictionary = sim.s["guests"][gid]
 		if g["state"] != "staying":
@@ -474,7 +503,7 @@ func _job_request(st: Dictionary) -> Dictionary:
 			if rq["st"] != "open":
 				continue
 			var c := "req:%d:%s" % [gid, rq["k"]]
-			if _claimed(c, st["seat"]):
+			if _claimed(c, st["seat"]) or int(open[rq["k"]]) <= int(intent.get(rq["k"], 0)):
 				continue
 			var which := "towels" if rq["k"] == "towel" else "snacks"
 			if sim.s["st"][which] <= 0:
@@ -484,18 +513,30 @@ func _job_request(st: Dictionary) -> Dictionary:
 	return {}
 
 func _job_welcome(st: Dictionary) -> Dictionary:
+	var intent := _intent(st)
+	var need := {}
+	for gid0 in sim.s["guests"]:
+		var g0: Dictionary = sim.s["guests"][gid0]
+		if _guest_need_gift(g0):
+			need[g0["fam"]] = int(need.get(g0["fam"], 0)) + 1
 	for gid in sim.s["guests"]:
 		var g: Dictionary = sim.s["guests"][gid]
 		if not _guest_need_gift(g):
+			continue
+		if int(need.get(g["fam"], 0)) <= int(intent.get("gift_" + g["fam"], 0)):
 			continue
 		var c := "gift:%d" % gid
 		if _claimed(c, st["seat"]):
 			continue
 		var sel: String = SimC.FAMILIES[sim.s["st"]["kiosk_sel"]]
 		var kp := _um(sim.L.fixtures["welcome_kiosk"])
+		var t: Dictionary
 		if sel != g["fam"]:
-			return _task("kiosk_cycle", "work", kp, "kiosk", func(): return SimC.FAMILIES[sim.s["st"]["kiosk_sel"]] != g["fam"])
-		return _task("st:kiosk", "carry", kp, c)
+			t = _task("kiosk_cycle", "work", kp, "kiosk", func(): return SimC.FAMILIES[sim.s["st"]["kiosk_sel"]] != g["fam"])
+		else:
+			t = _task("st:kiosk", "carry", kp, c)
+		t["fam"] = g["fam"]
+		return t
 	return {}
 
 func _job_thermo(st: Dictionary) -> Dictionary:
@@ -610,11 +651,18 @@ func _job_trunk(st: Dictionary) -> Dictionary:
 		var tr: Dictionary = sim.s["trunks"][tid]
 		if tr["delivered"]:
 			continue
-		for h in 2:
+		for h in [1, 0]:
 			if tr["h"][h] == -1 and not _claimed("trunk:%d:%d" % [tid, h], st["seat"]):
 				var hp := SimGoals.handle_pos(tr, h)
+				var spot := hp + Vector2i(-450_000 if h == 0 else 450_000, 0)
+				var sc := _cell_of(spot.x, spot.y)
+				if not _free(sc.x, sc.y):
+					spot = hp
+					sc = _cell_of(spot.x, spot.y)
+					if not _free(sc.x, sc.y):
+						continue
 				var t := _task("handle:%d:%d" % [tid, h], "carry", hp, "trunk:%d:%d" % [tid, h], func(): return not sim.s["trunks"][tid]["delivered"], 700_000)
-				t["stand"] = hp + Vector2i(-500_000 if h == 0 else 500_000, 0)
+				t["stand"] = spot
 				return t
 	return {}
 

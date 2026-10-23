@@ -264,6 +264,7 @@ def sheet(lib: it.Library, groups: list[tuple[str, list[str]]], path: str, varia
 
 
 def cvd_check(lib: it.Library, path: str, scale: int = 3) -> None:
+    titles = ["semantic", "families", "status and pings"]
     sets = [
         ["sys_warm", "sys_cold", "sys_cozy", "sys_quiet", "sys_noise", "sys_water", "sys_humid", "sys_clean"],
         ["fam_slime", "fam_yeti", "fam_dragon", "fam_ghost", "fam_moonwolf", "fam_sprout"],
@@ -282,9 +283,10 @@ def cvd_check(lib: it.Library, path: str, scale: int = 3) -> None:
     cv = it.Canvas(width, height, PAPER)
     text(cv, "colour vision check", 12, 10, HEADER, 3)
     y = 40
-    for s in sets:
+    for title, s in zip(titles, sets):
         names = [n for n in s if n in lib.icons]
         cv.rect(0, y, width, 26, HEADER)
+        text(cv, title, 12, y + 4, CREAM, 3)
         y += 32
         for label, variant, kind in rows:
             text(cv, label, 12, y + step // 2 - 6, INK)
@@ -317,7 +319,8 @@ def main() -> int:
     for e in lib.errors:
         print("ERROR", e)
     files = lib.by_file()
-    order = [f for f in files]
+    pref = ["families.txt", "guests.txt", "staff.txt", "items.txt", "systems.txt", "actions.txt", "ui.txt", "badges.txt"]
+    order = [f for f in pref if f in files] + sorted(f for f in files if f not in pref)
 
     if args.only or args.names:
         groups: list[tuple[str, list[str]]] = []

@@ -195,6 +195,10 @@ func sync(alpha: float, dt: float) -> void:
 		wm.set_shader_parameter("fade_points", pts)
 
 func _sync_stations(dt: float) -> void:
+	for k in stations:
+		var sn = stations[k]
+		if sn.has_method("tick"):
+			sn.tick(dt)
 	var stv: Dictionary = s.get("st", {})
 	var trips: Dictionary = stv.get("trips", {})
 	var thermal := systems.has("thermal")
@@ -280,7 +284,7 @@ func _sync_stations(dt: float) -> void:
 		if thermal and absf(h) > 12.0:
 			var col := Art.WARM if h > 0 else Art.COLD
 			mat.set_shader_parameter("color", col)
-			mat.set_shader_parameter("alpha", clampf((absf(h) - 12.0) / 110.0, 0.0, 0.45))
+			mat.set_shader_parameter("alpha", clampf((absf(h) - 12.0) / 150.0, 0.0, 0.28))
 		else:
 			mat.set_shader_parameter("alpha", 0.0)
 
@@ -466,6 +470,14 @@ func _sync_items(alpha: float) -> void:
 		var n: Node3D = item_nodes[key]
 		if n.has_method("apply") and it["k"] == "watering_can":
 			n.apply({"charges": int(it.get("ch", 0))})
+		if n.has_method("apply") and it["k"] == "breezer":
+			var holder: Dictionary = {}
+			for stf in s.get("staff", []):
+				if int(stf["held"]) == key:
+					holder = stf
+			n.apply({"active": not holder.is_empty() and str(holder.get("work_key", "")).begins_with("cloud:")})
+		if n.has_method("tick"):
+			n.tick(get_process_delta_time())
 		var loc: String = it["loc"]
 		n.visible = true
 		match loc:

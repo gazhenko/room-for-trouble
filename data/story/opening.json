@@ -198,8 +198,8 @@
       {
        "id": "flurry",
        "pos": [
-        -1.4,
-        8.2
+        1.7,
+        9.4
        ],
        "pose": "happy",
        "face": 0
@@ -207,8 +207,8 @@
       {
        "id": "cinder",
        "pos": [
-        -1.4,
-        10.8
+        3.5,
+        9.4
        ],
        "pose": "happy",
        "face": 0
@@ -216,8 +216,8 @@
       {
        "id": "whisp",
        "pos": [
-        -1.0,
-        9.5
+        2.6,
+        9.0
        ],
        "pose": "wave",
        "face": 0
@@ -225,7 +225,7 @@
      ],
      "props": [],
      "focus": [
-      -1.2,
+      2.6,
       9.5
      ],
      "caption": "story.O00.6"
@@ -277,8 +277,8 @@
       {
        "id": "staff",
        "pos": [
-        1.2,
-        9.6
+        0.0,
+        0.7
        ],
        "pose": "photo",
        "face": 0
@@ -286,29 +286,54 @@
       {
        "id": "nana",
        "pos": [
-        -0.3,
-        9.0
+        -2.4,
+        0.1
        ],
        "pose": "wave",
-       "face": 30
+       "face": 20
       },
       {
        "id": "gus",
        "pos": [
-        2.9,
-        10.1
+        2.4,
+        0.7
+       ],
+       "pose": "happy",
+       "face": 0
+      },
+      {
+       "id": "mallow",
+       "pos": [
+        -1.2,
+        -0.6
+       ],
+       "pose": "happy",
+       "face": 0,
+       "slippers": true
+      },
+      {
+       "id": "flurry",
+       "pos": [
+        0.0,
+        -0.8
+       ],
+       "pose": "happy",
+       "face": 0
+      },
+      {
+       "id": "cinder",
+       "pos": [
+        1.2,
+        -0.6
        ],
        "pose": "happy",
        "face": 0
       }
      ],
      "props": [],
-     "focus": [
-      1.0,
-      9.4
-     ],
      "sting": "sting_results",
-     "caption": "story.O00.8"
+     "caption": "story.O00.8",
+     "set": "photo"
     }
    ]
   }

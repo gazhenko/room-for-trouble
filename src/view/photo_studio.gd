@@ -69,7 +69,12 @@ static func stage_photo(ps: PixelStage, staff: Array, families: Array, opts: Dic
 		var prop := ModelProps.build(opts["prop"])
 		prop.position = Vector3(3.0, 0, -1.4)
 		root.add_child(prop)
-	ps.set_bounds(Vector3(-4.2, 0, -2.6), Vector3(4.2, 1.6, 1.8))
+	# A front-on group photograph rather than the gameplay overview.
+	ps.pitch_deg = 16.0
+	ps.fov_deg = 26.0
+	ps.safe_top = 0.92
+	ps.safe_bottom = -0.92
+	ps.set_bounds(Vector3(-3.9, 0, -0.9), Vector3(3.9, 1.7, 1.4))
 	return root
 
 static func families_of(level_id: String) -> Array:

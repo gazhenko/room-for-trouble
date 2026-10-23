@@ -149,8 +149,8 @@ static func _steam_tick(st: StationNode, part: String, rise := 0.35, speed := 0.
 		c.scale = Vector3.ONE * maxf(0.01, s)
 
 ## Small rubbery reset switch (§9.6) with lever + lamp; parts trip_lever/trip_lamp.
-static func _trip_switch(st: StationNode, pos: Vector3, parent: Node3D = null) -> void:
-	var root := _pivot(st, "trip", pos, parent)
+static func _trip_switch(st: StationNode, pos: Vector3, parent: Node3D = null, rot_y := 0.0) -> void:
+	var root := _pivot(st, "trip", pos, parent, Vector3(0, rot_y, 0))
 	_mesh(st, "trip_box", _c("st_trip_box", _trip_box_mesh), root)
 	var lever := _pivot(st, "trip_lever", Vector3(-0.02, 0.07, 0), root, Vector3(-20, 0, 0))
 	_mesh(st, "trip_lever_mesh", _c("st_trip_lever", _trip_lever_mesh), lever)
@@ -183,8 +183,10 @@ static func _trip_tag_mesh(mk: MeshKit, w: float) -> void:
 		mk.box(Vector3(s2 * w * 0.35, 0.02, 0), Vector3(0.01, 0.05, 0.01), Art.CREAM.darkened(0.2))
 
 static func _trip_apply(st: StationNode, s: Dictionary) -> void:
-	var tripped := bool(s.get("tripped", false))
-	var warn := bool(s.get("warn", false)) and not tripped
+	_trip_set(st, bool(s.get("tripped", false)), bool(s.get("warn", false)))
+
+static func _trip_set(st: StationNode, tripped: bool, warn_in: bool) -> void:
+	var warn := warn_in and not tripped
 	var c1 := st.changed("tripped", tripped)
 	var c2 := st.changed("warn", warn)
 	if not (c1 or c2):
@@ -207,7 +209,7 @@ static func _trip_tick(st: StationNode) -> void:
 static func _reception(st: StationNode) -> void:
 	var acc := _pal(st, "accent", Art.CORAL)
 	_mesh(st, "body", _c("st_reception_" + acc.to_html(), _reception_mesh.bind(acc)))
-	_mesh(st, "tickets", _c("st_reception_tk_0", _ticket_stack.bind(0)), null, Vector3(0.03, 0.77, 0.17))
+	_mesh(st, "tickets", _c("st_reception_tk_0", _ticket_stack.bind(0)), null, Vector3(0, 0.77, 0))
 	st.apply_fn = _reception_apply
 	st.apply({"bench": 0})
 
@@ -237,16 +239,14 @@ static func _reception_mesh(mk: MeshKit, acc: Color) -> void:
 	mk.cyl(b + Vector3(0, 0.09, 0), 0.014, 0.03, Art.BRASS.darkened(0.2), 5)
 	mk.sphere(b + Vector3(0, 0.125, 0), 0.026, Art.GOLD.lightened(0.1), 2, 6)
 
+## Overflow tickets as little tent cards along the counter front (two rows of four).
 static func _ticket_stack(mk: MeshKit, n: int) -> void:
-	if n <= 0:
-		return
-	mk.cyl(Vector3.ZERO, 0.04, 0.016, Art.WALNUT.darkened(0.2), 6)
-	for i in n:
+	for i in mini(n, 8):
 		var fam: String = FAMILIES[(i * 5 + 2) % 6]
-		var band: Color = Art.FAMILY_COLORS[fam]
-		mk.push_at(Vector3(0, 0.016 + i * 0.016, 0), Vector3(0, float((i * 37) % 44) - 22.0, 0))
-		mk.box(Vector3(0, 0.007, 0), Vector3(0.14, 0.014, 0.09), ModelItems.PAPER.darkened(0.06), ModelItems.PAPER)
-		mk.box(Vector3(-0.05, 0.0075, 0), Vector3(0.045, 0.015, 0.092), band.darkened(0.2), band)
+		var x := -0.25 + (i % 4) * 0.165 + (0.04 if i >= 4 else 0.0)
+		var z := 0.255 if i < 4 else 0.165
+		mk.push_at(Vector3(x, 0, z), Vector3(0, float((i * 29) % 20) - 10.0, 0), Vector3(0.55, 0.55, 0.55))
+		ModelItems.ticket(mk, Art.FAMILY_COLORS[fam])
 		mk.pop()
 
 static func _reception_apply(st: StationNode, s: Dictionary) -> void:
@@ -302,17 +302,17 @@ static func _linen_mesh(mk: MeshKit) -> void:
 	var cx := -0.125
 	var d := 0.56
 	for x in [-0.35, 0.1]:
-		mk.box(Vector3(x, 0.45, 0), Vector3(0.04, 0.9, d), wood, wood.lightened(0.12))
-	for y in [0.06, 0.34, 0.62]:
+		mk.box(Vector3(x, 0.42, 0), Vector3(0.04, 0.84, d), wood, wood.lightened(0.12))
+		for sz0 in [-1.0, 1.0]:
+			mk.sphere(Vector3(x, 0.855, sz0 * 0.25), 0.036, Art.BRASS, 2, 6)
+	for y in [0.06, 0.32, 0.58]:
 		mk.box(Vector3(cx, y, 0), Vector3(0.43, 0.03, d - 0.02), wood.lightened(0.06), wood.lightened(0.22))
-	mk.rbox(Vector3(cx, 0.915, 0), Vector3(0.52, 0.04, d + 0.03), wood.darkened(0.05), 0.03, wood.lightened(0.12))
+		for sz1 in [-1.0, 1.0]:
+			mk.box(Vector3(cx, y, sz1 * 0.272), Vector3(0.43, 0.034, 0.014), Art.SKY)
+	ModelItems.rod(mk, Vector3(-0.35, 0.8, -0.25), Vector3(0.1, 0.8, -0.25), 0.018, Art.BRASS, 6)
 	for sz in [-1.0, 1.0]:
-		mk.box(Vector3(cx, 0.9, sz * 0.292), Vector3(0.5, 0.025, 0.012), Art.SKY)
 		for sx in [-0.33, 0.08]:
 			mk.box(Vector3(sx, 0.022, sz * 0.24), Vector3(0.05, 0.045, 0.05), wood.darkened(0.25))
-	# Folded-sheet emblem on top: one big bundle icon.
-	ModelItems.poly_flat(mk, Vector3(cx, 0.935, 0.0), ModelItems.circle_pts(0.085, 10), 0.012, Art.CREAM, Art.WHITE)
-	mk.box(Vector3(cx, 0.948, 0), Vector3(0.04, 0.008, 0.15), Art.SKY)
 	# Emergency press attachment on +x.
 	mk.rbox(Vector3(0.255, 0.26, 0), Vector3(0.22, 0.52, 0.5), Art.CORAL.darkened(0.05), 0.05, Art.CORAL)
 	mk.rbox(Vector3(0.255, 0.54, 0), Vector3(0.24, 0.04, 0.52), Art.CREAM.darkened(0.08), 0.04, Art.CREAM)
@@ -323,7 +323,7 @@ static func _linen_mesh(mk: MeshKit) -> void:
 
 static func _linen_stock(mk: MeshKit, n: int) -> void:
 	var idx := 0
-	var tops := [0.075, 0.355, 0.635]
+	var tops := [0.075, 0.335, 0.595]
 	for tier in 3:
 		for lvl in 2:
 			for col in 2:
@@ -481,8 +481,8 @@ static func _hamper_tick(st: StationNode, dt: float) -> void:
 static func _towel_shelf(st: StationNode) -> void:
 	_mesh(st, "body", _c("st_towel", _towel_mesh))
 	_mesh(st, "stock", _c("st_towel_stock_0", _towel_stock.bind(0)))
-	_trip_switch(st, Vector3(0.21, 0.935, 0.08))
-	_mesh(st, "trip_tag", _c("st_trip_tag_0.30", _trip_tag_mesh.bind(0.3)), null, Vector3(0, 0.9, 0.262))
+	_trip_switch(st, Vector3(0.3, 0.84, 0.1))
+	_mesh(st, "trip_tag", _c("st_trip_tag_0.30", _trip_tag_mesh.bind(0.3)), null, Vector3(0, 0.585, 0.25))
 	st.apply_fn = _towel_apply
 	st.tick_fn = _stock_tick
 	st.apply({"count": 0, "tripped": false, "warn": false})
@@ -490,21 +490,17 @@ static func _towel_shelf(st: StationNode) -> void:
 static func _towel_mesh(mk: MeshKit) -> void:
 	var wood := Art.WALNUT.lightened(0.05)
 	for x in [-0.3, 0.3]:
-		mk.rbox(Vector3(x, 0.45, 0), Vector3(0.05, 0.9, 0.48), wood, 0.02, wood.lightened(0.14))
+		mk.rbox(Vector3(x, 0.42, 0), Vector3(0.05, 0.84, 0.48), wood, 0.02, wood.lightened(0.14))
+		for sz0 in [-1.0, 1.0]:
+			mk.sphere(Vector3(x, 0.855, sz0 * 0.21), 0.036, Art.CORAL, 2, 6)
 	for y in [0.06, 0.32, 0.58]:
 		mk.box(Vector3(0, y, 0), Vector3(0.56, 0.03, 0.46), wood.lightened(0.06), wood.lightened(0.2))
-	mk.rbox(Vector3(0, 0.915, 0), Vector3(0.68, 0.04, 0.52), wood.darkened(0.06), 0.03, wood.lightened(0.12))
+		for sz1 in [-1.0, 1.0]:
+			mk.box(Vector3(0, y, sz1 * 0.232), Vector3(0.56, 0.034, 0.014), Art.CORAL)
+	ModelItems.rod(mk, Vector3(-0.3, 0.8, -0.21), Vector3(0.3, 0.8, -0.21), 0.02, Art.BRASS, 6)
 	for sz in [-1.0, 1.0]:
-		mk.box(Vector3(0, 0.9, sz * 0.262), Vector3(0.64, 0.025, 0.012), Art.CORAL)
 		for sx in [-0.28, 0.28]:
 			mk.box(Vector3(sx, 0.022, sz * 0.2), Vector3(0.05, 0.045, 0.05), wood.darkened(0.25))
-	# Towel crest on top: a rolled coral towel on a brass bar.
-	mk.push_at(Vector3(-0.08, 0.98, 0), Vector3(0, 0, 90))
-	mk.cyl(Vector3(0, -0.16, 0), 0.045, 0.32, Art.CORAL, 8, Art.CORAL.lightened(0.1))
-	mk.pop()
-	for sx2 in [-0.25, 0.09]:
-		mk.cyl(Vector3(sx2, 0.935, 0), 0.016, 0.05, Art.BRASS, 5)
-	mk.box(Vector3(-0.08, 0.98, 0.0), Vector3(0.04, 0.094, 0.094), Art.CREAM)
 
 static func _towel_stock(mk: MeshKit, n: int) -> void:
 	var tops := [0.075, 0.335, 0.595]
@@ -529,7 +525,7 @@ static func _stock_tick(st: StationNode, dt: float) -> void:
 static func _snack_tin(st: StationNode) -> void:
 	_mesh(st, "body", _c("st_snack", _snack_mesh))
 	_mesh(st, "stock", _c("st_snack_stock_0", _snack_stock.bind(0)))
-	_trip_switch(st, Vector3(0.29, 0.34, 0.27))
+	_trip_switch(st, Vector3(0.21, 0.27, 0.21), null, -45.0)
 	_mesh(st, "trip_tag", _c("st_trip_tag_0.30", _trip_tag_mesh.bind(0.3)), null, Vector3(0, 0.31, 0.29))
 	st.apply_fn = _snack_apply
 	st.tick_fn = _stock_tick
@@ -546,14 +542,6 @@ static func _snack_mesh(mk: MeshKit) -> void:
 		mk.push_at(base + Vector3(cos(a) * 0.272, 0.165, sin(a) * 0.272), Vector3(0, 90.0 - rad_to_deg(a), 0))
 		ModelItems.poly_xy(mk, ModelItems.star_pts(5, 0.05, 0.024), 0.01, Art.CREAM, Art.WHITE)
 		mk.pop()
-	# Lid leaning against the back, painted with a big gold star.
-	mk.push_at(Vector3(0, 0.31, -0.31), Vector3(75, 0, 0))
-	mk.cyl(Vector3(0, -0.02, 0), 0.28, 0.04, TIN.darkened(0.06), 14, TIN.lightened(0.12))
-	mk.torus(Vector3(0, 0.02, 0), 0.27, 0.016, Art.GOLD, 14, 3)
-	ModelItems.poly_flat(mk, Vector3(0, 0.02, 0), ModelItems.star_pts(5, 0.14, 0.065), 0.012, Art.GOLD.darkened(0.1), Art.GOLD.lightened(0.15), 180.0)
-	mk.pop()
-	# Stub post for the reset switch.
-	mk.cyl(Vector3(0.29, 0, 0.27), 0.04, 0.34, Art.WALNUT, 6, Art.WALNUT.lightened(0.15))
 
 static func _snack_stock(mk: MeshKit, n: int) -> void:
 	var order := [270.0, 210.0, 330.0, 150.0, 30.0, 90.0]
@@ -662,9 +650,10 @@ static func _kiosk_lamps(mk: MeshKit, mask: int) -> void:
 	for i in 6:
 		if ((mask >> i) & 1) == 1:
 			var p := _tile_pos(i)
-			mk.sphere(p + Vector3(0.088, 0.066, 0.03), 0.032, Art.CORAL.lightened(0.15), 2, 6)
+			mk.sphere(p + Vector3(0.085, 0.062, 0.04), 0.042, Art.CORAL.lightened(0.2), 2, 7)
 
-static func _fam_mask(arr: Array) -> int:
+## Bitmask of FAMILIES contained in an Array or PackedStringArray.
+static func _fam_mask(arr) -> int:
 	var m := 0
 	for i in 6:
 		if FAMILIES[i] in arr:
@@ -672,8 +661,7 @@ static func _fam_mask(arr: Array) -> int:
 	return m
 
 static func _kiosk_apply(st: StationNode, s: Dictionary) -> void:
-	var fams: Array = s.get("families", FAMILIES)
-	var emask := _fam_mask(fams)
+	var emask := _fam_mask(s.get("families", FAMILIES))
 	var sel := FAMILIES.find(String(s.get("selected", "")))
 	if sel >= 0 and ((emask >> sel) & 1) == 0:
 		sel = -1
@@ -692,7 +680,7 @@ static func _kiosk_apply(st: StationNode, s: Dictionary) -> void:
 
 static func _kiosk_tick(st: StationNode, dt: float) -> void:
 	if int(st.anim.get("needed", 0)) != 0:
-		st.show_part("lamps", _blink(st, 0.9))
+		st.show_part("lamps", fmod(st.t, 0.9) < 0.6)
 
 # ================================================================ return shelf + curtain drawer
 
@@ -777,12 +765,12 @@ static func _heat_pump(st: StationNode) -> void:
 	_mesh(st, "body", _c("st_heat_pump", _hp_mesh), on)
 	var panel := _pivot(st, "panel", Vector3(0, 0.36, 0.25), on, Vector3(-16, 0, 0))
 	_mesh(st, "panel_mesh", _c("st_hp_panel", _hp_panel), panel)
-	_mesh(st, "lamp_hot", _c("st_hp_lamp_hot", _hp_lamp.bind(true)), panel, Vector3(-0.13, 0.115, 0.04), ModelItems.dim_mat())
-	_mesh(st, "lamp_cold", _c("st_hp_lamp_cold", _hp_lamp.bind(false)), panel, Vector3(0.13, 0.115, 0.04), ModelItems.dim_mat())
+	_mesh(st, "lamp_hot", _c("st_hp_lamp_hot", _hp_lamp.bind(true)), panel, Vector3(-0.125, -0.005, 0.04), ModelItems.dim_mat())
+	_mesh(st, "lamp_cold", _c("st_hp_lamp_cold", _hp_lamp.bind(false)), panel, Vector3(0.125, -0.005, 0.04), ModelItems.dim_mat())
 	for side in ["hot", "cold"]:
-		var nd := _pivot(st, "needle_" + side, Vector3(-0.13 if side == "hot" else 0.13, -0.045, 0.045), panel)
+		var nd := _pivot(st, "needle_" + side, Vector3(-0.125 if side == "hot" else 0.125, -0.06, 0.075), panel)
 		_mesh(st, "needle_%s_mesh" % side, _c("st_hp_needle", _hp_needle), nd)
-	var lever := _pivot(st, "priority", Vector3(0, -0.07, 0.045), panel)
+	var lever := _pivot(st, "priority", Vector3(0, -0.1, 0.045), panel)
 	_mesh(st, "priority_mesh", _c("st_hp_lever_balanced", _hp_lever.bind(Art.CREAM)), lever)
 	_steam(st, "steam", Vector3(0, 0.83, -0.04), 3, 0.06, on)
 	_mesh(st, "sheet", _c("st_hp_sheet", _hp_sheet))
@@ -804,41 +792,38 @@ static func _hp_mesh(mk: MeshKit) -> void:
 		ModelItems.rod(mk, Vector3(s * 0.23, 0.32, 0.0), Vector3(s * 0.33, 0.32, 0.0), 0.04, Art.BRASS.darkened(0.1), 6)
 		ModelItems.rod(mk, Vector3(s * 0.33, 0.34, 0.0), Vector3(s * 0.33, 0.0, 0.0), 0.04, pc, 6)
 		mk.sphere(Vector3(s * 0.33, 0.33, 0), 0.05, Art.BRASS.darkened(0.1), 2, 6)
-	# Riveted friendly face plate on the back side.
-	mk.box(Vector3(0, 0.36, -0.245), Vector3(0.3, 0.16, 0.03), Art.CREAM.darkened(0.08))
+	# Static twin of the dial panel on the back so the z=9 side also reads as a front.
+	mk.push_at(Vector3(0, 0.36, -0.25), Vector3(-16, 180, 0))
+	_hp_panel(mk)
+	for s2 in [-1.0, 1.0]:
+		mk.push_at(Vector3(s2 * 0.125, -0.005, 0.04))
+		_hp_lamp(mk, s2 < 0)
+		mk.pop()
+	mk.pop()
 
 static func _hp_panel(mk: MeshKit) -> void:
-	mk.rbox(Vector3(0, 0.0, 0), Vector3(0.52, 0.32, 0.06), Art.WALNUT, 0.04, Art.WALNUT.lightened(0.12))
-	mk.box(Vector3(0, -0.02, 0.026), Vector3(0.46, 0.24, 0.02), Art.CREAM.darkened(0.05), Art.CREAM)
+	mk.rbox(Vector3(0, 0.0, 0), Vector3(0.54, 0.3, 0.06), Art.WALNUT, 0.04, Art.WALNUT.lightened(0.12))
+	mk.box(Vector3(0, -0.005, 0.026), Vector3(0.49, 0.25, 0.02), Art.CREAM.darkened(0.05), Art.CREAM)
 	for s in [-1.0, 1.0]:
-		var c := Art.CORAL if s < 0 else Art.SKY
-		mk.push_at(Vector3(s * 0.13, -0.045, 0.038))
-		ModelItems.poly_xy(mk, ModelItems.circle_pts(0.075, 12), 0.01, Art.WHITE.darkened(0.04), Art.WHITE)
+		mk.push_at(Vector3(s * 0.125, -0.005, 0.04), Vector3(90, 0, 0))
+		mk.torus(Vector3.ZERO, 0.1, 0.018, Art.BRASS, 12, 4)
 		mk.pop()
-		mk.push_at(Vector3(s * 0.13, -0.045, 0.04), Vector3(90, 0, 0))
-		mk.torus(Vector3.ZERO, 0.078, 0.014, c, 12, 3)
-		mk.pop()
-		for k in 3:
-			var a := deg_to_rad(150.0 - k * 60.0)
-			mk.box(Vector3(s * 0.13 + cos(a) * 0.055, -0.045 + sin(a) * 0.055, 0.045), Vector3(0.016, 0.016, 0.006), c.darkened(0.2))
-	mk.box(Vector3(0, -0.1, 0.04), Vector3(0.05, 0.03, 0.012), SLATE)
+	mk.box(Vector3(0, -0.115, 0.04), Vector3(0.05, 0.03, 0.012), SLATE)
 
+## Dial face that doubles as the side's lamp (lit when that side has priority).
 static func _hp_lamp(mk: MeshKit, hot: bool) -> void:
 	var c := Art.CORAL if hot else Art.SKY
-	mk.cyl(Vector3(0, 0, -0.01), 0.07, 0.02, Art.BRASS.darkened(0.1), 10)
-	mk.push_at(Vector3(0, 0, 0.012))
-	ModelItems.poly_xy(mk, ModelItems.circle_pts(0.062, 12), 0.02, c.darkened(0.05), c)
-	mk.pop()
-	mk.push_at(Vector3(0, 0, 0.026))
+	ModelItems.poly_xy(mk, ModelItems.circle_pts(0.092, 14), 0.02, c.darkened(0.05), c)
+	mk.push_at(Vector3(0, 0.02, 0.014))
 	if hot:
-		ModelItems.sun_xy(mk, 0.085, 0.008, Art.GOLD.lightened(0.1), Art.CREAM)
+		ModelItems.sun_xy(mk, 0.1, 0.008, Art.GOLD.lightened(0.15), Art.CREAM)
 	else:
-		ModelItems.snowflake_xy(mk, 0.09, 0.016, 0.008, Art.WHITE)
+		ModelItems.snowflake_xy(mk, 0.1, 0.018, 0.008, Art.WHITE)
 	mk.pop()
 
 static func _hp_needle(mk: MeshKit) -> void:
-	mk.box(Vector3(0, 0.03, 0.004), Vector3(0.014, 0.065, 0.006), Art.INK)
-	mk.sphere(Vector3(0, 0, 0.006), 0.016, Art.BRASS.darkened(0.15), 2, 6)
+	mk.box(Vector3(0, 0.04, 0.004), Vector3(0.016, 0.08, 0.006), Art.INK)
+	mk.sphere(Vector3(0, 0, 0.006), 0.018, Art.BRASS.darkened(0.15), 2, 6)
 
 static func _hp_lever(mk: MeshKit, knob: Color) -> void:
 	mk.cyl(Vector3.ZERO, 0.012, 0.11, Art.BRASS.darkened(0.15), 5)
@@ -878,11 +863,12 @@ static func _hp_apply(st: StationNode, s: Dictionary) -> void:
 		st.set_part_mesh("priority_mesh", _c("st_hp_lever_" + mode, _hp_lever.bind(knob)))
 		st.set_part_material("lamp_hot", _lit(mode != "cool"))
 		st.set_part_material("lamp_cold", _lit(mode != "warm"))
-	for side in ["hot", "cold"]:
-		var d := clampi(int(s.get(side + "_demand", 0)), 0, 6)
-		if st.changed(side, d):
-			var nd: Node3D = st.parts["needle_" + side]
-			nd.rotation.z = deg_to_rad(70.0 - d * (140.0 / 6.0))
+	var dh := clampi(int(s.get("hot_demand", 0)), 0, 6)
+	if st.changed("hot", dh):
+		(st.parts["needle_hot"] as Node3D).rotation.z = deg_to_rad(70.0 - dh * (140.0 / 6.0))
+	var dc := clampi(int(s.get("cold_demand", 0)), 0, 6)
+	if st.changed("cold", dc):
+		(st.parts["needle_cold"] as Node3D).rotation.z = deg_to_rad(70.0 - dc * (140.0 / 6.0))
 
 static func _hp_tick(st: StationNode, dt: float) -> void:
 	if st.last("enabled", true):
@@ -956,9 +942,9 @@ static func _tap_tick(st: StationNode, dt: float) -> void:
 
 static func _dock_color(tool: String) -> Color:
 	match tool:
-		"breezer": return Art.PLUM.lightened(0.12)
-		"can": return Art.SAGE
-		_: return Art.SKY
+		"breezer": return Art.PLUM.lerp(Art.CREAM, 0.3)
+		"can": return Art.SAGE.lerp(Art.CREAM, 0.25)
+		_: return Art.SKY.lerp(Art.CREAM, 0.25)
 
 static func _tool_dock(st: StationNode) -> void:
 	var tool := String(st.opts.get("tool", "mop"))
@@ -972,7 +958,7 @@ static func _tool_dock(st: StationNode) -> void:
 	st.apply({"occupied": false, "enabled": true})
 
 static func _dock_mesh(mk: MeshKit, col: Color) -> void:
-	mk.rbox(Vector3(0, 0.014, 0), Vector3(0.72, 0.028, 0.72), col.darkened(0.25), 0.14, col.darkened(0.08))
+	mk.rbox(Vector3(0, 0.014, 0), Vector3(0.68, 0.028, 0.68), col.darkened(0.25), 0.14, col.darkened(0.05))
 	ModelItems.rod(mk, Vector3(-0.29, 0.0, -0.29), Vector3(-0.29, 0.44, -0.29), 0.032, Art.WALNUT, 6)
 	mk.cyl(Vector3(-0.29, 0.0, -0.29), 0.06, 0.035, Art.WALNUT.darkened(0.15), 6)
 
@@ -1217,10 +1203,11 @@ static func _goal_mesh(mk: MeshKit, r: float) -> void:
 
 static func _goal_arrows(mk: MeshKit, r: float) -> void:
 	mk.jitter = 0.0
+	var ap := ModelItems.arrow_pts(0.3, 0.08, 0.2, 0.12)
 	for k in 4:
 		var a := deg_to_rad(45.0 + 90.0 * k)
-		var p := Vector3(cos(a), 0, sin(a)) * (r * 0.52)
-		_chevron(mk, p + Vector3(0, 0.02, 0), -rad_to_deg(a), 0.22, Art.GOLD.darkened(0.12))
+		var p := Vector3(cos(a), 0, sin(a)) * (r * 0.58)
+		ModelItems.poly_flat(mk, p + Vector3(0, 0.018, 0), ap, 0.006, Art.GOLD.darkened(0.12), Art.GOLD.darkened(0.04), 180.0 - rad_to_deg(a), Vector2(0.04, 0))
 
 static func _goal_glow(mk: MeshKit, r: float) -> void:
 	mk.jitter = 0.0
@@ -1305,8 +1292,7 @@ static func _lift_apply(st: StationNode, s: Dictionary) -> void:
 		st.show_part("arrows", busy and not trip)
 		st.set_part_material("ring", ModelItems.dim_mat() if trip else (ModelItems.lit_mat() if busy else Art.toon()))
 		st.anim["busy"] = busy and not trip
-	_trip_apply(st, {"tripped": trip, "warn": false})
-	st.show_part("trip_tag", false)
+	_trip_set(st, trip, false)
 
 static func _lift_tick(st: StationNode, dt: float) -> void:
 	if st.anim.get("busy", false):
@@ -1392,11 +1378,13 @@ static func _bed_stripped(mk: MeshKit) -> void:
 	mk.box(Vector3(0.68, 0.39, 0.33), Vector3(0.06, 0.006, 0.05), Art.CORAL)
 
 static func _bed_dnd(mk: MeshKit) -> void:
-	mk.push_at(Vector3(0.82, 0.39, 0.3), Vector3(0, 90, 0))
-	mk.torus(Vector3(0, 0.06, 0), 0.035, 0.008, Art.PLUM.darkened(0.1), 8, 3)
-	mk.box(Vector3(0, -0.04, 0), Vector3(0.11, 0.17, 0.014), Art.PLUM, Art.PLUM.lightened(0.15))
-	mk.push_at(Vector3(0.0, -0.04, 0.01), Vector3(0, 0, 200))
-	ModelItems.crescent_xy(mk, 0.035, 0.02, 0.008, Art.GOLD)
+	mk.push_at(Vector3(0.74, 0.47, 0.44), Vector3(-10, 0, 0))
+	mk.push_at(Vector3(0, 0.07, 0), Vector3(90, 0, 0))
+	mk.torus(Vector3.ZERO, 0.04, 0.01, Art.PLUM.darkened(0.1), 8, 3)
+	mk.pop()
+	mk.box(Vector3(0, -0.06, 0), Vector3(0.15, 0.2, 0.016), Art.PLUM, Art.PLUM.lightened(0.15))
+	mk.push_at(Vector3(0.0, -0.06, 0.011), Vector3(0, 0, 200))
+	ModelItems.crescent_xy(mk, 0.05, 0.028, 0.008, Art.GOLD)
 	mk.pop()
 	mk.pop()
 
@@ -1506,7 +1494,7 @@ static func _thermo_apply(st: StationNode, s: Dictionary) -> void:
 	var trip := bool(s.get("tripped", false))
 	var mode := String(s.get("mode", "neutral"))
 	var face := "tripped" if trip else mode
-	if not (face in ["warm", "cool", "tripped"]):
+	if face != "warm" and face != "cool" and face != "tripped":
 		face = "neutral"
 	if st.changed("face", face):
 		st.set_part_mesh("face", _c("st_thermo_face_" + face, _thermo_face.bind(face)))
@@ -1609,7 +1597,7 @@ static func _curtain_rail(st: StationNode) -> void:
 	_mesh(st, "rail", _c("st_rail_%.2f" % ry, _rail_mesh.bind(ry)))
 	for s in [-1.0, 1.0]:
 		var part := "curtain_l" if s < 0 else "curtain_r"
-		var cp := _pivot(st, part, Vector3(s * 0.335, ry - 0.02, 0))
+		var cp := _pivot(st, part, Vector3(s * 0.36, ry - 0.02, 0))
 		_mesh(st, part + "_mesh", _c("st_curtain_%.2f_%d" % [ry, int(s)], _curtain_panel.bind(ry - 0.04, s)), cp)
 	st.apply_fn = _rail_apply
 	st.tick_fn = _rail_tick
@@ -1627,17 +1615,19 @@ static func _rail_mesh(mk: MeshKit, ry: float) -> void:
 		mk.box(Vector3(s * 0.47, ry - 0.07, 0), Vector3(0.04, 0.06, 0.06), Art.BRASS.darkened(0.15))
 	mk.sphere(Vector3(0, ry + 0.06, 0), 0.035, Art.GOLD, 2, 6)
 
+## Tied-back acoustic curtain hanging from the rail (pivot at the rail).
 static func _curtain_panel(mk: MeshKit, h: float, side: float) -> void:
-	var cream := Color("#F7EBD3")
+	var cream := Color("#FCF2DF")
+	var tie := -h * 0.52
+	mk.push_at(Vector3.ZERO, Vector3.ZERO, Vector3(1, 1, 0.6))
+	mk.cyl(Vector3(0, tie, 0), 0.06, -tie, cream.darkened(0.03), 8, cream, 0.12)
+	mk.cyl(Vector3(0, -h + 0.05, 0), 0.115, h + tie - 0.05, cream.darkened(0.06), 8, cream, 0.06)
+	mk.cyl(Vector3(0, -h, 0), 0.12, 0.05, Art.PLUM, 8, Art.PLUM.lightened(0.15), 0.117)
+	mk.torus(Vector3(0, tie, 0), 0.068, 0.02, Art.PLUM.lightened(0.05), 8, 3)
+	mk.pop()
+	mk.sphere(Vector3(-side * 0.05, tie, 0.05), 0.028, Art.GOLD, 2, 5)
 	for k in 3:
-		var x := (-0.06 + k * 0.06) * side
-		var z := 0.025 if k % 2 == 0 else -0.02
-		mk.cyl(Vector3(x, -h, z), 0.045 - k * 0.003, h, cream.darkened(0.05 * k), 6, cream, 0.035)
-	mk.box(Vector3(0, -h + 0.04, 0), Vector3(0.2, 0.06, 0.1), Art.PLUM, Art.PLUM.lightened(0.15))
-	mk.torus(Vector3(0, -h * 0.45, 0), 0.07, 0.016, Art.PLUM.lightened(0.05), 8, 3)
-	mk.sphere(Vector3(side * 0.06, -h * 0.45, 0.05), 0.025, Art.GOLD, 2, 5)
-	for k2 in 3:
-		mk.torus(Vector3((-0.06 + k2 * 0.06) * side, 0.0, 0), 0.026, 0.008, Art.BRASS.darkened(0.1), 6, 3)
+		mk.torus(Vector3((-0.08 + k * 0.08), 0.0, 0), 0.026, 0.009, Art.BRASS.darkened(0.1), 6, 3)
 
 static func _rail_apply(st: StationNode, s: Dictionary) -> void:
 	var en := bool(s.get("enabled", true))
@@ -1666,7 +1656,7 @@ static func _vent_gate(st: StationNode) -> void:
 	_mesh(st, "body", _c("st_vent_%.2f" % pipe_y, _vent_mesh.bind(pipe_y)), mount)
 	var flap := _pivot(st, "flap", Vector3(0, 0.49, -0.326), mount)
 	_mesh(st, "flap_mesh", _c("st_vent_flap", _vent_flap), flap)
-	var ind := _pivot(st, "indicator", Vector3(0.09, 0.545, -0.42 * f))
+	var ind := _pivot(st, "indicator", Vector3(-0.1 * f, pipe_y + 0.06, -0.45 * f))
 	_mesh(st, "lamp", _c("st_vent_lamp_open", _vent_lamp.bind("open")), ind, Vector3.ZERO, ModelItems.lit_mat())
 	st.apply_fn = _vent_apply
 	st.tick_fn = _vent_tick
@@ -1685,7 +1675,7 @@ static func _vent_mesh(mk: MeshKit, pipe_y: float) -> void:
 	ModelItems.rod(mk, Vector3(-0.1, 0.54, z0 + 0.05), Vector3(-0.1, pipe_y, z0 + 0.05), 0.035, Art.BRASS, 6)
 	ModelItems.rod(mk, Vector3(-0.1, pipe_y, z0 + 0.05), Vector3(-0.1, pipe_y, z0 - 0.5), 0.035, Art.BRASS, 6)
 	mk.sphere(Vector3(-0.1, pipe_y, z0 + 0.05), 0.045, Art.BRASS.darkened(0.1), 2, 6)
-	mk.cyl(Vector3(0.09, 0.535, z0 + 0.08), 0.06, 0.012, Art.BRASS.darkened(0.2), 10)
+	mk.cyl(Vector3(-0.1, pipe_y + 0.02, z0 + 0.05), 0.075, 0.035, Art.BRASS.darkened(0.2), 10, Art.BRASS.darkened(0.05))
 
 static func _vent_flap(mk: MeshKit) -> void:
 	mk.box(Vector3(0, -0.1, 0.012), Vector3(0.32, 0.2, 0.024), Art.CORAL.darkened(0.04), Art.CORAL.lightened(0.1))
@@ -1696,15 +1686,15 @@ static func _vent_lamp(mk: MeshKit, kind: String) -> void:
 	mk.jitter = 0.0
 	match kind:
 		"open":
-			ModelItems.poly_flat(mk, Vector3.ZERO, ModelItems.circle_pts(0.055, 12), 0.012, Art.SAGE.darkened(0.1), Art.SAGE.lightened(0.15))
-			ModelItems.poly_flat(mk, Vector3(0, 0.012, 0), [Vector2(0.03, 0.0), Vector2(-0.025, 0.028), Vector2(-0.025, -0.028)], 0.004, Art.WHITE, Art.WHITE, -90.0)
+			ModelItems.poly_flat(mk, Vector3.ZERO, ModelItems.circle_pts(0.075, 12), 0.016, Art.SAGE.darkened(0.1), Art.SAGE.lightened(0.15))
+			ModelItems.poly_flat(mk, Vector3(0, 0.016, 0), ModelItems.circle_pts(0.025, 8), 0.004, Art.WHITE, Art.WHITE)
 		"flow":
-			ModelItems.poly_flat(mk, Vector3.ZERO, ModelItems.circle_pts(0.055, 12), 0.012, Art.SAGE.darkened(0.1), Art.SAGE.lightened(0.15))
-			var ap := ModelItems.arrow_pts(0.08, 0.022, 0.06, 0.035)
-			ModelItems.poly_flat(mk, Vector3(0, 0.012, 0), ap, 0.004, Art.WHITE, Art.WHITE, -90.0, Vector2(0.01, 0))
+			ModelItems.poly_flat(mk, Vector3.ZERO, ModelItems.circle_pts(0.075, 12), 0.016, Art.SAGE.darkened(0.1), Art.SAGE.lightened(0.15))
+			var ap := ModelItems.arrow_pts(0.12, 0.034, 0.09, 0.05)
+			ModelItems.poly_flat(mk, Vector3(0, 0.016, 0), ap, 0.004, Art.WHITE, Art.WHITE, 0.0, Vector2(0.02, 0))
 		_:
-			ModelItems.poly_flat(mk, Vector3.ZERO, ModelItems.circle_pts(0.055, 12), 0.012, Art.CORAL.darkened(0.1), Art.CORAL.lightened(0.1))
-			mk.box(Vector3(0, 0.015, 0), Vector3(0.07, 0.004, 0.022), Art.WHITE)
+			ModelItems.poly_flat(mk, Vector3.ZERO, ModelItems.circle_pts(0.075, 12), 0.016, Art.CORAL.darkened(0.1), Art.CORAL.lightened(0.1))
+			mk.box(Vector3(0, 0.02, 0), Vector3(0.1, 0.006, 0.03), Art.WHITE)
 
 static func _vent_apply(st: StationNode, s: Dictionary) -> void:
 	var open := bool(s.get("open", true))
@@ -1769,8 +1759,8 @@ static func _shutter_mesh(mk: MeshKit) -> void:
 static func _shutter_warn(mk: MeshKit) -> void:
 	mk.jitter = 0.0
 	for i in 7:
-		if i % 2 == 0:
-			mk.box(Vector3(-0.42 + i * 0.14, 1.08, 0), Vector3(0.1, 0.212, 0.252), Art.GOLD.lightened(0.35))
+		var c := Color("#FFF4B8") if i % 2 == 0 else Color("#FFB7A3")
+		mk.box(Vector3(-0.42 + i * 0.14, 1.08, 0), Vector3(0.1, 0.212, 0.252), c)
 
 static func _shutter_slats(mk: MeshKit) -> void:
 	var n := 8

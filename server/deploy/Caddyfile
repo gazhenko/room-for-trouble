@@ -1,0 +1,14 @@
+# TLS termination for the private-room WebSocket service. Only TLS is public;
+# the Godot listener stays on the internal network.
+{$RFT_DOMAIN} {
+	encode zstd gzip
+	handle /game* {
+		reverse_proxy rft:8080
+	}
+	handle /healthz {
+		respond "ok" 200
+	}
+	handle {
+		respond "Room for Trouble private rooms. Point your game's endpoint at wss://{$RFT_DOMAIN}/game" 200
+	}
+}

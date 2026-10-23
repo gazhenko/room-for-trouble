@@ -1,0 +1,16 @@
+# Optional systemd unit for running the exported server without containers.
+[Unit]
+Description=Room for Trouble private-room service
+After=network-online.target
+[Service]
+User=rft
+Group=rft
+Environment=RFT_PORT=8080 RFT_BIND=127.0.0.1 RFT_DATA_DIR=/var/lib/rft RFT_MAX_ROOMS=16
+ExecStart=/opt/rft/RoomForTroubleServer.x86_64 --headless -- --server
+Restart=on-failure
+TimeoutStopSec=15
+NoNewPrivileges=true
+ProtectSystem=strict
+ReadWritePaths=/var/lib/rft
+[Install]
+WantedBy=multi-user.target

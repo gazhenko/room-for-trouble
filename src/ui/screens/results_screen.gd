@@ -21,16 +21,17 @@ func _ready() -> void:
 	Audio.sting("sting_results")
 	var bg := ColorRect.new()
 	bg.color = Color(0.13, 0.16, 0.2, 0.45)
-	bg.set_anchors_preset(Control.PRESET_FULL_RECT)
+	bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(bg)
 	var row := UiKit.hbox(24)
 	row.alignment = BoxContainer.ALIGNMENT_CENTER
 	var cc := CenterContainer.new()
-	cc.set_anchors_preset(Control.PRESET_FULL_RECT)
+	cc.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	cc.add_child(row)
 	add_child(cc)
 	# Photo in a polaroid frame.
 	var frame := UiKit.panel("card")
+	frame.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	var fv := UiKit.vbox(8)
 	frame.add_child(fv)
 	photo = PhotoStudio.make_stage(Vector2(520, 330), 200)

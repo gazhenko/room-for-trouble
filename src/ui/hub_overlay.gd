@@ -6,7 +6,7 @@ var hub: HubScreen
 var _t := 0.0
 
 func _ready() -> void:
-	set_anchors_preset(Control.PRESET_FULL_RECT)
+	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 func _process(dt: float) -> void:
@@ -27,6 +27,10 @@ func _draw() -> void:
 		var sp := hub.view.stage.world_to_screen(Vector3(float(p.x) / 1e6, 1.7, float(p.y) / 1e6)) / hub.hud.ui_scale
 		var on := near.has(h["id"])
 		var bob := 0.0 if Settings.g("reduced_motion") else sin(_t * 2.4 + p.x) * 3.0
+		if not on:
+			UiKit.draw_bubble(self, sp + Vector2(0, bob), 14)
+			UiKit.draw_icon(self, h["icon"], sp + Vector2(0, bob), 20)
+			continue
 		var txt := Loc.t(h["label"])
 		var tw := f.get_string_size(txt, HORIZONTAL_ALIGNMENT_LEFT, -1, 16).x
 		var r := Rect2(sp + Vector2(-tw * 0.5 - 22, -16 + bob), Vector2(tw + 44, 30))

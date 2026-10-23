@@ -37,12 +37,12 @@ func _ready() -> void:
 	captions = Captions.new()
 	l2.add_child(captions)
 	toast_layer = Control.new()
-	toast_layer.set_anchors_preset(Control.PRESET_FULL_RECT)
+	toast_layer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	toast_layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	l2.add_child(toast_layer)
 	fade = ColorRect.new()
 	fade.color = Color(0.2, 0.26, 0.29, 0.0)
-	fade.set_anchors_preset(Control.PRESET_FULL_RECT)
+	fade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	fade.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	l2.add_child(fade)
 	get_viewport().size_changed.connect(_layout_ui)

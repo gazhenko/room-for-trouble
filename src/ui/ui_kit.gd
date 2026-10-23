@@ -117,11 +117,13 @@ static func label(text: String, size := 22, color := INK, align := HORIZONTAL_AL
 	l.add_theme_font_size_override("font_size", size)
 	l.add_theme_color_override("font_color", color)
 	l.horizontal_alignment = align
-	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	# Wrap only paragraphs; short labels inside rows must keep their width.
+	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART if text.length() > 48 else TextServer.AUTOWRAP_OFF
 	return l
 
 static func title(text: String, size := 40) -> Label:
 	var l := label(text, size, INK, HORIZONTAL_ALIGNMENT_CENTER)
+	l.autowrap_mode = TextServer.AUTOWRAP_OFF
 	l.add_theme_color_override("font_outline_color", CREAM)
 	l.add_theme_constant_override("outline_size", 8)
 	return l
@@ -167,7 +169,7 @@ static func panel(kind := "cream") -> PanelContainer:
 
 static func center(c: Control) -> CenterContainer:
 	var cc := CenterContainer.new()
-	cc.set_anchors_preset(Control.PRESET_FULL_RECT)
+	cc.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	cc.add_child(c)
 	return cc
 

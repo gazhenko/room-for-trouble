@@ -86,16 +86,18 @@ func _build_code() -> void:
 	v.add_child(grid)
 	for ch in NetProtocol.CODE_ALPHABET:
 		var c: String = ch
-		var b := add_button(grid, c, "", func():
+		var add_char := func():
 			if code_text.length() < 8:
 				code_text += c
-				le.text = NetProtocol.pretty_code(code_text)), false, 64)
+				le.text = NetProtocol.pretty_code(code_text)
+		add_button(grid, c, "", add_char, false, 64)
 	var row := UiKit.hbox(8)
 	row.alignment = BoxContainer.ALIGNMENT_CENTER
 	v.add_child(row)
-	add_button(row, "⌫", "", func():
+	var erase := func():
 		code_text = code_text.substr(0, maxi(0, code_text.length() - 1))
-		le.text = NetProtocol.pretty_code(code_text), false, 120)
+		le.text = NetProtocol.pretty_code(code_text)
+	add_button(row, "⌫", "", erase, false, 120)
 	add_button(row, Loc.t("ui.online.join"), "ui_play", func(): _go("join"), false, 220)
 	add_button(row, Loc.t("ui.back"), "ui_arrow_left", _build_menu, false, 160)
 	on_back(_build_menu)

@@ -50,8 +50,8 @@ func _draw() -> void:
 	draw_circle(Vector2(-w * 0.5 + 34, 0), 8, UiKit.CREAM)
 	var title := Loc.t("ui.title.name")
 	var tw := f.get_string_size(title, HORIZONTAL_ALIGNMENT_LEFT, -1, 64).x
-	draw_string_outline(f, Vector2(-tw * 0.5 + 16, 18), title, HORIZONTAL_ALIGNMENT_LEFT, -1, 64, 10, UiKit.CREAM)
-	draw_string(f, Vector2(-tw * 0.5 + 16, 18), title, HORIZONTAL_ALIGNMENT_LEFT, -1, 64, UiKit.INK)
+	draw_string_outline(f, Vector2(-tw * 0.5 + 30, 18), title, HORIZONTAL_ALIGNMENT_LEFT, -1, 64, 10, UiKit.CREAM)
+	draw_string(f, Vector2(-tw * 0.5 + 30, 18), title, HORIZONTAL_ALIGNMENT_LEFT, -1, 64, UiKit.INK)
 	var sub := Loc.t("ui.title.tagline")
 	var sw := f.get_string_size(sub, HORIZONTAL_ALIGNMENT_LEFT, -1, 24).x
 	draw_string(f, Vector2(-sw * 0.5 + 16, 62), sub, HORIZONTAL_ALIGNMENT_LEFT, -1, 24, UiKit.CORAL.darkened(0.35))

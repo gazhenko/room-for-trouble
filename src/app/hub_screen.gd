@@ -27,6 +27,7 @@ func setup_hub(p_stage: PixelStage, p_captions: Captions, p_cfg: Dictionary) -> 
 	overlay.hub = self
 	add_child(overlay)
 	hud.level = {"duration_hotel_s": 0}
+	hud.show_clock = false
 	Audio.play_music("title_loop")
 	captions.push("nana", Loc.t("ui.hub.welcome"), "story", 4.0)
 	_decorate_hub()

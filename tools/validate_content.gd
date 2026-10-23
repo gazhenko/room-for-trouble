@@ -1,0 +1,117 @@
+extends SceneTree
+## Content validation (§22.1): references, layouts, story staging, tutorial
+## graphs, icons and localization keys used by code. Fails (exit 1) on errors.
+##   godot --headless --path . --script res://tools/validate_content.gd
+
+var errors: PackedStringArray = []
+var warnings: PackedStringArray = []
+
+func err(msg: String) -> void:
+	errors.append(msg)
+
+func _initialize() -> void:
+	var C = load("res://src/content/content_registry.gd").new()
+	C.load_all()
+	for e in C.errors:
+		if not "levels.json" in e:
+			err(e)
+	var loc: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/localization/en.json"))
+	# Guests / items / stations reference integrity.
+	for fam in SimC.FAMILIES:
+		if not C.guests.has(fam):
+			err("guest definition missing: " + fam)
+		elif not C.items.has(C.guests[fam]["welcome_item_id"]):
+			err("guests/%s: welcome item %s unknown" % [fam, C.guests[fam]["welcome_item_id"]])
+	for L in C.levels:
+		for w in L["waves"]:
+			for f in w["roster"]:
+				if not C.guests.has(f):
+					err("%s: unknown family %s" % [L["id"], f])
+		for k in ["title", "mid", "postcard", "purpose"]:
+			if not loc.has("level.%s.%s" % [L["id"], k]):
+				err("missing localization level.%s.%s" % [L["id"], k])
+		if not C.story.has(L["id"] + ".pre") or not C.story.has(L["id"] + ".post"):
+			err("%s: missing story beats" % L["id"])
+	# Story staging: cameras, props, actors, captions.
+	var props := ModelProps.kinds() if ResourceLoader.exists("res://src/view/models/model_props.gd") else PackedStringArray()
+	var cams := ["wide_hotel", "lobby_group", "desk_close", "guest_close", "room_door", "fixture_close", "festival_wide", "postcard_still"]
+	var actors := ["nana", "gus", "dot", "staff", "mallow", "flurry", "cinder", "whisp", "luna", "fern"]
+	for sid in C.story:
+		var sc: Dictionary = C.story[sid]
+		if not C.templates.has(sc.get("layout", "P1")):
+			err("story %s: unknown layout" % sid)
+		for p in sc.get("panels", []):
+			if not p.get("camera", "") in cams:
+				err("story %s: unknown camera %s" % [p.get("id", sid), p.get("camera", "")])
+			if p.has("caption") and not loc.has(p["caption"]):
+				err("story %s: caption key %s missing" % [p.get("id", sid), p["caption"]])
+			for a in p.get("actors", []):
+				var aid: String = a["id"]
+				if not (aid in actors or aid.begins_with("guest:")):
+					err("story %s: unknown actor %s" % [p.get("id", sid), aid])
+			for pr in p.get("props", []):
+				if not props.is_empty() and not pr["kind"] in props:
+					err("story %s: unknown prop %s" % [p.get("id", sid), pr["kind"]])
+	# Tutorials.
+	for tid in C.tutorials:
+		var t: Dictionary = C.tutorials[tid]
+		if not C.templates.has(t["layout"]):
+			err("tutorial %s: unknown layout" % tid)
+		for st in t["steps"]:
+			if not loc.has(st["caption"]):
+				err("tutorial %s: caption %s missing" % [tid, st["caption"]])
+	# Layout anchors reachable from the hall (MAP01 summary).
+	for tid in C.templates:
+		var Lay: LayoutDef = C.layout(tid)
+		for letter in Lay.active_rooms:
+			var d: Vector2i = Lay.rooms[letter]["door"]
+			if Lay.is_wall_tile(d.x, d.y):
+				err("%s: door %s is a wall" % [tid, letter])
+	# Localization keys used literally by code.
+	var used := {}
+	var rx := RegEx.new()
+	rx.compile("Loc\\.t\\(\"([a-z0-9_.]+)\"")
+	for path in _scripts("res://src"):
+		var txt := FileAccess.get_file_as_string(path)
+		for m in rx.search_all(txt):
+			used[m.get_string(1)] = path
+	for k in used:
+		if k.ends_with(".") or k.ends_with("_"):
+			continue
+		if not loc.has(k):
+			err("missing localization key %s (used in %s)" % [k, used[k]])
+	# Icons referenced literally exist (if the icon set is present).
+	if ResourceLoader.exists("res://src/ui/icons.gd"):
+		var irx := RegEx.new()
+		irx.compile("(?:draw_icon\\(self, |UiKit\\.icon\\(|Icons\\.tex\\(|\\.button\\([^\\n]*?, )\"([a-z][a-z0-9_]+)\"")
+		var Icons_ = load("res://src/ui/icons.gd")
+		var missing := {}
+		for path in _scripts("res://src"):
+			var txt2 := FileAccess.get_file_as_string(path)
+			for m2 in irx.search_all(txt2):
+				var name := m2.get_string(1)
+				if name.ends_with("_"):
+					continue
+				if not Icons_.has(name) and not missing.has(name):
+					missing[name] = path
+		for n in missing:
+			warnings.append("icon %s not in icon set (%s)" % [n, missing[n]])
+	for w in warnings:
+		print("WARN  ", w)
+	for e in errors:
+		print("ERROR ", e)
+	print("content validation: %d errors, %d warnings (hash %s)" % [errors.size(), warnings.size(), C.content_hash])
+	C.free()
+	quit(1 if errors.size() > 0 else 0)
+
+func _scripts(dir: String) -> Array:
+	var out: Array = []
+	var da := DirAccess.open(dir)
+	if da == null:
+		return out
+	for f in da.get_files():
+		if f.ends_with(".gd"):
+			out.append(dir.path_join(f))
+	for d in da.get_directories():
+		out.append_array(_scripts(dir.path_join(d)))
+	return out

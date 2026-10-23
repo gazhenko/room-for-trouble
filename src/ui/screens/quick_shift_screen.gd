@@ -52,9 +52,10 @@ func _build() -> void:
 	for d in diffs:
 		dl.append(Loc.t("ui.diff." + d))
 	add_cycle(v, Loc.t("ui.diff.label"), diffs, dl, difficulty, func(val): difficulty = val)
-	var seed_btn := add_button(v, Loc.t("ui.quick.seed", {"seed": seed_v}), "ui_quick", func():
+	var reseed := func():
 		seed_v = randi() % 100000
-		_build(), false, 460)
+		_build()
+	add_button(v, Loc.t("ui.quick.seed", {"seed": seed_v}), "ui_quick", reseed, false, 460)
 	v.add_child(UiKit.label(Loc.t("ui.quick.mods", {"n": mods.size()}), 20, UiKit.PLUM.darkened(0.3)))
 	var grid := GridContainer.new()
 	grid.columns = 2

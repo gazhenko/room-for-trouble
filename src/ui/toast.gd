@@ -10,7 +10,7 @@ const LIFE := 3.2
 func setup(p_text: String, p_icon: String) -> void:
 	text = p_text
 	icon_name = p_icon
-	set_anchors_preset(Control.PRESET_FULL_RECT)
+	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 func _process(dt: float) -> void:

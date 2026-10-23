@@ -1,0 +1,5 @@
+# Pinned deployment inputs (§20.6). Update deliberately; record in CHANGELOG.
+debian:bookworm-slim  sha256:7ff6ba31527b9e336162fa061746c366c4b2032f4d2cff2078bea43f78efe3f8  (index; amd64 sha256:ec31d744f83f4a73447ba045aaab9409997efe5cc706eca4890c1be36cc1606a)
+caddy:2.8-alpine      sha256:af32e97399febea808609119bb21544d0265c58a02836576e32a2d082c262c17
+godot                 4.7.2-stable  (export templates SHA-512 verified from SHA512-SUMS.txt)
+server binary         see build/SHA256SUMS → server/RoomForTroubleServer.x86_64

@@ -53,7 +53,11 @@ def panel_out(p, scene_id, idx):
     if p.get("caption_text"):
         loc[key] = p["caption_text"]
         d["caption"] = key
-    if d.get("actors_rel") and "focus" in d:
+    if d.get("camera") == "postcard_still":
+        d["set"] = "photo"
+        d.pop("actors_rel", None)
+        d.pop("focus", None)
+    elif d.get("actors_rel") and "focus" in d:
         fx, fz = d["focus"]
         for a in d["actors"]:
             a["pos"] = [round(a["pos"][0] + fx, 3), round(a["pos"][1] + fz, 3)]

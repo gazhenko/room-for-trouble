@@ -10,7 +10,7 @@ var _first_focus: Control
 var _back_cb: Callable
 
 func _init() -> void:
-	set_anchors_preset(Control.PRESET_FULL_RECT)
+	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	theme = UiKit.theme()
 
 func _enter_tree() -> void:
@@ -45,7 +45,7 @@ func on_back(cb: Callable) -> void:
 func card(title_text: String, width := 560.0, icon_name := "") -> VBoxContainer:
 	var dim := ColorRect.new()
 	dim.color = Color(0.13, 0.16, 0.2, 0.35)
-	dim.set_anchors_preset(Control.PRESET_FULL_RECT)
+	dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	dim.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(dim)
 	var p := UiKit.panel("cream")
@@ -60,7 +60,7 @@ func card(title_text: String, width := 560.0, icon_name := "") -> VBoxContainer:
 		h.add_child(UiKit.title(title_text, 34))
 		v.add_child(h)
 	var cc := CenterContainer.new()
-	cc.set_anchors_preset(Control.PRESET_FULL_RECT)
+	cc.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	cc.add_child(p)
 	add_child(cc)
 	root_box = v

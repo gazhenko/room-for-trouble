@@ -1,0 +1,66 @@
+extends Node
+## Dev: plays a shift with reference bots through the real presentation and
+## saves screenshots.  godot --path . res://tools/dev/autoplay.tscn -- --level=L06 --humans=2 --secs=60 --out=build/shots/play.png [--speed=4] [--shots=3]
+var level := "L06"
+var humans := 2
+var secs := 60.0
+var out := "build/shots/play.png"
+var speed := 4.0
+var shots := 1
+var main_like: Node
+var shift: ShiftScreen
+var bot: ReferenceBot
+var t := 0.0
+var shot_i := 0
+
+func _ready() -> void:
+	for a in OS.get_cmdline_user_args():
+		if a.begins_with("--level="): level = a.substr(8)
+		elif a.begins_with("--humans="): humans = int(a.substr(9))
+		elif a.begins_with("--secs="): secs = float(a.substr(7))
+		elif a.begins_with("--out="): out = a.substr(6)
+		elif a.begins_with("--speed="): speed = float(a.substr(8))
+		elif a.begins_with("--shots="): shots = int(a.substr(8))
+	DisplayServer.window_set_size(Vector2i(1280, 720))
+	var l0 := CanvasLayer.new(); add_child(l0)
+	var stage := PixelStage.new(); l0.add_child(stage)
+	var l1 := CanvasLayer.new(); l1.layer = 1; add_child(l1)
+	var ui := Control.new(); ui.theme = UiKit.theme(); l1.add_child(ui)
+	ui.size = Vector2(1280, 720)
+	var l2 := CanvasLayer.new(); l2.layer = 5; add_child(l2)
+	var cap := Captions.new(); l2.add_child(cap)
+	InputRouter.reset_all()
+	InputRouter.join("kb1")
+	for i in range(1, humans):
+		InputRouter.join("pad", 100 + i)
+	var seats: Array = []
+	for i in humans:
+		seats.append({"seat": i, "char": SimC.STAFF_IDS[i], "cos": "default", "assists": {"auto_catch": true}})
+	var cfg := {"mode": "campaign", "level_id": level, "humans": humans, "seats": seats, "difficulty": "family", "seed": 3,
+		"modifiers": [], "gus": humans == 1, "first_visit_coaches": []}
+	shift = ShiftScreen.new()
+	shift.setup(stage, cap, cfg)
+	ui.add_child(shift)
+	bot = ReferenceBot.new(shift.sim)
+	shift.frame_source = bot.frames
+	Engine.time_scale = speed
+
+func _process(dt: float) -> void:
+	t += dt / maxf(0.01, Engine.time_scale)
+	var due := secs * float(shot_i + 1) / float(shots)
+	var hotel_t := float(shift.sim.s["hotel_q"]) / SimC.HOTEL_Q_PER_S
+	if not has_meta("p"):
+		set_meta("p", true)
+		print("sizes ui=%s shift=%s hud=%s" % [shift.get_parent().size, shift.size, shift.hud.size])
+	if hotel_t >= due or t > 600.0:
+		Engine.time_scale = 1.0
+		await get_tree().process_frame
+		await get_tree().process_frame
+		var img := get_viewport().get_texture().get_image()
+		var path := out if shots == 1 else out.replace(".png", "_%d.png" % shot_i)
+		img.save_png(ProjectSettings.globalize_path("res://").path_join(path))
+		print("saved %s at hotel %.0fs phase %s" % [path, hotel_t, shift.sim.s["phase"]])
+		shot_i += 1
+		Engine.time_scale = speed
+		if shot_i >= shots:
+			get_tree().quit()

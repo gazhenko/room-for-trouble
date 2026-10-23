@@ -14,7 +14,7 @@ var _t := 0.0
 var bottom_offset := 70.0
 
 func _ready() -> void:
-	set_anchors_preset(Control.PRESET_FULL_RECT)
+	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 func push(speaker: String, text: String, prio := "bark", secs := -1.0) -> void:

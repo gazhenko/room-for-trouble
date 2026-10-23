@@ -13,7 +13,7 @@ const KINDS := ["ticket", "move_ticket", "linen_clean", "linen_dirty", "towel", 
 const FAMILIES := ["slime", "yeti", "dragon", "ghost", "moonwolf", "sprout"]
 
 const PAPER := Color("#FBF1DF")
-const DIRTY := Color("#D5BD95")
+const DIRTY := Color("#E6D5B0")
 const SLIPPER := Color("#F27FAE")
 const TRUNK_BLUE := Color("#5B8CC9")
 const NAVY := Color("#46558A")
@@ -424,11 +424,12 @@ static func dirty_bundle(mk: MeshKit, s := 1.0, sock := true) -> void:
 	mk.sphere(Vector3(0, 0.1, 0) * s, 0.15 * s, DIRTY, 4, 8, Vector3(1.15, 0.7, 0.95), DIRTY.darkened(0.08))
 	mk.sphere(Vector3(0.08, 0.14, 0.05) * s, 0.085 * s, DIRTY.lightened(0.06), 3, 7)
 	mk.sphere(Vector3(-0.09, 0.13, -0.03) * s, 0.08 * s, DIRTY.darkened(0.04), 3, 7)
-	mk.sphere(Vector3(0, 0.2, 0) * s, 0.04 * s, DIRTY.darkened(0.14), 2, 6)
+	mk.sphere(Vector3(0, 0.2, 0) * s, 0.04 * s, Art.CORAL.darkened(0.1), 2, 6)
 	for e in [-1.0, 1.0]:
 		mk.push_at(Vector3(e * 0.03, 0.21, 0) * s, Vector3(0, 0, -e * 50.0))
-		mk.cone(Vector3.ZERO, 0.035 * s, 0.085 * s, DIRTY.darkened(0.1), 5)
+		mk.cone(Vector3.ZERO, 0.035 * s, 0.085 * s, DIRTY.darkened(0.22), 5)
 		mk.pop()
+	mk.torus(Vector3(0, 0.17, 0) * s, 0.045 * s, 0.014 * s, Art.CORAL.darkened(0.1), 8, 3)
 	if sock:
 		mk.push_at(Vector3(0.15, 0.06, 0.07) * s, Vector3(0, -25, -25))
 		mk.rbox(Vector3(0.03, 0, 0) * s, Vector3(0.1, 0.05, 0.055) * s, Art.SKY, 0.02)
@@ -469,11 +470,9 @@ static func _slippers(mk: MeshKit) -> void:
 
 static func _yeti_pillow(mk: MeshKit) -> void:
 	var pc := Color("#9FC8DB")
-	mk.sphere(Vector3(0, 0.072, 0), 0.17, pc, 4, 8, Vector3(1.0, 0.42, 0.8), pc.darkened(0.08))
-	for sx in [-1.0, 1.0]:
-		for sz in [-1.0, 1.0]:
-			mk.sphere(Vector3(sx * 0.15, 0.06, sz * 0.115), 0.035, pc.darkened(0.04), 2, 5)
-	mk.push_at(Vector3(0, 0.146, 0), Vector3(-90, 0, 0))
+	mk.rbox(Vector3(0, 0.04, 0), Vector3(0.32, 0.08, 0.25), pc.darkened(0.08), 0.08, pc)
+	mk.sphere(Vector3(0, 0.08, 0), 0.155, pc.lightened(0.04), 3, 8, Vector3(1.0, 0.4, 0.78))
+	mk.push_at(Vector3(0, 0.142, 0), Vector3(-90, 0, 0))
 	snowflake_xy(mk, 0.2, 0.03, 0.014, Art.WHITE)
 	mk.pop()
 
@@ -490,7 +489,7 @@ static func _dragon_cushion(mk: MeshKit) -> void:
 		poly_flat(mk, p, [Vector2(0.026, 0), Vector2(0, 0.034), Vector2(-0.026, 0), Vector2(0, -0.034)], 0.01, c, c.lightened(0.15), 20.0)
 	for sx in [-1.0, 1.0]:
 		for sz in [-1.0, 1.0]:
-			mk.sphere(Vector3(sx * 0.15, 0.05, sz * 0.13), 0.03, Art.GOLD, 2, 5)
+			mk.sphere(Vector3(sx * 0.125, 0.05, sz * 0.11), 0.022, Art.GOLD, 2, 5)
 
 static func _ghost_mask(mk: MeshKit) -> void:
 	mk.torus(Vector3(0, 0.02, -0.01), 0.14, 0.011, Color("#B9AED6"), 12, 3)

@@ -124,11 +124,12 @@ func _controls() -> void:
 	for a in ["up", "down", "left", "right", "carry", "work", "step", "ping", "hint", "inspect", "pause"]:
 		var g := InputRouter.glyph(seat_sel, a)
 		var act = a
-		add_button(content, "%s:   %s" % [Loc.t("ui.action." + a), g.get("text", "?")], "sys_controller" if InputRouter.seats[seat_sel]["device"] == "pad" else "sys_keyboard", func():
+		var capture := func():
 			capture_label.text = Loc.t("ui.settings.press_new", {"action": Loc.t("ui.action." + act)})
 			InputRouter.begin_capture(seat_sel, act)
 			if not InputRouter.rebind_captured.is_connected(_on_rebound):
-				InputRouter.rebind_captured.connect(_on_rebound), false, 560)
+				InputRouter.rebind_captured.connect(_on_rebound)
+		add_button(content, "%s:   %s" % [Loc.t("ui.action." + a), g.get("text", "?")], "sys_controller" if InputRouter.seats[seat_sel]["device"] == "pad" else "sys_keyboard", capture, false, 560)
 	add_button(content, Loc.t("ui.settings.reset_binds"), "ui_quick", func():
 		InputRouter.reset_bindings(seat_sel)
 		_build())

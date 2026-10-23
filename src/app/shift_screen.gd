@@ -28,12 +28,13 @@ var _done := false
 var _gag_played: Dictionary = {}
 var _fam_cache: Array = []
 var _story_hook: Callable
+var frame_source: Callable   # dev/autoplay: replaces InputRouter frames
 
 func setup(p_stage: PixelStage, p_captions: Captions, p_cfg: Dictionary) -> void:
 	stage = p_stage
 	captions = p_captions
 	cfg = p_cfg
-	set_anchors_preset(Control.PRESET_FULL_RECT)
+	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	online = cfg.get("online", false)
 	var i := 0
@@ -67,6 +68,7 @@ func _build_view() -> void:
 	hud.local_seats = router_to_sim.values()
 	hud.seat_device = sim_to_router
 	hud.ui_scale = Settings.effective_ui_scale()
+	hud.show_clock = cfg.get("mode", "campaign") in ["campaign", "quick"] or online
 	add_child(hud)
 	stage.set_pixel_lines(Settings.pixel_lines())
 	stage.set_outlines(Settings.g("outlines"))
@@ -122,7 +124,7 @@ func _process(dt: float) -> void:
 	view.sync(clampf(acc / TICK, 0.0, 1.0), dt)
 
 func _tick() -> void:
-	var frames := InputRouter.build_frames(router_to_sim)
+	var frames: Array = frame_source.call() if frame_source.is_valid() else InputRouter.build_frames(router_to_sim)
 	sim.step(frames)
 	view.capture_tick(sim.s)
 	_decorate_state(sim.s)
@@ -190,7 +192,8 @@ func _tutorial_hud() -> void:
 	var cap_key: String = tdef.get("caption", "")
 	if tdef.has("caption_multi") and sim.s["humans"] >= 2:
 		cap_key = tdef["caption_multi"]
-	hud.tutorial = {"caption": Loc.t(cap_key), "speaker": tdef.get("speaker", "nana"), "icon": tdef.get("icon", "sys_help")}
+	hud.tutorial = {"caption": Loc.t(cap_key), "speaker": tdef.get("speaker", "nana"), "icon": tdef.get("icon", "sys_help"),
+		"circles": sim.tutorial.circles}
 	# Highlight the step's hint targets in the world after 15 s (icon pulse) /
 	# 30 s (pointing arrow) of no progress.
 	var lvl: int = sim.tutorial.hint_level()

@@ -517,6 +517,9 @@ func glyph(seat: int, action: String) -> Dictionary:
 		if code == KEY_SHIFT: name = "LShift" if int(b.get("loc", 0)) == KEY_LOCATION_LEFT else "RShift"
 		if code == KEY_CTRL: name = "RCtrl" if int(b.get("loc", 0)) == KEY_LOCATION_RIGHT else "Ctrl"
 		if code == KEY_SPACE: name = "Space"
+		var short := {KEY_BACKSLASH: "\\", KEY_SLASH: "/", KEY_PERIOD: ".", KEY_COMMA: ",", KEY_TAB: "Tab",
+			KEY_UP: "↑", KEY_DOWN: "↓", KEY_LEFT: "←", KEY_RIGHT: "→", KEY_SEMICOLON: ";", KEY_APOSTROPHE: "'"}
+		if short.has(code): name = short[code]
 		if code == KEY_ESCAPE: name = "Esc"
 		if code == KEY_ENTER: name = "Enter"
 		return {"text": name, "shape": "key"}

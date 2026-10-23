@@ -1,0 +1,45 @@
+# Example deployment: the game service on a private network behind Caddy (TLS).
+#   cp server/deploy/.env.example server/deploy/.env   # set RFT_DOMAIN
+#   docker compose -f server/deploy/docker-compose.yml --env-file server/deploy/.env up -d
+# Clients then use wss://$RFT_DOMAIN/game as their endpoint.
+services:
+  rft:
+    build:
+      context: ../../build/server
+      dockerfile: ../../server/deploy/Dockerfile
+    image: room-for-trouble-server:${RFT_VERSION:-1.0.0}
+    restart: unless-stopped
+    read_only: true
+    tmpfs: [/tmp]
+    environment:
+      RFT_MAX_ROOMS: ${RFT_MAX_ROOMS:-16}
+      RFT_LOG_LEVEL: ${RFT_LOG_LEVEL:-info}
+      RFT_JOINS_PER_MIN: ${RFT_JOINS_PER_MIN:-10}
+      RFT_CREATES_PER_MIN: ${RFT_CREATES_PER_MIN:-3}
+      RFT_INPUTS_PER_S: ${RFT_INPUTS_PER_S:-60}
+      RFT_CHECKPOINT_TTL_H: ${RFT_CHECKPOINT_TTL_H:-24}
+    volumes:
+      - rft-data:/var/lib/rft
+    networks: [internal]
+    deploy:
+      resources:
+        limits: {cpus: "1.0", memory: 512M}
+    stop_grace_period: 15s
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: [ALL]
+  proxy:
+    image: caddy:2.8-alpine@sha256:af32e97399febea808609119bb21544d0265c58a02836576e32a2d082c262c17
+    restart: unless-stopped
+    ports: ["443:443", "80:80"]
+    environment:
+      RFT_DOMAIN: ${RFT_DOMAIN:?set RFT_DOMAIN}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+    networks: [internal]
+    depends_on: [rft]
+networks:
+  internal: {}
+volumes:
+  rft-data: {}
+  caddy-data: {}

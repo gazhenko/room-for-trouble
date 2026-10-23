@@ -15,7 +15,7 @@ Together, the team greets guests, chooses rooms, carries towels and snacks, wash
 sheets and opens or closes vents and curtains. Every room you assign changes the hotel
 around it. Nobody loses, and there is always a next move.
 
-![Planning a shift on Radiator Row](docs/images/planning.png)
+![Three players mid-shift in the Conservatory](docs/images/gameplay.png)
 
 ## What's in the game
 
@@ -47,7 +47,7 @@ around it. Nobody loses, and there is always a next move.
     mono audio and read-aloud
   - controller-only navigation everywhere
 
-![The opening](docs/images/opening.png)
+![Planning a shift on Radiator Row](docs/images/planning.png)
 
 ## Controls
 

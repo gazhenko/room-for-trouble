@@ -98,6 +98,9 @@ in-game `--gamepad-test` harness (`src/dev/gamepad_test.gd`) checks:
 `tests/net/run_netem.sh` runs the online e2e suite against the exported Linux server behind
 a delayed, lossy link (`tc netem`, 100 ± 20 ms and 2% loss by default).
 
+`tests/net/run_tunnel.sh` runs it over the public internet through a temporary Cloudflare
+quick tunnel (needs `cloudflared`; the tunnel closes when the script ends).
+
 `tools/verify_artifacts.sh` runs all of the above (and the macOS smoke test on a Mac) and
 writes `build/verify_summary.txt`.
 

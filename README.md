@@ -149,10 +149,11 @@ Version 1.0.0 is a complete local and online game, built and played on macOS (Ap
 Silicon). The exported builds are checked automatically:
 - **Linux:** in a clean x86-64 container, including four kernel-level virtual gamepads.
 - **Windows:** under Wine, with both renderers.
-- **Online:** the service through a 100 ms, 2%-loss link.
+- **Online:** the service through a 100 ms, 2%-loss link, and over the public internet via
+  a temporary Cloudflare tunnel.
 
-Real Windows PCs, the Steam Deck, physical controllers, a public WSS host, notarization and
-real family playtests have **not** been verified. [KNOWN_ISSUES.md](KNOWN_ISSUES.md) lists
+Real Windows PCs, the Steam Deck, physical controllers, a permanent public host,
+notarization and real family playtests have **not** been verified. [KNOWN_ISSUES.md](KNOWN_ISSUES.md) lists
 exactly what remains.
 
 Built with [Claude Code](https://claude.com/claude-code) for the project owner.

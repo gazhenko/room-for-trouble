@@ -194,5 +194,12 @@ default 16 rooms comfortably. This is an estimate, not a load test; see `KNOWN_I
     saw nothing, and the probe passed.
 - `tools/smoke_linux.sh`: the exported server under Docker `linux/amd64`, plus the probe.
 
-**Not verified:** a public internet endpoint, long-running soak tests, and real-world
-packet loss or latency (only local loopback and Docker networking).
+- `tests/net/run_netem.sh`: the e2e suite against the exported Linux server behind a
+  100 ± 20 ms, 2%-loss link (`tc netem`).
+- `tests/net/run_tunnel.sh`: the e2e suite over the **public internet**. It goes through a
+  temporary Cloudflare quick tunnel (`wss://…trycloudflare.com`, real TLS), which is shut
+  down afterwards. It passed on 2026-10-23. A quick tunnel is also the easiest way for a
+  host to try private rooms without a domain:
+  `cloudflared tunnel --url http://127.0.0.1:8080`.
+
+**Not verified:** a permanently deployed host, long-running soak tests, and multi-room load.

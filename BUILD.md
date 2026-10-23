@@ -81,6 +81,10 @@ The process exits `0` only if every step passed.
 Xvfb with Mesa llvmpipe and the Compatibility renderer. It then starts the dedicated server
 with no GPU, display or audio and runs its health probe.
 
+`tools/smoke_windows_wine.sh` runs the exported Windows `.exe` the same way under Wine.
+This is a best-effort check without a Windows machine; it does not replace testing on real
+Windows hardware.
+
 ## Tests
 
 | Command | What it covers |

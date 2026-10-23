@@ -84,6 +84,29 @@ tools/build.sh                      # full release build (see BUILD.md)
 service, see [OPERATIONS.md](OPERATIONS.md) for the Docker + Caddy stack, the health probe,
 checkpoints and rollout. Local play never needs the network.
 
+## Troubleshooting
+
+- **A controller does nothing.** Press **Carry** (A / Cross) on it in the seat lobby to give
+  it a seat. Unjoined controllers can't move other players' menus. If a controller was
+  unplugged mid-shift, the pause menu shows the missing seat: press Carry on any free
+  controller to take it over.
+- **Two players on one keyboard miss key presses.** Many keyboards can't register lots of
+  keys at once. Use a controller for one player, or rebind in **Settings → Controls**.
+- **Wrong button symbols.** The game guesses Xbox, PlayStation, Nintendo or Steam Deck
+  symbols from the controller's name. Remapping works whatever symbols are shown.
+- **"We restored your scrapbook from a backup."** The main save was damaged (for example by
+  a power cut), so the newest valid one of three automatic backups was used. Backups are
+  `couch.json.bak1`–`.bak3` in the `profiles` folder of the user-data folder.
+- **"Couldn't save just now."** The disk was full or not writable. Your last good save is
+  untouched; free some space and the next save will go through.
+- **"Couldn't reach the server."** Check the endpoint in **Settings → Online** (it must start
+  with `wss://`). Local play and your progress never depend on it. Server operators should
+  see `OPERATIONS.md`.
+- **"Someone needs to update the game first."** Everyone in an online room needs the same
+  version.
+- **macOS says the app can't be opened.** This build is not notarized: right-click the app,
+  then choose **Open**.
+
 ## Documentation
 
 | Document | Contents |
@@ -123,8 +146,9 @@ server/deploy Dockerfile, Compose + Caddy, systemd unit
 ## Status
 
 Version 1.0.0 is a complete local and online game, built and tested on macOS (Apple
-Silicon). The Linux build was smoke-tested in a clean x86-64 container with a software
-renderer. Windows, the Steam Deck, a public WSS endpoint and real family playtests have
-**not** been verified yet; [KNOWN_ISSUES.md](KNOWN_ISSUES.md) lists exactly what remains.
+Silicon). The Linux build was smoke-tested in a clean x86-64 container, and the Windows build
+under Wine, both with a software renderer. Real Windows PCs, the Steam Deck, physical
+controllers, a public WSS endpoint and real family playtests have **not** been verified yet.
+[KNOWN_ISSUES.md](KNOWN_ISSUES.md) lists exactly what remains.
 
 Built with [Claude Code](https://claude.com/claude-code) for the project owner.

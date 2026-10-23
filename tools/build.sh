@@ -38,7 +38,7 @@ if [ "$SKIP_TESTS" = 0 ]; then
   echo "== tests"
   out=$("$GODOT" --headless --path . --script res://tests/run_all.gd 2>&1 | tee build/test_report.txt)
   if echo "$out" | grep -q "SCRIPT ERROR"; then echo "script errors during tests" >&2; exit 1; fi
-  echo "$out" | tail -1
+  echo "$out" | grep "^== .*checks"
   echo "$out" | grep -q " 0 failures" || { echo "test failures" >&2; exit 1; }
   echo "== UI01 controller traversal"
   "$GODOT" --headless --path . res://tests/ui/ui_focus_test.tscn > build/ui_report.txt 2>&1 || { tail -5 build/ui_report.txt; echo "UI01 failed" >&2; exit 1; }

@@ -8,7 +8,7 @@ than it is.
 
 | Area | Status | What remains |
 |---|---|---|
-| **Windows** | Exported (`build/windows/RoomForTrouble.exe` plus `RoomForTrouble.pck`, x86-64); never launched on Windows | Run `RoomForTrouble.exe -- --smoke-test` on a real Windows 10/11 PC, then play couch co-op with controllers. The `.exe` has no embedded icon (`modify_resources=false`: rcedit/Wine are not in the toolchain). |
+| **Windows** | Exported (`RoomForTrouble.exe` plus `RoomForTrouble.pck`, x86-64). The shipping smoke test **passes under Wine** (`tools/smoke_windows_wine.sh`: x86-64 Debian container, Wine, Mesa llvmpipe, Compatibility renderer): boot, a full L01 shift, save, reload, Playground, Settings and Credits. It has **never run on real Windows**. | Run `RoomForTrouble.exe -- --smoke-test` on a real Windows 10/11 PC (Forward+ via D3D12/Vulkan), then play couch co-op with controllers. The `.exe` has no embedded icon (`modify_resources=false`, because rcedit is not in the toolchain). |
 | **Linux desktop** | Smoke test passes in a clean x86-64 Debian container under Xvfb, with Mesa llvmpipe and the Compatibility renderer (`tools/smoke_linux.sh`) | Test on a real Linux desktop GPU with the Forward+ renderer. |
 | **Steam Deck** | Not tested | 800p layout, Deck controls and glyphs, suspend/resume and focus changes on the device (§24.4). |
 | **macOS** | Fully played and smoke-tested from the exported `.app` on an M1 Pro | Unsigned and not notarized, so Gatekeeper warns on first launch (right-click → Open). Signing and notarization need the owner's Apple Developer credentials. |

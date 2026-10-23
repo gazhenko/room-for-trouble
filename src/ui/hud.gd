@@ -380,6 +380,16 @@ func _draw_pings() -> void:
 		draw_line(sp + Vector2(0, 16), sp + Vector2(0, 30), col, 3.0)
 
 func _draw_prompts() -> void:
+	# Seat tags (P1..P4) first, so a teammate's tag never covers someone's prompt.
+	for st0 in s.get("staff", []):
+		var rig0: ActorRig = view.staff_rigs.get(int(st0["seat"]), null)
+		if rig0 == null or not rig0.visible:
+			continue
+		var head0 := _w2s(rig0.position + Vector3(0, rig0.height * ModelActors.ACTOR_SCALE + 0.35, 0))
+		var col0: Color = SEAT_COLORS[int(st0["seat"]) % 4]
+		var tr := Rect2(head0 + Vector2(-15, -14), Vector2(30, 20))
+		draw_style_box(UiKit._box(col0, UiKit.INK, 2, 4, 0), tr)
+		UiKit.draw_text_outlined(self, head0 + Vector2(0, 2), "P%d" % (int(st0["seat"]) + 1), 15, UiKit.INK, Color(0, 0, 0, 0))
 	for st in s.get("staff", []):
 		var seat: int = st["seat"]
 		var rig: ActorRig = view.staff_rigs.get(seat, null)
@@ -387,11 +397,6 @@ func _draw_prompts() -> void:
 			continue
 		var head := _w2s(rig.position + Vector3(0, rig.height * ModelActors.ACTOR_SCALE + 0.35, 0))
 		var col: Color = SEAT_COLORS[seat % 4]
-		# Seat tag (P1..P4) so everyone can find themselves.
-		var tag := "P%d" % (seat + 1)
-		var tr := Rect2(head + Vector2(-15, -14), Vector2(30, 20))
-		draw_style_box(UiKit._box(col, UiKit.INK, 2, 4, 0), tr)
-		UiKit.draw_text_outlined(self, head + Vector2(0, 2), tag, 15, UiKit.INK, Color(0, 0, 0, 0))
 		if not local_seats.has(seat):
 			continue
 		var router_seat: int = seat_device.get(seat, seat)
@@ -577,7 +582,11 @@ func _draw_incoming() -> void:
 	var x := 14.0
 	var y := 12.0
 	var hq := float(s.get("hotel_q", 0))
-	for i in mini(3, upcoming.size()):
+	# Cards stop before the centre clock (UI scale can leave room for fewer than 3).
+	var limit_x := size.x * 0.5 - 92.0 - 10.0 if show_clock else size.x * 0.6
+	var fit := clampi(int((limit_x - x - 62.0) / 112.0), 1, 3)
+	var shown := mini(fit, upcoming.size())
+	for i in shown:
 		var g: Dictionary = upcoming[i]
 		var announced: bool = g.get("announced", false)
 		var r := Rect2(Vector2(x, y), Vector2(104, 64))
@@ -588,10 +597,10 @@ func _draw_incoming() -> void:
 		var secs := maxi(0, int((float(g["arrive_q"]) - hq) / SimC.HOTEL_Q_PER_S))
 		draw_string(_font, r.position + Vector2(52, 54), "%ds" % secs, HORIZONTAL_ALIGNMENT_LEFT, -1, 16, UiKit.INK)
 		x += 112.0
-	if upcoming.size() > 3:
+	if upcoming.size() > shown:
 		var r2 := Rect2(Vector2(x, y + 8), Vector2(54, 48))
 		draw_style_box(UiKit._box(Color("#EFE6D8"), UiKit.WALNUT, 2, 8, 0), r2)
-		draw_string(_font, r2.position + Vector2(10, 32), "+%d" % (upcoming.size() - 3), HORIZONTAL_ALIGNMENT_LEFT, -1, 20, UiKit.INK)
+		draw_string(_font, r2.position + Vector2(10, 32), "+%d" % (upcoming.size() - shown), HORIZONTAL_ALIGNMENT_LEFT, -1, 20, UiKit.INK)
 
 static func _family_need_icon(fam: String) -> String:
 	match fam:

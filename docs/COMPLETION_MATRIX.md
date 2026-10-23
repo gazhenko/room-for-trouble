@@ -95,7 +95,7 @@ again, run `tools/build.sh`. It writes `build/test_report.txt`, `build/ui_report
 | SAVE01 | Power cut, corrupt primary, migration | ✅ | `tests/test_save.gd::test_save01_*` (fixtures) |
 | SAVE02 | Idempotent progress | ✅ | `test_save02_idempotent_results` |
 | REPLAY01 | Same commands give the same hashes; the first divergence is identifiable | ✅ | `tests/test_rules.gd::test_replay01_*`, `src/sim/sim_replay.gd`, `tools/dev/replay.gd` |
-| UI01 | Controller-only traversal and rebinding with no focus traps | ✅ | `tests/ui/ui_focus_test.tscn` (65 checks: every screen and settings tab, seat lobby, pause, rebind, keyboard-only menus). Also fixed a rebind bug where capture mutated the default bindings. |
+| UI01 | Controller-only traversal and rebinding with no focus traps | ✅ | `tests/ui/ui_focus_test.tscn` (73 checks: every screen and settings tab, seat lobby, pause, rebind, keyboard-only menus, every card on screen at 175%). Also fixed a rebind bug where capture mutated the default bindings. |
 | NET01 | Forged seat, wrong shift, bad sequence rejected | ✅ | `tests/test_save.gd::test_net01_protocol_rejects_bad_input`, `tests/net/run_e2e.sh`, `run_quad.sh` (attacks) |
 | NET02 | Disconnect while holding, working or co-carrying releases safely; one owner after reconnect | ✅ | `tests/test_rules.gd::test_net02_*`, `run_e2e.sh` (reconnect with token) |
 | NET03 | 4 seats, 2+1+1, no cross-room data, capacity rejection | ✅ | `tests/net/run_quad.sh` |
@@ -129,7 +129,7 @@ again, run `tools/build.sh`. It writes `build/test_report.txt`, `build/ui_report
 | Mixed Xbox/PlayStation glyphs | ✅ | The virtual Xbox 360 and DualShock 4 pads were recognised by Godot's controller database. Seats showed `A` and `✕` respectively (`tools/smoke_linux_gamepads.sh`). |
 | Controller unplug/replug and device reassignment | ✅ | Kernel-level pad unplugged mid-shift: its seat was marked missing, the staff safely released and the team paused. A *different* controller then pressed Carry and reclaimed the seat; that check found and fixed a reused-device-id bug. A same-model replug is auto-reassigned by GUID (`InputRouter._on_joy_changed`). |
 | Custom remap | ✅ | UI01 rebind test. Fixed a shared-defaults bug. |
-| UI scale 125/150/175% | ✅ | Settings → Vision (shared and per-seat); the HUD uses `Settings.effective_ui_scale()` |
+| UI scale 125/150/175% | ✅ | Settings → Vision (shared and per-seat), applied to the HUD and menus. At 175%, menus that would overflow a 720p screen shrink to fit, centred. The seat lobby and the HUD arrival strip adapt, and seat tags never cover prompts. UI01 checks that every menu card lies fully on screen at 175%. Screenshots at 175%, 125% and 1280×800 were reviewed. |
 | Mono audio; all audio muted | ✅ | Settings → Hearing (mono and per-bus sliders); no audio-only objectives (warnings are icons and captions) |
 | Reduced motion; high contrast | ✅ | Settings → Vision/Comfort; icons have a high-contrast variant |
 | Steady Feet; toggle Work; Auto Catch | ✅ | Per-seat assists in the sim (`Settings.seat_assists`). Auto Catch is used in every test. |

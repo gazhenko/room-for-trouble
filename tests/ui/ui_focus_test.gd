@@ -51,6 +51,7 @@ func _ready() -> void:
 	await _pause_menu()
 	await _rebind()
 	await _keyboard()
+	await _large_ui_fits()
 	print("== UI01: %d checks, %d failures ==" % [checks, failures.size()])
 	for f in failures:
 		print("   ✗ ", f)
@@ -284,3 +285,28 @@ func _keyboard() -> void:
 	await _frames(4)
 	_check(Session.screen is MainMenuScreen, "keyboard: Left Shift backs out")
 	print("UI01 keyboard: checked")
+
+func _large_ui_fits() -> void:
+	# §11.3 UI scale 175%: every menu card must stay fully on screen.
+	Settings.data["ui_scale"] = 1.75
+	main._layout_ui()
+	var vr := get_viewport().get_visible_rect().grow(1.0)
+	var openers := [["main_menu", func(): Session.show_main_menu()], ["settings", func(): Session.open_settings()],
+		["shift_select", func(): Session.open_shift_select()], ["scrapbook", func(): Session.open_scrapbook()],
+		["wardrobe", func(): Session.open_wardrobe()], ["quick_shift", func(): Session.open_quick_shift()],
+		["credits", func(): Session.open_credits()], ["practice", func(): Session.open_practice()]]
+	for o in openers:
+		Session.show_main_menu()
+		await _frames(3)
+		o[1].call()
+		await _frames(8)
+		var panels: Array = Session.screen.find_children("*", "PanelContainer", true, false)
+		var p: Control = panels[0] if not panels.is_empty() else null
+		if p == null:
+			_check(false, "175%%: %s has a panel" % o[0])
+			continue
+		var r: Rect2 = p.get_global_transform_with_canvas() * Rect2(Vector2.ZERO, p.size)
+		_check(vr.encloses(r), "175%%: %s card fits on screen (%s in %s)" % [o[0], r, vr])
+	Settings.data["ui_scale"] = 1.0
+	main._layout_ui()
+	print("UI01 ui_scale 175%: checked")

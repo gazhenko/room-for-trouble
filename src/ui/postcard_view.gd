@@ -27,6 +27,7 @@ func _ready() -> void:
 	cc.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	cc.add_child(p)
 	add_child(cc)
+	fit_to_screen(p)
 	photo = PhotoStudio.make_stage(Vector2(640, 360), 220)
 	v.add_child(photo)
 	var staff: Array = pc.get("staff", ["pip"])

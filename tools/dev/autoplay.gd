@@ -27,6 +27,13 @@ func _ready() -> void:
 		elif a.begins_with("--shots="): shots = int(a.substr(8))
 		elif a == "--perf": perf = true
 		elif a.begins_with("--graphics="): Settings.data["graphics"] = a.substr(11)
+		elif a.begins_with("--set="):
+			# --set=key=value for any Settings key (bool/float/string), e.g. --set=ui_scale=1.75
+			var kv := a.substr(6).split("=", true, 1)
+			var v: Variant = kv[1]
+			if kv[1] in ["true", "false"]: v = kv[1] == "true"
+			elif kv[1].is_valid_float(): v = float(kv[1])
+			Settings.data[kv[0]] = v
 		elif a.begins_with("--size="):
 			var p := a.substr(7).split("x")
 			DisplayServer.window_set_size(Vector2i(int(p[0]), int(p[1])))
@@ -34,7 +41,10 @@ func _ready() -> void:
 	var stage := PixelStage.new(); l0.add_child(stage)
 	var l1 := CanvasLayer.new(); l1.layer = 1; add_child(l1)
 	var ui := Control.new(); ui.theme = UiKit.theme(); l1.add_child(ui)
-	ui.size = Vector2(1280, 720)
+	# Mirror main.gd's layout: the UI root is scaled by the effective UI scale.
+	var sc := Settings.effective_ui_scale()
+	ui.scale = Vector2(sc, sc)
+	ui.size = Vector2(DisplayServer.window_get_size()) / sc
 	var l2 := CanvasLayer.new(); l2.layer = 5; add_child(l2)
 	var cap := Captions.new(); l2.add_child(cap)
 	InputRouter.reset_all()

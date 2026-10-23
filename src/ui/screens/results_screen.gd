@@ -29,6 +29,7 @@ func _ready() -> void:
 	cc.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	cc.add_child(row)
 	add_child(cc)
+	fit_to_screen(row)
 	# Photo in a polaroid frame.
 	var frame := UiKit.panel("card")
 	frame.size_flags_vertical = Control.SIZE_SHRINK_CENTER

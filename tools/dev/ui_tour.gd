@@ -9,6 +9,12 @@ func _ready() -> void:
 	for a in OS.get_cmdline_user_args():
 		if a.begins_with("--out="): out = a.substr(6)
 		elif a.begins_with("--only="): only = a.substr(7)
+		elif a.begins_with("--set="):
+			var kv := a.substr(6).split("=", true, 1)
+			var v: Variant = kv[1]
+			if kv[1] in ["true", "false"]: v = kv[1] == "true"
+			elif kv[1].is_valid_float(): v = float(kv[1])
+			Settings.data[kv[0]] = v
 	DisplayServer.window_set_size(Vector2i(1280, 720))
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path("res://").path_join(out))
 	main = load("res://src/app/main.tscn").instantiate()

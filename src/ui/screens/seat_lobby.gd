@@ -164,15 +164,20 @@ func _process(dt: float) -> void:
 func _draw() -> void:
 	var f := UiKit.font()
 	draw_rect(Rect2(Vector2.ZERO, size), Color(0.13, 0.16, 0.2, 0.35))
+	# Laid out for a 1180×720 area; shrink uniformly (never enlarge) so all four
+	# seat cards fit at any UI scale.
+	var fit_k := minf(1.0, minf((size.x - 24.0) / 1180.0, size.y / 720.0))
+	var vs := size / fit_k
+	draw_set_transform(Vector2.ZERO, 0.0, Vector2(fit_k, fit_k))
 	var title := Loc.t("ui.lobby.title_" + mode)
-	UiKit.draw_text_outlined(self, Vector2(size.x * 0.5, 64), title, 38)
+	UiKit.draw_text_outlined(self, Vector2(vs.x * 0.5, 64), title, 38)
 	var n := max_seats
 	var w := 270.0
 	var gap := 18.0
 	var total := n * w + (n - 1) * gap
-	var x0 := size.x * 0.5 - total * 0.5
+	var x0 := vs.x * 0.5 - total * 0.5
 	var y0 := 110.0
-	var h := minf(470.0, size.y - 220.0)
+	var h := minf(470.0, vs.y - 220.0)
 	for i in n:
 		var s: Dictionary = InputRouter.seats[i]
 		var r := Rect2(Vector2(x0 + i * (w + gap), y0), Vector2(w, h))
@@ -223,6 +228,6 @@ func _draw() -> void:
 			draw_style_box(UiKit._box(Color("#D7F0C8"), Color("#5E8F4E"), 3, 10, 0), rr)
 			UiKit.draw_text_outlined(self, rr.get_center() + Vector2(0, 8), Loc.t("ui.lobby.is_ready"), 22, Color("#2F5A25"), Color(0, 0, 0, 0))
 	if countdown > 0.0:
-		UiKit.draw_text_outlined(self, Vector2(size.x * 0.5, size.y - 50), Loc.t("ui.lobby.starting", {"n": int(ceil(countdown))}), 28)
+		UiKit.draw_text_outlined(self, Vector2(vs.x * 0.5, vs.y - 50), Loc.t("ui.lobby.starting", {"n": int(ceil(countdown))}), 28)
 	else:
-		UiKit.draw_text_outlined(self, Vector2(size.x * 0.5, size.y - 50), Loc.t("ui.lobby.hint_" + ("solo" if mode == "solo" else "couch")), 20, UiKit.INK)
+		UiKit.draw_text_outlined(self, Vector2(vs.x * 0.5, vs.y - 50), Loc.t("ui.lobby.hint_" + ("solo" if mode == "solo" else "couch")), 20, UiKit.INK)

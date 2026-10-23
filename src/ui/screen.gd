@@ -63,8 +63,39 @@ func card(title_text: String, width := 560.0, icon_name := "") -> VBoxContainer:
 	cc.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	cc.add_child(p)
 	add_child(cc)
+	fit_to_screen(p)
 	root_box = v
 	return v
+
+## Shrinks a centred panel uniformly (never enlarges) so it fits on screen at
+## any UI scale (§11.3: 125–175%); text stays as large as the screen allows.
+var _fit_targets: Array = []
+
+func fit_to_screen(panel: Control) -> void:
+	_fit_targets.append(panel)
+	panel.resized.connect(_refit)
+	if not resized.is_connected(_refit):
+		resized.connect(_refit)
+	_refit.call_deferred()
+
+func _refit() -> void:
+	_fit_targets = _fit_targets.filter(func(x): return is_instance_valid(x))
+	var avail := size - Vector2(24, 24)
+	for p in _fit_targets:
+		var need: Vector2 = (p as Control).size
+		# Containers reset their children's scale, so scale the full-screen
+		# CenterContainer holding the panel, about the screen centre.
+		var holder := (p as Control).get_parent() as Control
+		if holder == null or holder is Container and holder.get_parent() is Container:
+			continue
+		if need.x <= 0.0 or need.y <= 0.0 or avail.x <= 0.0:
+			continue
+		var f := minf(1.0, minf(avail.x / need.x, avail.y / need.y))
+		# An oversized panel grows its container past the screen from the
+		# top-left, so centre the scaled container explicitly.
+		holder.pivot_offset = Vector2.ZERO
+		holder.scale = Vector2(f, f)
+		holder.position = ((size - holder.size * f) * 0.5).floor()
 
 func add_button(box: Container, text: String, icon_name: String, cb: Callable, disabled := false, width := 0) -> Button:
 	var b := UiKit.button(text, icon_name, width if width > 0 else 360)

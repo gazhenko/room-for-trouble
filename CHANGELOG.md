@@ -38,6 +38,9 @@ First complete build of the game described in `docs/DESIGN_BRIEF.md`.
 
 ### Presentation
 
+- Menus fit any UI scale: at 175% on a 720p screen, oversized cards shrink to fit instead of
+  clipping. The HUD arrival strip never covers the clock, and seat tags never cover prompts.
+
 - An Overcooked-style fixed perspective camera over a pixel-art 3D scene: low-resolution
   render, integer upscale, toon shading with dithered bands, and an outline pass on Forward+.
 - Procedural low-poly actors, stations, items and props, 143 text-authored pixel icons, and

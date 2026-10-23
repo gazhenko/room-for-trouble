@@ -1,0 +1,258 @@
+# Room for Trouble - icon palette and colour-blind variants.
+#
+# FORMAT (shared by every file in data/art/icons/, read by src/ui/icons.gd and
+# tools/icons/*.py):
+#
+#   palette base              shared palette keys every icon can use
+#   <key> <#RRGGBB|transparent>   <comment>
+#   end
+#
+#   variant <name>            colour remap applied by Icons.tinted(name, variant)
+#   <#from> <#to>             <comment>       (matched by exact hex, any key)
+#   end
+#
+#   icon <name> <size>        one icon; size is N (square) or WxH
+#   <key> <#RRGGBB|transparent>   optional local key (overrides the palette)
+#   <rows>                    exactly H rows of W keys, '.' = transparent
+#   end
+#
+# Comments are lines that start with '# ' (hash + space) or are a lone '#';
+# blank lines are ignored. Text after a palette/variant entry is a comment.
+# Keys are single printable characters other than '#' and space.
+#
+# STYLE RULES (see tools/icons/preview.py lint):
+#   * Every silhouette has a 1-px outline in ink k (or K/N on dark detail).
+#   * Light comes from the top-left: light tint on top-left inner edge,
+#     shade along the bottom-right inner edge.
+#   * 2-4 fill colours + highlight per icon; shapes carry meaning, colour
+#     only supports it. No letters or words are baked into icons.
+#   * Semantic colours: warm = coral + sun, cold = sky + snowflake,
+#     quiet = plum + sleeping moon, sound = gold + note, water = water + drop,
+#     clean = cream + folded rectangle.
+
+palette base
+.  transparent
+k  #33434B   ink - the outline of every icon
+K  #1E282D   deep ink - pupils, darkest accents
+d  #5A6B74   soft ink - inner seams and secondary lines
+w  #FFF9F0   warm white
+W  #FFFFFF   sparkle (1-px glints only)
+c  #F7EAD6   cream (clean)
+C  #E0C9A8   cream shade
+n  #805C49   walnut
+N  #5B4033   walnut dark
+t  #B48668   walnut light / tan
+r  #E88D79   coral (warm)
+R  #C2614F   coral shade
+q  #F6BCAB   coral light
+s  #8BAE91   sage
+S  #64886C   sage shade
+a  #BDD6BF   sage light
+y  #8EBBC7   sky (cold)
+Y  #6390A3   sky shade
+u  #C8E3EA   sky light
+p  #8C7CA8   plum (quiet)
+P  #655586   plum shade
+v  #BFB4D9   plum light
+D  #4B3F6B   plum deep (bat wings, deep shadow)
+g  #E8BF66   gold (sound)
+G  #C08F35   gold shade / brass
+h  #F8E0A0   gold light
+e  #9DA4AE   stone
+E  #6F7884   stone shade
+f  #C7CDD4   stone light
+i  #F2A7B5   rose (cheeks)
+I  #D47D8F   rose shade
+l  #86B86A   leaf (sprout family)
+L  #5B8C46   leaf shade
+o  #B7DB9C   leaf light
+x  #7FB2A0   water
+X  #568C7A   water shade
+j  #BCE0D2   water light
+m  #7FCFAE   slime family
+M  #4FA083   slime shade
+b  #DDEBF2   yeti family fur
+B  #A7C4D4   yeti shade
+z  #E9805E   dragon family
+Z  #BC5638   dragon shade
+F  #F6D7A7   dragon belly / warm glow
+O  #F4F1FA   ghost family sheet
+Q  #CBC4DD   ghost shade
+V  #9C8FC0   moonwolf family fur
+U  #706497   moonwolf shade
+T  #D9825B   terracotta
+A  #A85E3E   terracotta shade
+H  #A0704B   leather (Gus)
+J  #74492F   leather shade
+1  #A79DB0   Nana lilac-grey stone
+2  #7E7590   Nana stone shade
+4  #E7B58F   warm skin (Moss)
+5  #C48A66   warm skin shade
+8  #3E4C7A   navy (moon mask, night sky)
+end
+
+# Colour-blind variants keep every outline and shape; they spread the semantic
+# and family colours along the axes each vision type still separates
+# (blue-orange + lightness for red-green types, red-cyan + lightness for
+# tritanopia). Checked with tools/icons/preview.py (icons_cvd_check.png).
+
+variant deuteranopia
+#E88D79 #E5782C   warm
+#C2614F #BC4C00   warm shade/light
+#F6BCAB #F3A87A   warm shade/light
+#E8BF66 #F6DE7A   sound
+#C08F35 #C6B046   sound shade/light
+#F8E0A0 #FFFCB7   sound shade/light
+#8EBBC7 #8CC4F0   cold
+#6390A3 #569AC9   cold shade/light
+#C8E3EA #CEEDFF   cold shade/light
+#7FB2A0 #3C8CA8   water
+#568C7A #006885   water shade/light
+#BCE0D2 #88B8CD   water shade/light
+#8C7CA8 #5B55A6   quiet
+#655586 #2A3089   quiet shade/light
+#BFB4D9 #948ACE   quiet shade/light
+#7FCFAE #55C2DA   slime
+#4FA083 #0E94AA   slime shade/light
+#DDEBF2 #DCEEF8   yeti
+#A7C4D4 #A0C8DD   yeti shade/light
+#E9805E #EE8A2E   dragon
+#BC5638 #BF6100   dragon shade/light
+#F4F1FA #FAF6FF   ghost
+#CBC4DD #D3C8E1   ghost shade/light
+#9C8FC0 #7A7FC6   wolf
+#706497 #4A559F   wolf shade/light
+#86B86A #6B8F3E   sprout
+#5B8C46 #43651A   sprout shade/light
+#B7DB9C #96B171   sprout shade/light
+#8BAE91 #6FA6B6   sage
+#64886C #468090   sage shade/light
+#BDD6BF #A7CEDA   sage shade/light
+end
+
+variant protanopia
+#E88D79 #EE8A24   warm
+#C2614F #C45F00   warm shade/light
+#F6BCAB #FFB87E   warm shade/light
+#E8BF66 #F8E482   sound
+#C08F35 #C8B64E   sound shade/light
+#F8E0A0 #FFFFBE   sound shade/light
+#8EBBC7 #8CC4F0   cold
+#6390A3 #569AC9   cold shade/light
+#C8E3EA #CEEDFF   cold shade/light
+#7FB2A0 #3A88A8   water
+#568C7A #006485   water shade/light
+#BCE0D2 #86B4CC   water shade/light
+#8C7CA8 #5752A4   quiet
+#655586 #242D87   quiet shade/light
+#BFB4D9 #9087CC   quiet shade/light
+#7FCFAE #55C2DA   slime
+#4FA083 #0E94AA   slime shade/light
+#DDEBF2 #DCEEF8   yeti
+#A7C4D4 #A0C8DD   yeti shade/light
+#E9805E #F29428   dragon
+#BC5638 #C36B00   dragon shade/light
+#F4F1FA #FAF6FF   ghost
+#CBC4DD #D3C8E1   ghost shade/light
+#9C8FC0 #7A7FC6   wolf
+#706497 #4A559F   wolf shade/light
+#86B86A #6B8F3E   sprout
+#5B8C46 #43651A   sprout shade/light
+#B7DB9C #96B171   sprout shade/light
+#8BAE91 #6FA6B6   sage
+#64886C #468090   sage shade/light
+#BDD6BF #A7CEDA   sage shade/light
+end
+
+variant tritanopia
+#E88D79 #EC6F7C   warm
+#C2614F #C73C53   warm shade/light
+#F6BCAB #F5A5A9   warm shade/light
+#E8BF66 #EDBA48   sound
+#C08F35 #BC8D00   sound shade/light
+#F8E0A0 #FFD98D   sound shade/light
+#8EBBC7 #92DCEC   cold
+#6390A3 #5BB1C3   cold shade/light
+#C8E3EA #D9FFFF   cold shade/light
+#7FB2A0 #2F8F7A   water
+#568C7A #006A56   water shade/light
+#BCE0D2 #7EBBAA   water shade/light
+#8C7CA8 #9A5294   quiet
+#655586 #772373   quiet shade/light
+#BFB4D9 #C98DC2   quiet shade/light
+#7FCFAE #7FE0C4   slime
+#4FA083 #4FB096   slime shade/light
+#DDEBF2 #E2F2F8   yeti
+#A7C4D4 #A9CCD8   yeti shade/light
+#E9805E #E8604A   dragon
+#BC5638 #B93324   dragon shade/light
+#F4F1FA #FFF4FA   ghost
+#CBC4DD #E2C4D5   ghost shade/light
+#9C8FC0 #8E7CC8   wolf
+#706497 #6151A0   wolf shade/light
+#86B86A #A3A23C   sprout
+#5B8C46 #777815   sprout shade/light
+#B7DB9C #CAC678   sprout shade/light
+end
+
+# High contrast: outlines go to near-black, base fills brighter and more
+# saturated, shades darker, so every fill/outline pair has maximum contrast.
+# Line weight is unchanged.
+variant high_contrast
+#33434B #0B1114   ink
+#1E282D #000000   deep ink
+#5A6B74 #24323A   soft ink
+#FFF9F0 #FFFFFF   white
+#F7EAD6 #FFF4E0   cream
+#E0C9A8 #B89868   cream shade
+#805C49 #7A4A2E   walnut
+#5B4033 #3A2216   walnut dark
+#B48668 #D49A6E   tan
+#E88D79 #FF7452   coral
+#C2614F #A8321E   coral shade
+#F6BCAB #FFD3C4   coral light
+#8BAE91 #6CCB7E   sage
+#64886C #2E7A40   sage shade
+#BDD6BF #D4F7DA   sage light
+#8EBBC7 #62C4FF   sky
+#6390A3 #1F6FA8   sky shade
+#C8E3EA #D9F2FF   sky light
+#8C7CA8 #9A70F0   plum
+#655586 #4A2A9C   plum shade
+#BFB4D9 #E0D0FF   plum light
+#4B3F6B #2E1F5C   plum deep
+#E8BF66 #FFCF2E   gold
+#C08F35 #A87000   gold shade
+#F8E0A0 #FFF2B8   gold light
+#9DA4AE #A9B2C0   stone
+#6F7884 #4C5562   stone shade
+#C7CDD4 #E4E9EF   stone light
+#F2A7B5 #FF94B0   rose
+#D47D8F #C2405F   rose shade
+#86B86A #6EDB45   leaf
+#5B8C46 #2F8A1C   leaf shade
+#B7DB9C #D2F7BC   leaf light
+#7FB2A0 #2FD0B0   water
+#568C7A #0E806A   water shade
+#BCE0D2 #C4F8EC   water light
+#7FCFAE #3FEAB4   slime
+#4FA083 #0E9A6A   slime shade
+#DDEBF2 #EEF8FF   yeti
+#A7C4D4 #7EB0D2   yeti shade
+#E9805E #FF7030   dragon
+#BC5638 #B03A10   dragon shade
+#F6D7A7 #FFE6B8   dragon belly
+#F4F1FA #FFFFFF   ghost
+#CBC4DD #A898D8   ghost shade
+#9C8FC0 #A08AF0   moonwolf
+#706497 #5236B8   moonwolf shade
+#D9825B #F07A40   terracotta
+#A85E3E #8E3A16   terracotta shade
+#A0704B #B8763E   leather
+#74492F #5A2E14   leather shade
+#A79DB0 #B4A6CC   Nana stone
+#7E7590 #5A4E73   Nana stone shade
+#E7B58F #F2B98A   skin
+#C48A66 #A8643A   skin shade
+#3E4C7A #1E2A6A   navy
+end

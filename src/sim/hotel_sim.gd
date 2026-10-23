@@ -45,6 +45,10 @@ func _setup() -> void:
 			systems[sname] = true
 		level = {"id": cfg["tutorial_id"], "duration_hotel_s": 0, "waves": [], "service_count": 1,
 			"events": [], "ribbons": [], "required_goal_ids": [], "initial_rooms": {}, "chapter": 0}
+	elif mode == "hub":
+		template_id = cfg.get("layout", "P1")
+		level = {"id": "HUB", "duration_hotel_s": 0, "waves": [], "service_count": 1, "events": [],
+			"ribbons": [], "required_goal_ids": [], "initial_rooms": {}, "chapter": 1}
 	else:
 		template_id = cfg.get("layout", "P6")
 		for sname in ["core", "thermal", "sound", "moisture", "festival"]:
@@ -90,7 +94,7 @@ func _setup() -> void:
 	if mode == "tutorial":
 		tutorial = SimTutorial.new()
 		tutorial.begin(self, content.tutorials[cfg["tutorial_id"]])
-	if mode == "playground":
+	if mode in ["playground", "hub"]:
 		s["phase"] = "active"
 	emit("shift_setup", {"layout": L.id, "mode": mode})
 
@@ -300,6 +304,7 @@ func step(frames: Array) -> void:
 		var f: Dictionary = fmap.get(st["seat"], {})
 		st["ax"] = int(f.get("ax", 0)); st["az"] = int(f.get("az", 0))
 		st["held_btn"] = int(f.get("held", 0)); st["pressed_btn"] = int(f.get("pressed", 0))
+		st["ping_pick"] = int(f.get("pick", -1))
 		if not st["present"]:
 			st["ax"] = 0; st["az"] = 0; st["held_btn"] = 0; st["pressed_btn"] = 0
 		st["inspect"] = (st["held_btn"] & SimC.BTN_INSPECT) != 0
@@ -345,7 +350,7 @@ func _set_phase(p: String) -> void:
 	emit("phase", {"phase": p})
 
 func _planning_checks() -> void:
-	if cfg.get("mode") in ["tutorial", "playground"]:
+	if cfg.get("mode") in ["tutorial", "playground", "hub"]:
 		_set_phase("active")
 		return
 	var all_ready := true

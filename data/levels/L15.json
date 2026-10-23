@@ -1,0 +1,331 @@
+{
+ "schema_version": 1,
+ "generated_from": "data/campaign_manifest.json",
+ "id": "L15",
+ "title": "Puddle Buddies",
+ "chapter": 4,
+ "layout": "P4",
+ "story": {
+  "pre": "L15.pre",
+  "post": "L15.post",
+  "gag": {
+   "trigger": "first_shared",
+   "fallback_s": 150,
+   "speaker": "mallow",
+   "caption": "level.L15.mid"
+  }
+ },
+ "by_humans": {
+  "1": {
+   "waves": [
+    [
+     "slime",
+     "sprout"
+    ],
+    [
+     "sprout"
+    ],
+    [
+     "slime",
+     "sprout"
+    ]
+   ],
+   "schedule": [
+    {
+     "family": "slime",
+     "wave": 0,
+     "arrive_s": 25,
+     "announce_s": 17
+    },
+    {
+     "family": "sprout",
+     "wave": 0,
+     "arrive_s": 30,
+     "announce_s": 22
+    },
+    {
+     "family": "sprout",
+     "wave": 1,
+     "arrive_s": 105,
+     "announce_s": 97
+    },
+    {
+     "family": "slime",
+     "wave": 2,
+     "arrive_s": 175,
+     "announce_s": 167
+    },
+    {
+     "family": "sprout",
+     "wave": 2,
+     "arrive_s": 180,
+     "announce_s": 172
+    }
+   ],
+   "guest_count": 5
+  },
+  "2": {
+   "waves": [
+    [
+     "slime",
+     "sprout",
+     "slime"
+    ],
+    [
+     "sprout",
+     "slime"
+    ],
+    [
+     "slime",
+     "sprout",
+     "slime"
+    ]
+   ],
+   "schedule": [
+    {
+     "family": "slime",
+     "wave": 0,
+     "arrive_s": 20,
+     "announce_s": 12
+    },
+    {
+     "family": "sprout",
+     "wave": 0,
+     "arrive_s": 25,
+     "announce_s": 17
+    },
+    {
+     "family": "slime",
+     "wave": 0,
+     "arrive_s": 30,
+     "announce_s": 22
+    },
+    {
+     "family": "sprout",
+     "wave": 1,
+     "arrive_s": 100,
+     "announce_s": 92
+    },
+    {
+     "family": "slime",
+     "wave": 1,
+     "arrive_s": 105,
+     "announce_s": 97
+    },
+    {
+     "family": "slime",
+     "wave": 2,
+     "arrive_s": 170,
+     "announce_s": 162
+    },
+    {
+     "family": "sprout",
+     "wave": 2,
+     "arrive_s": 175,
+     "announce_s": 167
+    },
+    {
+     "family": "slime",
+     "wave": 2,
+     "arrive_s": 180,
+     "announce_s": 172
+    }
+   ],
+   "guest_count": 8
+  },
+  "3": {
+   "waves": [
+    [
+     "slime",
+     "sprout",
+     "slime",
+     "slime"
+    ],
+    [
+     "sprout",
+     "slime",
+     "sprout"
+    ],
+    [
+     "slime",
+     "sprout",
+     "slime",
+     "slime"
+    ]
+   ],
+   "schedule": [
+    {
+     "family": "slime",
+     "wave": 0,
+     "arrive_s": 15,
+     "announce_s": 7
+    },
+    {
+     "family": "sprout",
+     "wave": 0,
+     "arrive_s": 20,
+     "announce_s": 12
+    },
+    {
+     "family": "slime",
+     "wave": 0,
+     "arrive_s": 25,
+     "announce_s": 17
+    },
+    {
+     "family": "slime",
+     "wave": 0,
+     "arrive_s": 30,
+     "announce_s": 22
+    },
+    {
+     "family": "sprout",
+     "wave": 1,
+     "arrive_s": 95,
+     "announce_s": 87
+    },
+    {
+     "family": "slime",
+     "wave": 1,
+     "arrive_s": 100,
+     "announce_s": 92
+    },
+    {
+     "family": "sprout",
+     "wave": 1,
+     "arrive_s": 105,
+     "announce_s": 97
+    },
+    {
+     "family": "slime",
+     "wave": 2,
+     "arrive_s": 165,
+     "announce_s": 157
+    },
+    {
+     "family": "sprout",
+     "wave": 2,
+     "arrive_s": 170,
+     "announce_s": 162
+    },
+    {
+     "family": "slime",
+     "wave": 2,
+     "arrive_s": 175,
+     "announce_s": 167
+    },
+    {
+     "family": "slime",
+     "wave": 2,
+     "arrive_s": 180,
+     "announce_s": 172
+    }
+   ],
+   "guest_count": 11
+  },
+  "4": {
+   "waves": [
+    [
+     "slime",
+     "sprout",
+     "slime",
+     "slime",
+     "sprout"
+    ],
+    [
+     "sprout",
+     "slime",
+     "sprout"
+    ],
+    [
+     "slime",
+     "sprout",
+     "slime",
+     "slime",
+     "sprout"
+    ]
+   ],
+   "schedule": [
+    {
+     "family": "slime",
+     "wave": 0,
+     "arrive_s": 10,
+     "announce_s": 2
+    },
+    {
+     "family": "sprout",
+     "wave": 0,
+     "arrive_s": 15,
+     "announce_s": 7
+    },
+    {
+     "family": "slime",
+     "wave": 0,
+     "arrive_s": 20,
+     "announce_s": 12
+    },
+    {
+     "family": "slime",
+     "wave": 0,
+     "arrive_s": 25,
+     "announce_s": 17
+    },
+    {
+     "family": "sprout",
+     "wave": 0,
+     "arrive_s": 30,
+     "announce_s": 22
+    },
+    {
+     "family": "sprout",
+     "wave": 1,
+     "arrive_s": 95,
+     "announce_s": 87
+    },
+    {
+     "family": "slime",
+     "wave": 1,
+     "arrive_s": 100,
+     "announce_s": 92
+    },
+    {
+     "family": "sprout",
+     "wave": 1,
+     "arrive_s": 105,
+     "announce_s": 97
+    },
+    {
+     "family": "slime",
+     "wave": 2,
+     "arrive_s": 160,
+     "announce_s": 152
+    },
+    {
+     "family": "sprout",
+     "wave": 2,
+     "arrive_s": 165,
+     "announce_s": 157
+    },
+    {
+     "family": "slime",
+     "wave": 2,
+     "arrive_s": 170,
+     "announce_s": 162
+    },
+    {
+     "family": "slime",
+     "wave": 2,
+     "arrive_s": 175,
+     "announce_s": 167
+    },
+    {
+     "family": "sprout",
+     "wave": 2,
+     "arrive_s": 180,
+     "announce_s": 172
+    }
+   ],
+   "guest_count": 13
+  }
+ }
+}

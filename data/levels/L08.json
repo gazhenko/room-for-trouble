@@ -1,0 +1,331 @@
+{
+ "schema_version": 1,
+ "generated_from": "data/campaign_manifest.json",
+ "id": "L08",
+ "title": "The Great Defrost",
+ "chapter": 2,
+ "layout": "P2",
+ "story": {
+  "pre": "L08.pre",
+  "post": "L08.post",
+  "gag": {
+   "trigger": "recovery",
+   "fallback_s": 150,
+   "speaker": "gus",
+   "caption": "level.L08.mid"
+  }
+ },
+ "by_humans": {
+  "1": {
+   "waves": [
+    [
+     "yeti",
+     "dragon"
+    ],
+    [
+     "dragon"
+    ],
+    [
+     "yeti",
+     "dragon"
+    ]
+   ],
+   "schedule": [
+    {
+     "family": "yeti",
+     "wave": 0,
+     "arrive_s": 25,
+     "announce_s": 17
+    },
+    {
+     "family": "dragon",
+     "wave": 0,
+     "arrive_s": 30,
+     "announce_s": 22
+    },
+    {
+     "family": "dragon",
+     "wave": 1,
+     "arrive_s": 112,
+     "announce_s": 104
+    },
+    {
+     "family": "yeti",
+     "wave": 2,
+     "arrive_s": 190,
+     "announce_s": 182
+    },
+    {
+     "family": "dragon",
+     "wave": 2,
+     "arrive_s": 195,
+     "announce_s": 187
+    }
+   ],
+   "guest_count": 5
+  },
+  "2": {
+   "waves": [
+    [
+     "yeti",
+     "dragon",
+     "slime"
+    ],
+    [
+     "dragon",
+     "yeti"
+    ],
+    [
+     "yeti",
+     "dragon",
+     "slime"
+    ]
+   ],
+   "schedule": [
+    {
+     "family": "yeti",
+     "wave": 0,
+     "arrive_s": 20,
+     "announce_s": 12
+    },
+    {
+     "family": "dragon",
+     "wave": 0,
+     "arrive_s": 25,
+     "announce_s": 17
+    },
+    {
+     "family": "slime",
+     "wave": 0,
+     "arrive_s": 30,
+     "announce_s": 22
+    },
+    {
+     "family": "dragon",
+     "wave": 1,
+     "arrive_s": 107,
+     "announce_s": 99
+    },
+    {
+     "family": "yeti",
+     "wave": 1,
+     "arrive_s": 112,
+     "announce_s": 104
+    },
+    {
+     "family": "yeti",
+     "wave": 2,
+     "arrive_s": 185,
+     "announce_s": 177
+    },
+    {
+     "family": "dragon",
+     "wave": 2,
+     "arrive_s": 190,
+     "announce_s": 182
+    },
+    {
+     "family": "slime",
+     "wave": 2,
+     "arrive_s": 195,
+     "announce_s": 187
+    }
+   ],
+   "guest_count": 8
+  },
+  "3": {
+   "waves": [
+    [
+     "yeti",
+     "dragon",
+     "slime",
+     "yeti"
+    ],
+    [
+     "dragon",
+     "yeti",
+     "dragon"
+    ],
+    [
+     "yeti",
+     "dragon",
+     "slime",
+     "yeti"
+    ]
+   ],
+   "schedule": [
+    {
+     "family": "yeti",
+     "wave": 0,
+     "arrive_s": 15,
+     "announce_s": 7
+    },
+    {
+     "family": "dragon",
+     "wave": 0,
+     "arrive_s": 20,
+     "announce_s": 12
+    },
+    {
+     "family": "slime",
+     "wave": 0,
+     "arrive_s": 25,
+     "announce_s": 17
+    },
+    {
+     "family": "yeti",
+     "wave": 0,
+     "arrive_s": 30,
+     "announce_s": 22
+    },
+    {
+     "family": "dragon",
+     "wave": 1,
+     "arrive_s": 102,
+     "announce_s": 94
+    },
+    {
+     "family": "yeti",
+     "wave": 1,
+     "arrive_s": 107,
+     "announce_s": 99
+    },
+    {
+     "family": "dragon",
+     "wave": 1,
+     "arrive_s": 112,
+     "announce_s": 104
+    },
+    {
+     "family": "yeti",
+     "wave": 2,
+     "arrive_s": 180,
+     "announce_s": 172
+    },
+    {
+     "family": "dragon",
+     "wave": 2,
+     "arrive_s": 185,
+     "announce_s": 177
+    },
+    {
+     "family": "slime",
+     "wave": 2,
+     "arrive_s": 190,
+     "announce_s": 182
+    },
+    {
+     "family": "yeti",
+     "wave": 2,
+     "arrive_s": 195,
+     "announce_s": 187
+    }
+   ],
+   "guest_count": 11
+  },
+  "4": {
+   "waves": [
+    [
+     "yeti",
+     "dragon",
+     "slime",
+     "yeti",
+     "dragon"
+    ],
+    [
+     "dragon",
+     "yeti",
+     "dragon"
+    ],
+    [
+     "yeti",
+     "dragon",
+     "slime",
+     "yeti",
+     "dragon"
+    ]
+   ],
+   "schedule": [
+    {
+     "family": "yeti",
+     "wave": 0,
+     "arrive_s": 10,
+     "announce_s": 2
+    },
+    {
+     "family": "dragon",
+     "wave": 0,
+     "arrive_s": 15,
+     "announce_s": 7
+    },
+    {
+     "family": "slime",
+     "wave": 0,
+     "arrive_s": 20,
+     "announce_s": 12
+    },
+    {
+     "family": "yeti",
+     "wave": 0,
+     "arrive_s": 25,
+     "announce_s": 17
+    },
+    {
+     "family": "dragon",
+     "wave": 0,
+     "arrive_s": 30,
+     "announce_s": 22
+    },
+    {
+     "family": "dragon",
+     "wave": 1,
+     "arrive_s": 102,
+     "announce_s": 94
+    },
+    {
+     "family": "yeti",
+     "wave": 1,
+     "arrive_s": 107,
+     "announce_s": 99
+    },
+    {
+     "family": "dragon",
+     "wave": 1,
+     "arrive_s": 112,
+     "announce_s": 104
+    },
+    {
+     "family": "yeti",
+     "wave": 2,
+     "arrive_s": 175,
+     "announce_s": 167
+    },
+    {
+     "family": "dragon",
+     "wave": 2,
+     "arrive_s": 180,
+     "announce_s": 172
+    },
+    {
+     "family": "slime",
+     "wave": 2,
+     "arrive_s": 185,
+     "announce_s": 177
+    },
+    {
+     "family": "yeti",
+     "wave": 2,
+     "arrive_s": 190,
+     "announce_s": 182
+    },
+    {
+     "family": "dragon",
+     "wave": 2,
+     "arrive_s": 195,
+     "announce_s": 187
+    }
+   ],
+   "guest_count": 13
+  }
+ }
+}

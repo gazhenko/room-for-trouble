@@ -1,0 +1,310 @@
+{
+ "schema_version": 1,
+ "generated_from": "data/campaign_manifest.json",
+ "id": "L06",
+ "title": "Hot and Cold Running Guests",
+ "chapter": 2,
+ "layout": "P2",
+ "story": {
+  "pre": "L06.pre",
+  "post": "L06.post",
+  "gag": {
+   "trigger": "first_steam",
+   "fallback_s": 115,
+   "speaker": "",
+   "caption": "level.L06.mid"
+  }
+ },
+ "by_humans": {
+  "1": {
+   "waves": [
+    [
+     "dragon",
+     "yeti"
+    ],
+    [
+     "yeti",
+     "dragon"
+    ],
+    [
+     "dragon",
+     "yeti"
+    ]
+   ],
+   "schedule": [
+    {
+     "family": "dragon",
+     "wave": 0,
+     "arrive_s": 25,
+     "announce_s": 17
+    },
+    {
+     "family": "yeti",
+     "wave": 0,
+     "arrive_s": 30,
+     "announce_s": 22
+    },
+    {
+     "family": "yeti",
+     "wave": 1,
+     "arrive_s": 100,
+     "announce_s": 92
+    },
+    {
+     "family": "dragon",
+     "wave": 1,
+     "arrive_s": 105,
+     "announce_s": 97
+    },
+    {
+     "family": "dragon",
+     "wave": 2,
+     "arrive_s": 175,
+     "announce_s": 167
+    },
+    {
+     "family": "yeti",
+     "wave": 2,
+     "arrive_s": 180,
+     "announce_s": 172
+    }
+   ],
+   "guest_count": 6
+  },
+  "2": {
+   "waves": [
+    [
+     "dragon",
+     "yeti"
+    ],
+    [
+     "yeti",
+     "dragon"
+    ],
+    [
+     "dragon",
+     "yeti",
+     "slime"
+    ]
+   ],
+   "schedule": [
+    {
+     "family": "dragon",
+     "wave": 0,
+     "arrive_s": 25,
+     "announce_s": 17
+    },
+    {
+     "family": "yeti",
+     "wave": 0,
+     "arrive_s": 30,
+     "announce_s": 22
+    },
+    {
+     "family": "yeti",
+     "wave": 1,
+     "arrive_s": 100,
+     "announce_s": 92
+    },
+    {
+     "family": "dragon",
+     "wave": 1,
+     "arrive_s": 105,
+     "announce_s": 97
+    },
+    {
+     "family": "dragon",
+     "wave": 2,
+     "arrive_s": 170,
+     "announce_s": 162
+    },
+    {
+     "family": "yeti",
+     "wave": 2,
+     "arrive_s": 175,
+     "announce_s": 167
+    },
+    {
+     "family": "slime",
+     "wave": 2,
+     "arrive_s": 180,
+     "announce_s": 172
+    }
+   ],
+   "guest_count": 7
+  },
+  "3": {
+   "waves": [
+    [
+     "dragon",
+     "yeti",
+     "dragon"
+    ],
+    [
+     "yeti",
+     "dragon",
+     "yeti"
+    ],
+    [
+     "dragon",
+     "yeti",
+     "slime",
+     "dragon"
+    ]
+   ],
+   "schedule": [
+    {
+     "family": "dragon",
+     "wave": 0,
+     "arrive_s": 20,
+     "announce_s": 12
+    },
+    {
+     "family": "yeti",
+     "wave": 0,
+     "arrive_s": 25,
+     "announce_s": 17
+    },
+    {
+     "family": "dragon",
+     "wave": 0,
+     "arrive_s": 30,
+     "announce_s": 22
+    },
+    {
+     "family": "yeti",
+     "wave": 1,
+     "arrive_s": 95,
+     "announce_s": 87
+    },
+    {
+     "family": "dragon",
+     "wave": 1,
+     "arrive_s": 100,
+     "announce_s": 92
+    },
+    {
+     "family": "yeti",
+     "wave": 1,
+     "arrive_s": 105,
+     "announce_s": 97
+    },
+    {
+     "family": "dragon",
+     "wave": 2,
+     "arrive_s": 165,
+     "announce_s": 157
+    },
+    {
+     "family": "yeti",
+     "wave": 2,
+     "arrive_s": 170,
+     "announce_s": 162
+    },
+    {
+     "family": "slime",
+     "wave": 2,
+     "arrive_s": 175,
+     "announce_s": 167
+    },
+    {
+     "family": "dragon",
+     "wave": 2,
+     "arrive_s": 180,
+     "announce_s": 172
+    }
+   ],
+   "guest_count": 10
+  },
+  "4": {
+   "waves": [
+    [
+     "dragon",
+     "yeti",
+     "dragon"
+    ],
+    [
+     "yeti",
+     "dragon",
+     "yeti"
+    ],
+    [
+     "dragon",
+     "yeti",
+     "slime",
+     "dragon",
+     "yeti"
+    ]
+   ],
+   "schedule": [
+    {
+     "family": "dragon",
+     "wave": 0,
+     "arrive_s": 20,
+     "announce_s": 12
+    },
+    {
+     "family": "yeti",
+     "wave": 0,
+     "arrive_s": 25,
+     "announce_s": 17
+    },
+    {
+     "family": "dragon",
+     "wave": 0,
+     "arrive_s": 30,
+     "announce_s": 22
+    },
+    {
+     "family": "yeti",
+     "wave": 1,
+     "arrive_s": 95,
+     "announce_s": 87
+    },
+    {
+     "family": "dragon",
+     "wave": 1,
+     "arrive_s": 100,
+     "announce_s": 92
+    },
+    {
+     "family": "yeti",
+     "wave": 1,
+     "arrive_s": 105,
+     "announce_s": 97
+    },
+    {
+     "family": "dragon",
+     "wave": 2,
+     "arrive_s": 160,
+     "announce_s": 152
+    },
+    {
+     "family": "yeti",
+     "wave": 2,
+     "arrive_s": 165,
+     "announce_s": 157
+    },
+    {
+     "family": "slime",
+     "wave": 2,
+     "arrive_s": 170,
+     "announce_s": 162
+    },
+    {
+     "family": "dragon",
+     "wave": 2,
+     "arrive_s": 175,
+     "announce_s": 167
+    },
+    {
+     "family": "yeti",
+     "wave": 2,
+     "arrive_s": 180,
+     "announce_s": 172
+    }
+   ],
+   "guest_count": 11
+  }
+ }
+}

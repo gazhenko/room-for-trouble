@@ -1,0 +1,44 @@
+{
+ "schema_version": 1,
+ "sections": [
+  {
+   "title": "Room for Trouble",
+   "lines": [
+    "An original cooperative game about running a cozy monster hotel together.",
+    "Design brief: “Room for Trouble” complete game design and engineering handoff, v1.0 (2026-10-22).",
+    "Implementation, procedural art, procedural audio and tools: built with Claude Code (Anthropic) for the project owner."
+   ]
+  },
+  {
+   "title": "Cast",
+   "lines": [
+    "Nana Nook · Gus · Dot Quill",
+    "Pip · Pebble · Moss · Button",
+    "Mallow · Flurry · Cinder · Whisp · Luna · Fern"
+   ]
+  },
+  {
+   "title": "Art & audio",
+   "lines": [
+    "All 3D models are procedural low-poly meshes authored in code (src/view/models).",
+    "All icons are original pixel art authored as text (data/art/icons).",
+    "All music and sound effects are original procedural synthesis (tools/audio/synth.py)."
+   ]
+  },
+  {
+   "title": "Third-party",
+   "lines": [
+    "Godot Engine 4.7.2 — MIT License, © Juan Linietsky, Ariel Manzur and contributors.",
+    "Pixelify Sans — SIL Open Font License 1.1, © The Pixelify Sans Project Authors.",
+    "Nunito — SIL Open Font License 1.1, © The Nunito Project Authors.",
+    "Full licence texts: THIRD_PARTY_NOTICES.md and assets/export/fonts/."
+   ]
+  },
+  {
+   "title": "Thank you",
+   "lines": [
+    "To every family, friend and neighbour who makes a little room."
+   ]
+  }
+ ]
+}

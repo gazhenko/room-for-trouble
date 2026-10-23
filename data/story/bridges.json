@@ -1,1 +1,769 @@
-{"schema_version":1,"scenes":[]}
+{
+ "schema_version": 1,
+ "scenes": [
+  {
+   "id": "B01",
+   "layout": "P1",
+   "music": "title_loop",
+   "title_key": "story.B01.title",
+   "panels": [
+    {
+     "id": "B01.1",
+     "camera": "lobby_group",
+     "duration": 6,
+     "speaker": "mallow",
+     "actors": [
+      {
+       "id": "mallow",
+       "pos": [
+        3.4,
+        9.3
+       ],
+       "pose": "happy",
+       "face": 0,
+       "slippers": true
+      },
+      {
+       "id": "nana",
+       "pos": [
+        1.3,
+        9.0
+       ],
+       "pose": "idle",
+       "face": 70
+      }
+     ],
+     "props": [
+      {
+       "kind": "invitation",
+       "pos": [
+        2.3,
+        0.95,
+        9.2
+       ]
+      }
+     ],
+     "caption": "story.B01.1"
+    },
+    {
+     "id": "B01.2",
+     "camera": "guest_close",
+     "duration": 6,
+     "speaker": "flurry",
+     "actors": [
+      {
+       "id": "flurry",
+       "pos": [
+        -0.8,
+        8.8
+       ],
+       "pose": "idle",
+       "face": 20
+      },
+      {
+       "id": "cinder",
+       "pos": [
+        -0.8,
+        10.4
+       ],
+       "pose": "idle",
+       "face": -20
+      }
+     ],
+     "props": [
+      {
+       "kind": "travel_hat_cool",
+       "pos": [
+        -0.8,
+        1.7,
+        8.8
+       ]
+      },
+      {
+       "kind": "travel_hat_warm",
+       "pos": [
+        -0.8,
+        1.5,
+        10.4
+       ]
+      }
+     ],
+     "focus": [
+      -0.8,
+      9.6
+     ],
+     "caption": "story.B01.2"
+    },
+    {
+     "id": "B01.3",
+     "camera": "desk_close",
+     "duration": 5,
+     "speaker": "dot",
+     "actors": [
+      {
+       "id": "dot",
+       "pos": [
+        3.0,
+        9.4
+       ],
+       "pose": "concern",
+       "face": -30
+      },
+      {
+       "id": "nana",
+       "pos": [
+        1.3,
+        9.0
+       ],
+       "pose": "idle",
+       "face": 70
+      }
+     ],
+     "props": [
+      {
+       "kind": "checklist",
+       "pos": [
+        3.4,
+        0.0,
+        9.9
+       ]
+      }
+     ],
+     "sound": "dot_paper",
+     "caption": "story.B01.3"
+    },
+    {
+     "id": "B01.4",
+     "camera": "fixture_close",
+     "duration": 6,
+     "speaker": "nana",
+     "actors": [
+      {
+       "id": "nana",
+       "pos": [
+        8.0,
+        8.9
+       ],
+       "pose": "wave",
+       "face": 0
+      }
+     ],
+     "props": [],
+     "focus": [
+      8.0,
+      8.0
+     ],
+     "layout": "P2",
+     "caption": "story.B01.4"
+    }
+   ]
+  },
+  {
+   "id": "B02",
+   "layout": "P2",
+   "music": "title_loop",
+   "title_key": "story.B02.title",
+   "panels": [
+    {
+     "id": "B02.1",
+     "camera": "lobby_group",
+     "duration": 6,
+     "speaker": "cinder",
+     "actors": [
+      {
+       "id": "cinder",
+       "pos": [
+        4.0,
+        9.4
+       ],
+       "pose": "helper",
+       "face": 0
+      },
+      {
+       "id": "flurry",
+       "pos": [
+        6.0,
+        9.4
+       ],
+       "pose": "helper",
+       "face": 0
+      }
+     ],
+     "props": [
+      {
+       "kind": "sheet_sculpture",
+       "pos": [
+        5.0,
+        0.0,
+        10.4
+       ]
+      }
+     ],
+     "caption": "story.B02.1"
+    },
+    {
+     "id": "B02.2",
+     "camera": "guest_close",
+     "duration": 5,
+     "speaker": "whisp",
+     "actors": [
+      {
+       "id": "whisp",
+       "pos": [
+        -0.8,
+        9.5
+       ],
+       "pose": "idle",
+       "face": 30,
+       "mask": true
+      }
+     ],
+     "props": [],
+     "focus": [
+      -0.8,
+      9.5
+     ],
+     "caption": "story.B02.2"
+    },
+    {
+     "id": "B02.3",
+     "camera": "lobby_group",
+     "duration": 6,
+     "speaker": "luna",
+     "actors": [
+      {
+       "id": "luna",
+       "pos": [
+        3.4,
+        9.6
+       ],
+       "pose": "happy",
+       "face": 0
+      },
+      {
+       "id": "nana",
+       "pos": [
+        2.0,
+        9.1
+       ],
+       "pose": "wave",
+       "face": 60
+      }
+     ],
+     "props": [],
+     "caption": "story.B02.3"
+    },
+    {
+     "id": "B02.4",
+     "camera": "lobby_group",
+     "duration": 6,
+     "speaker": "nana",
+     "actors": [
+      {
+       "id": "luna",
+       "pos": [
+        4.4,
+        9.6
+       ],
+       "pose": "happy",
+       "face": 0
+      },
+      {
+       "id": "whisp",
+       "pos": [
+        6.2,
+        9.6
+       ],
+       "pose": "idle",
+       "face": 0,
+       "mask": true
+      },
+      {
+       "id": "nana",
+       "pos": [
+        2.4,
+        9.1
+       ],
+       "pose": "happy",
+       "face": 60
+      }
+     ],
+     "props": [],
+     "layout": "P3",
+     "caption": "story.B02.4"
+    }
+   ]
+  },
+  {
+   "id": "B03",
+   "layout": "P3",
+   "music": "title_loop",
+   "title_key": "story.B03.title",
+   "panels": [
+    {
+     "id": "B03.1",
+     "camera": "lobby_group",
+     "duration": 6,
+     "speaker": "dot",
+     "actors": [
+      {
+       "id": "whisp",
+       "pos": [
+        3.4,
+        9.0
+       ],
+       "pose": "sleep",
+       "face": 0,
+       "mask": true
+      },
+      {
+       "id": "luna",
+       "pos": [
+        6.2,
+        9.4
+       ],
+       "pose": "happy",
+       "face": 0
+      },
+      {
+       "id": "dot",
+       "pos": [
+        4.6,
+        10.4
+       ],
+       "pose": "happy",
+       "face": 0
+      }
+     ],
+     "props": [],
+     "caption": "story.B03.1"
+    },
+    {
+     "id": "B03.2",
+     "camera": "guest_close",
+     "duration": 6,
+     "speaker": "fern",
+     "actors": [
+      {
+       "id": "fern",
+       "pos": [
+        -0.6,
+        9.6
+       ],
+       "pose": "happy",
+       "face": 0
+      },
+      {
+       "id": "dot",
+       "pos": [
+        0.6,
+        9.4
+       ],
+       "pose": "concern",
+       "face": 0
+      }
+     ],
+     "props": [
+      {
+       "kind": "clipboard",
+       "pos": [
+        0.2,
+        1.4,
+        9.6
+       ]
+      }
+     ],
+     "focus": [
+      -0.2,
+      9.5
+     ],
+     "caption": "story.B03.2"
+    },
+    {
+     "id": "B03.3",
+     "camera": "wide_hotel",
+     "duration": 6,
+     "speaker": "moss",
+     "actors": [],
+     "props": [],
+     "layout": "P4",
+     "caption": "story.B03.3"
+    },
+    {
+     "id": "B03.4",
+     "camera": "lobby_group",
+     "duration": 6,
+     "speaker": "nana",
+     "actors": [
+      {
+       "id": "fern",
+       "pos": [
+        4.0,
+        9.6
+       ],
+       "pose": "happy",
+       "face": 0
+      },
+      {
+       "id": "gus",
+       "pos": [
+        5.4,
+        10.2
+       ],
+       "pose": "happy",
+       "face": 0
+      },
+      {
+       "id": "nana",
+       "pos": [
+        2.6,
+        9.2
+       ],
+       "pose": "happy",
+       "face": 0
+      }
+     ],
+     "props": [
+      {
+       "kind": "umbrella",
+       "pos": [
+        5.4,
+        0.6,
+        10.2
+       ]
+      }
+     ],
+     "layout": "P4",
+     "caption": "story.B03.4"
+    }
+   ]
+  },
+  {
+   "id": "B04",
+   "layout": "P4",
+   "music": "title_loop",
+   "title_key": "story.B04.title",
+   "panels": [
+    {
+     "id": "B04.1",
+     "camera": "lobby_group",
+     "duration": 6,
+     "speaker": "dot",
+     "actors": [
+      {
+       "id": "cinder",
+       "pos": [
+        3.2,
+        9.0
+       ],
+       "pose": "helper",
+       "face": 0
+      },
+      {
+       "id": "flurry",
+       "pos": [
+        4.6,
+        9.0
+       ],
+       "pose": "helper",
+       "face": 0
+      },
+      {
+       "id": "fern",
+       "pos": [
+        6.0,
+        9.0
+       ],
+       "pose": "helper",
+       "face": 0
+      },
+      {
+       "id": "luna",
+       "pos": [
+        7.4,
+        9.0
+       ],
+       "pose": "helper",
+       "face": 0
+      },
+      {
+       "id": "dot",
+       "pos": [
+        5.0,
+        10.6
+       ],
+       "pose": "happy",
+       "face": 0
+      }
+     ],
+     "props": [
+      {
+       "kind": "lantern",
+       "pos": [
+        3.6,
+        0.0,
+        10.2
+       ]
+      },
+      {
+       "kind": "flowerpot_trio",
+       "pos": [
+        6.4,
+        0.0,
+        10.4
+       ]
+      }
+     ],
+     "caption": "story.B04.1"
+    },
+    {
+     "id": "B04.2",
+     "camera": "lobby_group",
+     "duration": 6,
+     "speaker": "button",
+     "actors": [
+      {
+       "id": "staff",
+       "pos": [
+        5.0,
+        10.6
+       ],
+       "pose": "carry",
+       "face": 0
+      }
+     ],
+     "props": [
+      {
+       "kind": "mini_trunk",
+       "pos": [
+        5.0,
+        0.0,
+        10.0
+       ],
+       "scale": 2.2
+      }
+     ],
+     "layout": "P1",
+     "caption": "story.B04.2"
+    },
+    {
+     "id": "B04.3",
+     "camera": "wide_hotel",
+     "duration": 6,
+     "speaker": "nana",
+     "actors": [
+      {
+       "id": "nana",
+       "pos": [
+        13,
+        9.5
+       ],
+       "pose": "wave",
+       "face": 0
+      }
+     ],
+     "props": [],
+     "layout": "P5",
+     "caption": "story.B04.3"
+    },
+    {
+     "id": "B04.4",
+     "camera": "lobby_group",
+     "duration": 6,
+     "speaker": "gus",
+     "actors": [
+      {
+       "id": "gus",
+       "pos": [
+        4.0,
+        10.4
+       ],
+       "pose": "happy",
+       "face": 0
+      },
+      {
+       "id": "staff",
+       "pos": [
+        6.0,
+        10.2
+       ],
+       "pose": "happy",
+       "face": 0
+      }
+     ],
+     "props": [
+      {
+       "kind": "paper_moon",
+       "pos": [
+        5.0,
+        0.0,
+        9.0
+       ],
+       "scale": 0.8
+      }
+     ],
+     "layout": "P6",
+     "caption": "story.B04.4"
+    }
+   ]
+  },
+  {
+   "id": "B05",
+   "layout": "P6",
+   "music": "title_loop",
+   "title_key": "story.B05.title",
+   "panels": [
+    {
+     "id": "B05.1",
+     "camera": "festival_wide",
+     "duration": 6,
+     "speaker": "dot",
+     "actors": [
+      {
+       "id": "dot",
+       "pos": [
+        16.0,
+        9.5
+       ],
+       "pose": "happy",
+       "face": 0
+      },
+      {
+       "id": "staff",
+       "pos": [
+        18.0,
+        10.0
+       ],
+       "pose": "work",
+       "face": 0
+      }
+     ],
+     "props": [
+      {
+       "kind": "lantern",
+       "pos": [
+        15.0,
+        0.0,
+        9.0
+       ]
+      },
+      {
+       "kind": "lantern",
+       "pos": [
+        19.0,
+        0.0,
+        9.0
+       ]
+      }
+     ],
+     "caption": "story.B05.1"
+    },
+    {
+     "id": "B05.2",
+     "camera": "guest_close",
+     "duration": 6,
+     "speaker": "cinder",
+     "actors": [
+      {
+       "id": "cinder",
+       "pos": [
+        -0.8,
+        9.6
+       ],
+       "pose": "concern",
+       "face": 0
+      }
+     ],
+     "props": [
+      {
+       "kind": "lantern",
+       "pos": [
+        -1.6,
+        0.0,
+        10.2
+       ]
+      },
+      {
+       "kind": "umbrella",
+       "pos": [
+        -0.2,
+        0.9,
+        9.8
+       ]
+      }
+     ],
+     "focus": [
+      -0.8,
+      9.6
+     ],
+     "caption": "story.B05.2"
+    },
+    {
+     "id": "B05.3",
+     "camera": "wide_hotel",
+     "duration": 6,
+     "speaker": "nana",
+     "actors": [
+      {
+       "id": "nana",
+       "pos": [
+        13.0,
+        9.6
+       ],
+       "pose": "wave",
+       "face": 0
+      }
+     ],
+     "props": [],
+     "caption": "story.B05.3"
+    },
+    {
+     "id": "B05.4",
+     "camera": "festival_wide",
+     "duration": 6,
+     "speaker": "staff",
+     "actors": [
+      {
+       "id": "staff",
+       "pos": [
+        17.0,
+        10.2
+       ],
+       "pose": "happy",
+       "face": 0
+      },
+      {
+       "id": "nana",
+       "pos": [
+        15.0,
+        9.4
+       ],
+       "pose": "happy",
+       "face": 0
+      },
+      {
+       "id": "gus",
+       "pos": [
+        19.2,
+        10.4
+       ],
+       "pose": "happy",
+       "face": 0
+      }
+     ],
+     "props": [
+      {
+       "kind": "paper_moon",
+       "pos": [
+        17.0,
+        0.0,
+        8.6
+       ]
+      }
+     ],
+     "caption": "story.B05.4"
+    }
+   ]
+  }
+ ]
+}

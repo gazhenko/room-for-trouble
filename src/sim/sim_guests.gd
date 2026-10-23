@@ -39,7 +39,7 @@ static func step_tick(sim: HotelSim) -> void:
 				if hq >= g["arrive_q"]:
 					_arrive(sim, g)
 			"lobby":
-				if not sim.s["cozy"] and not g.get("tut", false):
+				if not sim.s["cozy"] and not g.get("tut", false) and not g.get("play", false):
 					g["patience_q"] -= pace
 					if g["patience_q"] <= 0:
 						_to_cozy_corner(sim, g)
@@ -318,7 +318,7 @@ static func fulfill(sim: HotelSim, g: Dictionary, idx: int, seat: int, item_id: 
 		sim.tutorial.on_request_done(sim, g)
 
 static func _checkout_due(sim: HotelSim, g: Dictionary, hq: int) -> bool:
-	if g["relocating"]:
+	if g["relocating"] or g.get("play", false):
 		return false
 	if hq < g["checkout_q"]:
 		return false
@@ -332,6 +332,8 @@ static func goodbye_available(sim: HotelSim, g: Dictionary) -> bool:
 	if g["state"] != "staying" or g["relocating"]:
 		return false
 	if sim.tutorial != null and sim.tutorial.goodbye_allowed(sim, g):
+		return true
+	if g.get("play", false):
 		return true
 	if sim.s["cozy"] and sim.s["hotel_q"] >= g["checkout_q"]:
 		return true

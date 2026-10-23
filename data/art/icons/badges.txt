@@ -1,0 +1,332 @@
+# Room for Trouble - chapter badges (24x24) and cosmetic set badges (16x16).
+# Chapters share one round medallion (chapter-tinted 2-px rim, ink ring, emblem
+# face); cosmetic sets share one gold pin (bevelled rim, set-tinted face).
+# Format and palette keys: see palette.txt.
+
+# Chapter 1 Open Arms: walnut doorway full of warm light, door swung open; coral rim.
+icon ch1 24
+.........kkkkkk.........
+.......kkqqqrrrkk.......
+.....kkqqqqqrrrrrkk.....
+....kqqqqqkkkkrrrrrk....
+...kqqkkkkkkkkkkrrrrk...
+..kqqkknnnnnnkkkkkrrrk..
+..kqqknhhhhhhnktnkkrrk..
+.kqqqknhWWhhhnttnkkrrrk.
+.kqqkknhWhhhhnttnkckRRk.
+kqqqkknhWhhhhnttnkckRRRk
+kqqkcknhhhhhhntgnkcckRRk
+kqqkcknhhhhhhntgnkcckRRk
+krrkcknggggggntGnkcckRRk
+krrkcknggggggnttnkcckRRk
+krrrkknggggggnttnkckRRRk
+.krrkknggggggnttnkckRRk.
+.krrrknggggggnntnkkRRRk.
+..krkCCCCCCCCCCnnkkRRk..
+..krrrkkcccccccckkRRRk..
+...krrrrkkcccckkRRRRk...
+....krrrRRkkkkRRRRRk....
+.....kkrRRRRRRRRRkk.....
+.......kkRRRRRRkk.......
+.........kkkkkk.........
+end
+
+# Chapter 2 A Warm Welcome: warm|cool split with sun and snowflake; gold rim.
+icon ch2 24
+.........kkkkkk.........
+.......kkhhhgggkk.......
+.....kkhhhhhgggggkk.....
+....khhhhhkkkkgggggk....
+...khhhhkkqquukkggggk...
+..khhhkkqqqquuuukkgggk..
+..khhkqqqqqquuuuuukggk..
+.khhhkkRkqqquuuukukgggk.
+.khkkqqkqqqkuukkykkkGGk.
+khhhkqkkkqqqukykykykGGGk
+khhkqkqqRkqqukkyyykkkGGk
+khkkkqqrrRkqkyyyuyyykGGk
+kgRkkrrrrRkkRkkyyykkkGGk
+kgkkkRrrrRkqkkykykykkGGk
+kgggkkRRRkqquukkykkkGGGk
+.kggkqkkkqqquuuukuukGGk.
+.kgkgkqkqqqkuuuuuukGGGk.
+..kggkkRkqqquuuuuukGGk..
+..kgggkkqqqquuuukkGGGk..
+...kggggkkqquukkGGGGk...
+....kgggGGkkkkGGGGGk....
+.....kkgGGGGGGGGGkk.....
+.......kkGGGGGGkk.......
+.........kkkkkk.........
+end
+
+# Chapter 3 Quiet-ish Hours: cream crescent moon cradling a gold note on night blue; plum rim.
+icon ch3 24
+.........kkkkkk.........
+.......kkvvvpppkk.......
+.....kkvvvvvpppppkk.....
+....kvvvvvkkkkpppppk....
+...kvvvvkk8kkkkkppppk...
+..kvvvkk8kkcCCk8kkpppk..
+..kvvk88kcwCkkgk88kppk..
+.kvvvk8kccCk8kggk8kpppk.
+.kvvk8kcwCk88kgkgk8kPPk.
+kvvvk8kccCk88kgkkgkkPPPk
+kvvk8kcwCk888kgkkgk8kPPk
+kvvk8kccCk8kkkgk8k88kPPk
+kppk8kcccCkhgggk8888kPPk
+kppk8kCcckhgggGk8kk8kPPk
+kpppk8kccckggGkkkcCkPPPk
+.kppk8kCccckkkkcccCkPPk.
+.kpppk8kCCccccccCCkPPPk.
+..kppk88kkCCCCCCkkkPPk..
+..kpppkk88kkkkkkkkPPPk..
+...kppppkk8888kkPPPPk...
+....kpppPPkkkkPPPPPk....
+.....kkpPPPPPPPPPkk.....
+.......kkPPPPPPkk.......
+.........kkkkkk.........
+end
+
+# Chapter 4 Growing Room: two-leaf sprout in a terracotta pot on sky; leaf rim.
+icon ch4 24
+.........kkkkkk.........
+.......kkooolllkk.......
+.....kkooooolllllkk.....
+....koooookkkklllllk....
+...kooookkuuuukkllllk...
+..koookkuuuuuukkkklllk..
+..kookuukuuuukolLkkllk..
+.koookkkLkkukolllLklllk.
+.kookkoollLkkLLlLLkkLLk.
+koookkLllllLLkkLkkukLLLk
+kookuukLLLLLLkukuuuukLLk
+kookuuukkkkLkuuuuuuukLLk
+kllkuuuuuukLkuuuuuuukLLk
+kllkuuuuukkkkkkuuuuukLLk
+klllkuuukATTTTAkuuukLLLk
+.kllkuuuukTTTAkuuuukLLk.
+.klllkuuukTTTAkuuukLLLk.
+..kllkuuukAAAAkuuukLLk..
+..klllkkuuuuuuuukkLLLk..
+...kllllkkuuuukkLLLLk...
+....klllLLkkkkLLLLLk....
+.....kklLLLLLLLLLkk.....
+.......kkLLLLLLkk.......
+.........kkkkkk.........
+end
+
+# Chapter 5 The Other End: coral up arrow and sky down arrow (lift, both ways); sky rim.
+icon ch5 24
+.........kkkkkk.........
+.......kkuuuyyykk.......
+.....kkuuuuuyyyyykk.....
+....kuuuuukkkkyyyyyk....
+...kuuukkkhhhhkkyyyyk...
+..kuuukRkhhhhhhhkkyyyk..
+..kuukrqRkhhhhhkkkkyyk..
+.kuukrrrrRkhhhkyyYkyyyk.
+.kukrrqrrrRkhhkuyYkkYYk.
+kuuRRRrrrRRRhhkuyYkkYYYk
+kuukkkrqRkkkhhkuyYkhkYYk
+kuukhkrqRkhhhhkyyYkhkYYk
+kyykhkrrRkhhhhkyyYkhkYYk
+kyykhkrrRkhhhhkyyYkhkYYk
+kyyykkrrRkhhkkkyyYkkkYYk
+.kyykkrrRkhhYyyyyyyyYYk.
+.kyyykRRRkhhkYyuyyyYkYk.
+..kyykkkkhhhhkYyyyYkYk..
+..kyyykkhhhhhhkYyYkYYk..
+...kyyyykkhhhhkkYkYYk...
+....kyyyYYkkkkYYYYYk....
+.....kkyYYYYYYYYYkk.....
+.......kkYYYYYYkk.......
+.........kkkkkk.........
+end
+
+# Chapter 6 Room for Everyone: paper moon and paper lantern on strings; festival-colour rim.
+icon ch6 24
+.........kkkkkk.........
+.......kkuuuyyykk.......
+.....kkhuuuuyyyylkk.....
+....khhhcukkkkyclllk....
+...khhhhck8888kcllllk...
+..khhhkkc888888ckklllk..
+..khhk88ck88888c88kllk..
+.khhhkkkhgk888kkk8klllk.
+.kqqkkhhgk888kggGk8kRRk.
+kqqqkhhgk88888kkk88kRRRk
+kqqkkhhgk8888qqrRk88kRRk
+kqqkkhhgk888kRRRRRk8kRRk
+krrkkghhgkkkgqhhrRk8kRRk
+krrk8kghhhhhgRRRRRk8kRRk
+krrrk8kgggggkkRRRk8kRRRk
+.krrk88kkkkk88kkk88kRRk.
+.klllk8888888kggGkkGGGk.
+..kllk88888888kkk8kGGk..
+..klllkk8888888gkkGGGk..
+...kllllkk8888kkGGGGk...
+....klllYYkkkkYYGGGk....
+.....kklYYYYYYYYGkk.....
+.......kkYYYYYYkk.......
+.........kkkkkk.........
+end
+
+# First Hello set: coral welcome pennant on cream.
+icon badge_first_hello 16
+....kkkkkkkk....
+...khhhhggggk...
+..khhhhhgggggk..
+.khhhkcccccgggk.
+khhhknkkccccgggk
+khhcknqqkkkccgGk
+khhcknqrrrRkcGGk
+khhcknrrRRRkcGGk
+kggcknRRkkkccGGk
+kggcknkkcccccGGk
+kggcknkccccccGGk
+kgggknkcccccGGGk
+.kgggkcccccGGGk.
+..kgggGGGGGGGk..
+...kgGGGGGGGk...
+....kkkkkkkk....
+end
+
+# Fresh Fold set: stack of three folded white sheets with linen-blue trim.
+icon badge_fresh_fold 16
+....kkkkkkkk....
+...khhhhggggk...
+..khhhhhgggggk..
+.khhhukkkkugggk.
+khhhukWwwwkugggk
+khhuukyyyykuugGk
+khhuukkkkkkuuGGk
+khhukWwwwwwkuGGk
+kggukyyyyyykuGGk
+kgguukkkkkkuuGGk
+kggukWwwwwwkuGGk
+kgggkyyyyyykGGGk
+.kgggkkkkkkGGGk.
+..kgggGGGGGGGk..
+...kgGGGGGGGk...
+....kkkkkkkk....
+end
+
+# Two Temperatures set: warm sun half, cool snowflake half.
+icon badge_two_temperatures 16
+....kkkkkkkk....
+...khhhhggggk...
+..khhhhhgggggk..
+.khhkqqquuugggk.
+khhhqqqquuuugggk
+khkqqqqkuYuYuYGk
+khhqkkqquuYYYGGk
+khhkqrkquYYuYYGk
+kggkrrkquuYYYGGk
+kggqkkqquYuYuYGk
+kgkqkqqkuuuuuGGk
+kgggqqqquuuuGGGk
+.kgggqqquuuGGGk.
+..kgggGGGGGGGk..
+...kgGGGGGGGk...
+....kkkkkkkk....
+end
+
+# Quiet Chorus set: crescent moon and note on plum.
+icon badge_quiet_chorus 16
+....kkkkkkkk....
+...khhhhggggk...
+..khhhhhgggggk..
+.khhhppkkppgggk.
+khhhpkkcCkgpgggk
+khhpkccCkppgpgGk
+khhkccCkppgppGGk
+khhkcCkpgggppGGk
+kggkcCkpggpkpGGk
+kggkCcCkkkkCkGGk
+kggpkCccccCkpGGk
+kgggpkCCCCkpGGGk
+.kgggpkkkkpGGGk.
+..kgggGGGGGGGk..
+...kgGGGGGGGk...
+....kkkkkkkk....
+end
+
+# Little Bloom set: flower in a terracotta pot on leaf green.
+icon badge_little_bloom 16
+....kkkkkkkk....
+...khhhhggggk...
+..khhhhhgggggk..
+.khhhookkoogggk.
+khhhookiikoogggk
+khhookiggikoogGk
+khhookkiikoooGGk
+khhoklllkkoooGGk
+kggookklllkooGGk
+kggokTTTTTTkoGGk
+kggookTTTGkooGGk
+kgggokTTGGkoGGGk
+.kgggokkkkoGGGk.
+..kgggGGGGGGGk..
+...kgGGGGGGGk...
+....kkkkkkkk....
+end
+
+# Other End set: suitcase with travel stickers.
+icon badge_other_end 16
+....kkkkkkkk....
+...khhhhggggk...
+..khhhhhgggggk..
+.khhhukkkkugggk.
+khhhukJJJJkugggk
+khhukkJuuJkkugGk
+khhkHHHHHHHJkGGk
+khhkHrrHHHHJkGGk
+kggkHrHHHgHJkGGk
+kggkHHHHggHJkGGk
+kggkJJJJJJJJkGGk
+kgggkkkkkkkkGGGk
+.kggguuuuuuGGGk.
+..kgggGGGGGGGk..
+...kgGGGGGGGk...
+....kkkkkkkk....
+end
+
+# Everyone Fits set: paper moon on a little stand, festival flecks, night face.
+icon badge_everyone_fits 16
+....kkkkkkkk....
+...khhhhggggk...
+..khhhhhgggggk..
+.khhh88kk88gggk.
+khhh88khgkr8gggk
+khh88khgk8888gGk
+khh8khgk88ky8GGk
+khh8kggkkkgk8GGk
+kgg88kghhgrk8GGk
+kgg888kggkk88GGk
+kgg88kknnkk88GGk
+kgggknnnnnnkGGGk
+.kgggkkkkkkGGGk.
+..kgggGGGGGGGk..
+...kgGGGGGGGk...
+....kkkkkkkk....
+end
+
+# Helping Hands set: rose heart held in cupped cream hands on sage.
+icon badge_helping_hands 16
+....kkkkkkkk....
+...khhhhggggk...
+..khhhhhgggggk..
+.khhhkkskksgggk.
+khhhkiikiiksgggk
+khhkiWiiiiiksgGk
+khhkiiiiiIiksGGk
+khhskiiiIikssGGk
+kggkskiIiksksGGk
+kggckskikskckGGk
+kggcckkkkkcckGGk
+kggkccccccckGGGk
+.kggkkkkkkkGGGk.
+..kgggGGGGGGGk..
+...kgGGGGGGGk...
+....kkkkkkkk....
+end

@@ -25,6 +25,7 @@ var tutorials: Dictionary = {}
 var modifiers: Dictionary = {}
 var story: Dictionary = {}
 var cosmetics: Array = []
+var gags: Dictionary = {}
 var content_hash := ""
 var errors: PackedStringArray = []
 var _layout_cache: Dictionary = {}
@@ -64,6 +65,8 @@ func load_all() -> void:
 		var s := _read("res://data/story/%s.json" % f)
 		for p in s.get("scenes", []):
 			story[p["id"]] = p
+		for k in s.get("gags", {}):
+			gags[k] = s["gags"][k]
 	content_hash = _compute_hash()
 	loaded = true
 

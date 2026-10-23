@@ -15,16 +15,12 @@ boot_splash/bg_color=Color(0.2, 0.2627, 0.2941, 1)
 boot_splash/show_image=false
 config/windows_native_icon="res://assets/export/icons/app_icon.ico"
 
-[audio]
-
-buses/default_bus_layout="res://assets/export/audio/default_bus_layout.tres"
-
 [autoload]
 
 Content="*res://src/content/content_registry.gd"
 Loc="*res://src/content/loc.gd"
-Settings="*res://src/app/settings.gd"
 SaveService="*res://src/save/save_service.gd"
+Settings="*res://src/app/settings.gd"
 InputRouter="*res://src/app/input_router.gd"
 Audio="*res://src/view/audio_director.gd"
 Net="*res://src/net/net.gd"

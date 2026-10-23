@@ -1,0 +1,261 @@
+{
+ "schema_version": 1,
+ "generated_from": "data/campaign_manifest.json",
+ "id": "L05",
+ "title": "Some Like It Chilly",
+ "chapter": 2,
+ "layout": "P2",
+ "story": {
+  "pre": "L05.pre",
+  "post": "L05.post",
+  "gag": {
+   "trigger": "time",
+   "fallback_s": 90,
+   "speaker": "flurry",
+   "caption": "level.L05.mid"
+  }
+ },
+ "by_humans": {
+  "1": {
+   "waves": [
+    [
+     "yeti"
+    ],
+    [
+     "yeti"
+    ],
+    [
+     "yeti"
+    ]
+   ],
+   "schedule": [
+    {
+     "family": "yeti",
+     "wave": 0,
+     "arrive_s": 30,
+     "announce_s": 22
+    },
+    {
+     "family": "yeti",
+     "wave": 1,
+     "arrive_s": 105,
+     "announce_s": 97
+    },
+    {
+     "family": "yeti",
+     "wave": 2,
+     "arrive_s": 180,
+     "announce_s": 172
+    }
+   ],
+   "guest_count": 3
+  },
+  "2": {
+   "waves": [
+    [
+     "yeti",
+     "slime"
+    ],
+    [
+     "yeti",
+     "slime"
+    ],
+    [
+     "yeti",
+     "slime"
+    ]
+   ],
+   "schedule": [
+    {
+     "family": "yeti",
+     "wave": 0,
+     "arrive_s": 25,
+     "announce_s": 17
+    },
+    {
+     "family": "slime",
+     "wave": 0,
+     "arrive_s": 30,
+     "announce_s": 22
+    },
+    {
+     "family": "yeti",
+     "wave": 1,
+     "arrive_s": 100,
+     "announce_s": 92
+    },
+    {
+     "family": "slime",
+     "wave": 1,
+     "arrive_s": 105,
+     "announce_s": 97
+    },
+    {
+     "family": "yeti",
+     "wave": 2,
+     "arrive_s": 175,
+     "announce_s": 167
+    },
+    {
+     "family": "slime",
+     "wave": 2,
+     "arrive_s": 180,
+     "announce_s": 172
+    }
+   ],
+   "guest_count": 6
+  },
+  "3": {
+   "waves": [
+    [
+     "yeti",
+     "slime",
+     "yeti"
+    ],
+    [
+     "yeti",
+     "slime",
+     "yeti"
+    ],
+    [
+     "yeti",
+     "slime",
+     "yeti"
+    ]
+   ],
+   "schedule": [
+    {
+     "family": "yeti",
+     "wave": 0,
+     "arrive_s": 20,
+     "announce_s": 12
+    },
+    {
+     "family": "slime",
+     "wave": 0,
+     "arrive_s": 25,
+     "announce_s": 17
+    },
+    {
+     "family": "yeti",
+     "wave": 0,
+     "arrive_s": 30,
+     "announce_s": 22
+    },
+    {
+     "family": "yeti",
+     "wave": 1,
+     "arrive_s": 95,
+     "announce_s": 87
+    },
+    {
+     "family": "slime",
+     "wave": 1,
+     "arrive_s": 100,
+     "announce_s": 92
+    },
+    {
+     "family": "yeti",
+     "wave": 1,
+     "arrive_s": 105,
+     "announce_s": 97
+    },
+    {
+     "family": "yeti",
+     "wave": 2,
+     "arrive_s": 170,
+     "announce_s": 162
+    },
+    {
+     "family": "slime",
+     "wave": 2,
+     "arrive_s": 175,
+     "announce_s": 167
+    },
+    {
+     "family": "yeti",
+     "wave": 2,
+     "arrive_s": 180,
+     "announce_s": 172
+    }
+   ],
+   "guest_count": 9
+  },
+  "4": {
+   "waves": [
+    [
+     "yeti",
+     "slime",
+     "yeti"
+    ],
+    [
+     "yeti",
+     "slime",
+     "yeti"
+    ],
+    [
+     "yeti",
+     "slime",
+     "yeti"
+    ]
+   ],
+   "schedule": [
+    {
+     "family": "yeti",
+     "wave": 0,
+     "arrive_s": 20,
+     "announce_s": 12
+    },
+    {
+     "family": "slime",
+     "wave": 0,
+     "arrive_s": 25,
+     "announce_s": 17
+    },
+    {
+     "family": "yeti",
+     "wave": 0,
+     "arrive_s": 30,
+     "announce_s": 22
+    },
+    {
+     "family": "yeti",
+     "wave": 1,
+     "arrive_s": 95,
+     "announce_s": 87
+    },
+    {
+     "family": "slime",
+     "wave": 1,
+     "arrive_s": 100,
+     "announce_s": 92
+    },
+    {
+     "family": "yeti",
+     "wave": 1,
+     "arrive_s": 105,
+     "announce_s": 97
+    },
+    {
+     "family": "yeti",
+     "wave": 2,
+     "arrive_s": 170,
+     "announce_s": 162
+    },
+    {
+     "family": "slime",
+     "wave": 2,
+     "arrive_s": 175,
+     "announce_s": 167
+    },
+    {
+     "family": "yeti",
+     "wave": 2,
+     "arrive_s": 180,
+     "announce_s": 172
+    }
+   ],
+   "guest_count": 9
+  }
+ }
+}

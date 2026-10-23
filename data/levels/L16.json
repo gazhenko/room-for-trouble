@@ -1,0 +1,366 @@
+{
+ "schema_version": 1,
+ "generated_from": "data/campaign_manifest.json",
+ "id": "L16",
+ "title": "Bloom Service",
+ "chapter": 4,
+ "layout": "P4",
+ "story": {
+  "pre": "L16.pre",
+  "post": "L16.post",
+  "gag": {
+   "trigger": "three_cozy",
+   "fallback_s": 210,
+   "speaker": "gus",
+   "caption": "level.L16.mid"
+  }
+ },
+ "by_humans": {
+  "1": {
+   "waves": [
+    [
+     "sprout",
+     "slime"
+    ],
+    [
+     "yeti",
+     "dragon"
+    ],
+    [
+     "ghost",
+     "moonwolf"
+    ]
+   ],
+   "schedule": [
+    {
+     "family": "sprout",
+     "wave": 0,
+     "arrive_s": 25,
+     "announce_s": 17
+    },
+    {
+     "family": "slime",
+     "wave": 0,
+     "arrive_s": 30,
+     "announce_s": 22
+    },
+    {
+     "family": "yeti",
+     "wave": 1,
+     "arrive_s": 107,
+     "announce_s": 99
+    },
+    {
+     "family": "dragon",
+     "wave": 1,
+     "arrive_s": 112,
+     "announce_s": 104
+    },
+    {
+     "family": "ghost",
+     "wave": 2,
+     "arrive_s": 190,
+     "announce_s": 182
+    },
+    {
+     "family": "moonwolf",
+     "wave": 2,
+     "arrive_s": 195,
+     "announce_s": 187
+    }
+   ],
+   "guest_count": 6
+  },
+  "2": {
+   "waves": [
+    [
+     "sprout",
+     "slime",
+     "dragon"
+    ],
+    [
+     "yeti",
+     "dragon",
+     "moonwolf"
+    ],
+    [
+     "ghost",
+     "moonwolf",
+     "sprout"
+    ]
+   ],
+   "schedule": [
+    {
+     "family": "sprout",
+     "wave": 0,
+     "arrive_s": 20,
+     "announce_s": 12
+    },
+    {
+     "family": "slime",
+     "wave": 0,
+     "arrive_s": 25,
+     "announce_s": 17
+    },
+    {
+     "family": "dragon",
+     "wave": 0,
+     "arrive_s": 30,
+     "announce_s": 22
+    },
+    {
+     "family": "yeti",
+     "wave": 1,
+     "arrive_s": 102,
+     "announce_s": 94
+    },
+    {
+     "family": "dragon",
+     "wave": 1,
+     "arrive_s": 107,
+     "announce_s": 99
+    },
+    {
+     "family": "moonwolf",
+     "wave": 1,
+     "arrive_s": 112,
+     "announce_s": 104
+    },
+    {
+     "family": "ghost",
+     "wave": 2,
+     "arrive_s": 185,
+     "announce_s": 177
+    },
+    {
+     "family": "moonwolf",
+     "wave": 2,
+     "arrive_s": 190,
+     "announce_s": 182
+    },
+    {
+     "family": "sprout",
+     "wave": 2,
+     "arrive_s": 195,
+     "announce_s": 187
+    }
+   ],
+   "guest_count": 9
+  },
+  "3": {
+   "waves": [
+    [
+     "sprout",
+     "slime",
+     "dragon",
+     "sprout"
+    ],
+    [
+     "yeti",
+     "dragon",
+     "moonwolf",
+     "yeti"
+    ],
+    [
+     "ghost",
+     "moonwolf",
+     "sprout",
+     "ghost"
+    ]
+   ],
+   "schedule": [
+    {
+     "family": "sprout",
+     "wave": 0,
+     "arrive_s": 15,
+     "announce_s": 7
+    },
+    {
+     "family": "slime",
+     "wave": 0,
+     "arrive_s": 20,
+     "announce_s": 12
+    },
+    {
+     "family": "dragon",
+     "wave": 0,
+     "arrive_s": 25,
+     "announce_s": 17
+    },
+    {
+     "family": "sprout",
+     "wave": 0,
+     "arrive_s": 30,
+     "announce_s": 22
+    },
+    {
+     "family": "yeti",
+     "wave": 1,
+     "arrive_s": 97,
+     "announce_s": 89
+    },
+    {
+     "family": "dragon",
+     "wave": 1,
+     "arrive_s": 102,
+     "announce_s": 94
+    },
+    {
+     "family": "moonwolf",
+     "wave": 1,
+     "arrive_s": 107,
+     "announce_s": 99
+    },
+    {
+     "family": "yeti",
+     "wave": 1,
+     "arrive_s": 112,
+     "announce_s": 104
+    },
+    {
+     "family": "ghost",
+     "wave": 2,
+     "arrive_s": 180,
+     "announce_s": 172
+    },
+    {
+     "family": "moonwolf",
+     "wave": 2,
+     "arrive_s": 185,
+     "announce_s": 177
+    },
+    {
+     "family": "sprout",
+     "wave": 2,
+     "arrive_s": 190,
+     "announce_s": 182
+    },
+    {
+     "family": "ghost",
+     "wave": 2,
+     "arrive_s": 195,
+     "announce_s": 187
+    }
+   ],
+   "guest_count": 12
+  },
+  "4": {
+   "waves": [
+    [
+     "sprout",
+     "slime",
+     "dragon",
+     "sprout",
+     "slime"
+    ],
+    [
+     "yeti",
+     "dragon",
+     "moonwolf",
+     "yeti",
+     "dragon"
+    ],
+    [
+     "ghost",
+     "moonwolf",
+     "sprout",
+     "ghost",
+     "moonwolf"
+    ]
+   ],
+   "schedule": [
+    {
+     "family": "sprout",
+     "wave": 0,
+     "arrive_s": 10,
+     "announce_s": 2
+    },
+    {
+     "family": "slime",
+     "wave": 0,
+     "arrive_s": 15,
+     "announce_s": 7
+    },
+    {
+     "family": "dragon",
+     "wave": 0,
+     "arrive_s": 20,
+     "announce_s": 12
+    },
+    {
+     "family": "sprout",
+     "wave": 0,
+     "arrive_s": 25,
+     "announce_s": 17
+    },
+    {
+     "family": "slime",
+     "wave": 0,
+     "arrive_s": 30,
+     "announce_s": 22
+    },
+    {
+     "family": "yeti",
+     "wave": 1,
+     "arrive_s": 92,
+     "announce_s": 84
+    },
+    {
+     "family": "dragon",
+     "wave": 1,
+     "arrive_s": 97,
+     "announce_s": 89
+    },
+    {
+     "family": "moonwolf",
+     "wave": 1,
+     "arrive_s": 102,
+     "announce_s": 94
+    },
+    {
+     "family": "yeti",
+     "wave": 1,
+     "arrive_s": 107,
+     "announce_s": 99
+    },
+    {
+     "family": "dragon",
+     "wave": 1,
+     "arrive_s": 112,
+     "announce_s": 104
+    },
+    {
+     "family": "ghost",
+     "wave": 2,
+     "arrive_s": 175,
+     "announce_s": 167
+    },
+    {
+     "family": "moonwolf",
+     "wave": 2,
+     "arrive_s": 180,
+     "announce_s": 172
+    },
+    {
+     "family": "sprout",
+     "wave": 2,
+     "arrive_s": 185,
+     "announce_s": 177
+    },
+    {
+     "family": "ghost",
+     "wave": 2,
+     "arrive_s": 190,
+     "announce_s": 182
+    },
+    {
+     "family": "moonwolf",
+     "wave": 2,
+     "arrive_s": 195,
+     "announce_s": 187
+    }
+   ],
+   "guest_count": 15
+  }
+ }
+}

@@ -1,1 +1,316 @@
-{"schema_version":1,"scenes":[]}
+{
+ "schema_version": 1,
+ "scenes": [
+  {
+   "id": "O00",
+   "layout": "P1",
+   "music": "title_loop",
+   "title_key": "story.O00.title",
+   "panels": [
+    {
+     "id": "O00.1",
+     "camera": "wide_hotel",
+     "duration": 6,
+     "speaker": "nana",
+     "actors": [
+      {
+       "id": "nana",
+       "pos": [
+        -0.9,
+        9.6
+       ],
+       "pose": "wave",
+       "face": 90
+      }
+     ],
+     "props": [],
+     "sound": "chime",
+     "caption": "story.O00.1"
+    },
+    {
+     "id": "O00.2",
+     "camera": "lobby_group",
+     "duration": 6,
+     "speaker": "nana",
+     "actors": [
+      {
+       "id": "nana",
+       "pos": [
+        3.0,
+        9.4
+       ],
+       "pose": "work",
+       "face": 0
+      },
+      {
+       "id": "gus",
+       "pos": [
+        4.3,
+        9.9
+       ],
+       "pose": "happy",
+       "face": 0
+      }
+     ],
+     "props": [
+      {
+       "kind": "sheet_sculpture",
+       "pos": [
+        4.3,
+        0.0,
+        9.9
+       ],
+       "scale": 0.6
+      }
+     ],
+     "sound": "linen_fold",
+     "caption": "story.O00.2"
+    },
+    {
+     "id": "O00.3",
+     "camera": "desk_close",
+     "duration": 5,
+     "speaker": "",
+     "actors": [
+      {
+       "id": "nana",
+       "pos": [
+        1.3,
+        9.0
+       ],
+       "pose": "idle",
+       "face": 70
+      }
+     ],
+     "props": [
+      {
+       "kind": "invitation",
+       "pos": [
+        2.3,
+        0.95,
+        9.2
+       ]
+      }
+     ],
+     "sound": "bell_ring",
+     "caption": "story.O00.3"
+    },
+    {
+     "id": "O00.4",
+     "camera": "lobby_group",
+     "duration": 4,
+     "speaker": "staff",
+     "actors": [
+      {
+       "id": "staff",
+       "pos": [
+        5.2,
+        10.3
+       ],
+       "pose": "carry",
+       "face": 0
+      },
+      {
+       "id": "nana",
+       "pos": [
+        3.0,
+        9.4
+       ],
+       "pose": "happy",
+       "face": 0
+      }
+     ],
+     "props": [],
+     "caption": "story.O00.4"
+    },
+    {
+     "id": "O00.4b",
+     "camera": "lobby_group",
+     "duration": 4,
+     "speaker": "nana",
+     "actors": [
+      {
+       "id": "staff",
+       "pos": [
+        5.2,
+        10.3
+       ],
+       "pose": "happy",
+       "face": 0
+      },
+      {
+       "id": "nana",
+       "pos": [
+        3.0,
+        9.4
+       ],
+       "pose": "wave",
+       "face": 0
+      }
+     ],
+     "props": [],
+     "caption": "story.O00.4b"
+    },
+    {
+     "id": "O00.5",
+     "camera": "desk_close",
+     "duration": 7,
+     "speaker": "dot",
+     "actors": [
+      {
+       "id": "nana",
+       "pos": [
+        1.3,
+        9.0
+       ],
+       "pose": "idle",
+       "face": 70
+      },
+      {
+       "id": "dot",
+       "pos": [
+        3.0,
+        9.4
+       ],
+       "pose": "idle",
+       "face": -30
+      }
+     ],
+     "props": [
+      {
+       "kind": "checklist",
+       "pos": [
+        3.4,
+        0.0,
+        9.9
+       ]
+      }
+     ],
+     "sound": "dot_paper",
+     "caption": "story.O00.5"
+    },
+    {
+     "id": "O00.6",
+     "camera": "guest_close",
+     "duration": 7,
+     "speaker": "nana",
+     "actors": [
+      {
+       "id": "flurry",
+       "pos": [
+        -1.4,
+        8.2
+       ],
+       "pose": "happy",
+       "face": 0
+      },
+      {
+       "id": "cinder",
+       "pos": [
+        -1.4,
+        10.8
+       ],
+       "pose": "happy",
+       "face": 0
+      },
+      {
+       "id": "whisp",
+       "pos": [
+        -1.0,
+        9.5
+       ],
+       "pose": "wave",
+       "face": 0
+      }
+     ],
+     "props": [],
+     "focus": [
+      -1.2,
+      9.5
+     ],
+     "caption": "story.O00.6"
+    },
+    {
+     "id": "O00.7",
+     "camera": "lobby_group",
+     "duration": 7,
+     "speaker": "nana",
+     "actors": [
+      {
+       "id": "staff",
+       "pos": [
+        5.2,
+        10.3
+       ],
+       "pose": "happy",
+       "face": 0
+      },
+      {
+       "id": "nana",
+       "pos": [
+        3.0,
+        9.4
+       ],
+       "pose": "happy",
+       "face": 0
+      },
+      {
+       "id": "gus",
+       "pos": [
+        4.2,
+        10.8
+       ],
+       "pose": "happy",
+       "face": 0
+      }
+     ],
+     "props": [],
+     "sound": "bell_hiccup",
+     "caption": "story.O00.7"
+    },
+    {
+     "id": "O00.8",
+     "camera": "postcard_still",
+     "duration": 5,
+     "speaker": "",
+     "actors": [
+      {
+       "id": "staff",
+       "pos": [
+        1.2,
+        9.6
+       ],
+       "pose": "photo",
+       "face": 0
+      },
+      {
+       "id": "nana",
+       "pos": [
+        -0.3,
+        9.0
+       ],
+       "pose": "wave",
+       "face": 30
+      },
+      {
+       "id": "gus",
+       "pos": [
+        2.9,
+        10.1
+       ],
+       "pose": "happy",
+       "face": 0
+      }
+     ],
+     "props": [],
+     "focus": [
+      1.0,
+      9.4
+     ],
+     "sting": "sting_results",
+     "caption": "story.O00.8"
+    }
+   ]
+  }
+ ]
+}

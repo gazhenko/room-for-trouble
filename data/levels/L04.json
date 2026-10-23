@@ -1,0 +1,261 @@
+{
+ "schema_version": 1,
+ "generated_from": "data/campaign_manifest.json",
+ "id": "L04",
+ "title": "A Very Long Suitcase",
+ "chapter": 1,
+ "layout": "P1",
+ "story": {
+  "pre": "L04.pre",
+  "post": "L04.post",
+  "gag": {
+   "trigger": "trunk_delivered",
+   "fallback_s": 0,
+   "speaker": "gus",
+   "caption": "level.L04.mid"
+  }
+ },
+ "by_humans": {
+  "1": {
+   "waves": [
+    [
+     "slime"
+    ],
+    [
+     "slime"
+    ],
+    [
+     "slime"
+    ]
+   ],
+   "schedule": [
+    {
+     "family": "slime",
+     "wave": 0,
+     "arrive_s": 30,
+     "announce_s": 22
+    },
+    {
+     "family": "slime",
+     "wave": 1,
+     "arrive_s": 90,
+     "announce_s": 82
+    },
+    {
+     "family": "slime",
+     "wave": 2,
+     "arrive_s": 150,
+     "announce_s": 142
+    }
+   ],
+   "guest_count": 3
+  },
+  "2": {
+   "waves": [
+    [
+     "slime",
+     "slime"
+    ],
+    [
+     "slime",
+     "slime"
+    ],
+    [
+     "slime",
+     "slime"
+    ]
+   ],
+   "schedule": [
+    {
+     "family": "slime",
+     "wave": 0,
+     "arrive_s": 25,
+     "announce_s": 17
+    },
+    {
+     "family": "slime",
+     "wave": 0,
+     "arrive_s": 30,
+     "announce_s": 22
+    },
+    {
+     "family": "slime",
+     "wave": 1,
+     "arrive_s": 85,
+     "announce_s": 77
+    },
+    {
+     "family": "slime",
+     "wave": 1,
+     "arrive_s": 90,
+     "announce_s": 82
+    },
+    {
+     "family": "slime",
+     "wave": 2,
+     "arrive_s": 145,
+     "announce_s": 137
+    },
+    {
+     "family": "slime",
+     "wave": 2,
+     "arrive_s": 150,
+     "announce_s": 142
+    }
+   ],
+   "guest_count": 6
+  },
+  "3": {
+   "waves": [
+    [
+     "slime",
+     "slime",
+     "slime"
+    ],
+    [
+     "slime",
+     "slime",
+     "slime"
+    ],
+    [
+     "slime",
+     "slime",
+     "slime"
+    ]
+   ],
+   "schedule": [
+    {
+     "family": "slime",
+     "wave": 0,
+     "arrive_s": 20,
+     "announce_s": 12
+    },
+    {
+     "family": "slime",
+     "wave": 0,
+     "arrive_s": 25,
+     "announce_s": 17
+    },
+    {
+     "family": "slime",
+     "wave": 0,
+     "arrive_s": 30,
+     "announce_s": 22
+    },
+    {
+     "family": "slime",
+     "wave": 1,
+     "arrive_s": 80,
+     "announce_s": 72
+    },
+    {
+     "family": "slime",
+     "wave": 1,
+     "arrive_s": 85,
+     "announce_s": 77
+    },
+    {
+     "family": "slime",
+     "wave": 1,
+     "arrive_s": 90,
+     "announce_s": 82
+    },
+    {
+     "family": "slime",
+     "wave": 2,
+     "arrive_s": 140,
+     "announce_s": 132
+    },
+    {
+     "family": "slime",
+     "wave": 2,
+     "arrive_s": 145,
+     "announce_s": 137
+    },
+    {
+     "family": "slime",
+     "wave": 2,
+     "arrive_s": 150,
+     "announce_s": 142
+    }
+   ],
+   "guest_count": 9
+  },
+  "4": {
+   "waves": [
+    [
+     "slime",
+     "slime",
+     "slime"
+    ],
+    [
+     "slime",
+     "slime",
+     "slime"
+    ],
+    [
+     "slime",
+     "slime",
+     "slime"
+    ]
+   ],
+   "schedule": [
+    {
+     "family": "slime",
+     "wave": 0,
+     "arrive_s": 20,
+     "announce_s": 12
+    },
+    {
+     "family": "slime",
+     "wave": 0,
+     "arrive_s": 25,
+     "announce_s": 17
+    },
+    {
+     "family": "slime",
+     "wave": 0,
+     "arrive_s": 30,
+     "announce_s": 22
+    },
+    {
+     "family": "slime",
+     "wave": 1,
+     "arrive_s": 80,
+     "announce_s": 72
+    },
+    {
+     "family": "slime",
+     "wave": 1,
+     "arrive_s": 85,
+     "announce_s": 77
+    },
+    {
+     "family": "slime",
+     "wave": 1,
+     "arrive_s": 90,
+     "announce_s": 82
+    },
+    {
+     "family": "slime",
+     "wave": 2,
+     "arrive_s": 140,
+     "announce_s": 132
+    },
+    {
+     "family": "slime",
+     "wave": 2,
+     "arrive_s": 145,
+     "announce_s": 137
+    },
+    {
+     "family": "slime",
+     "wave": 2,
+     "arrive_s": 150,
+     "announce_s": 142
+    }
+   ],
+   "guest_count": 9
+  }
+ }
+}

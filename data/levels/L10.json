@@ -1,0 +1,310 @@
+{
+ "schema_version": 1,
+ "generated_from": "data/campaign_manifest.json",
+ "id": "L10",
+ "title": "Indoor Voices",
+ "chapter": 3,
+ "layout": "P3",
+ "story": {
+  "pre": "L10.pre",
+  "post": "L10.post",
+  "gag": {
+   "trigger": "quiet_howl",
+   "fallback_s": 0,
+   "speaker": "luna",
+   "caption": "level.L10.mid"
+  }
+ },
+ "by_humans": {
+  "1": {
+   "waves": [
+    [
+     "moonwolf",
+     "ghost"
+    ],
+    [
+     "ghost",
+     "moonwolf"
+    ],
+    [
+     "moonwolf",
+     "ghost"
+    ]
+   ],
+   "schedule": [
+    {
+     "family": "moonwolf",
+     "wave": 0,
+     "arrive_s": 25,
+     "announce_s": 17
+    },
+    {
+     "family": "ghost",
+     "wave": 0,
+     "arrive_s": 30,
+     "announce_s": 22
+    },
+    {
+     "family": "ghost",
+     "wave": 1,
+     "arrive_s": 100,
+     "announce_s": 92
+    },
+    {
+     "family": "moonwolf",
+     "wave": 1,
+     "arrive_s": 105,
+     "announce_s": 97
+    },
+    {
+     "family": "moonwolf",
+     "wave": 2,
+     "arrive_s": 175,
+     "announce_s": 167
+    },
+    {
+     "family": "ghost",
+     "wave": 2,
+     "arrive_s": 180,
+     "announce_s": 172
+    }
+   ],
+   "guest_count": 6
+  },
+  "2": {
+   "waves": [
+    [
+     "moonwolf",
+     "ghost"
+    ],
+    [
+     "ghost",
+     "moonwolf"
+    ],
+    [
+     "moonwolf",
+     "ghost",
+     "slime"
+    ]
+   ],
+   "schedule": [
+    {
+     "family": "moonwolf",
+     "wave": 0,
+     "arrive_s": 25,
+     "announce_s": 17
+    },
+    {
+     "family": "ghost",
+     "wave": 0,
+     "arrive_s": 30,
+     "announce_s": 22
+    },
+    {
+     "family": "ghost",
+     "wave": 1,
+     "arrive_s": 100,
+     "announce_s": 92
+    },
+    {
+     "family": "moonwolf",
+     "wave": 1,
+     "arrive_s": 105,
+     "announce_s": 97
+    },
+    {
+     "family": "moonwolf",
+     "wave": 2,
+     "arrive_s": 170,
+     "announce_s": 162
+    },
+    {
+     "family": "ghost",
+     "wave": 2,
+     "arrive_s": 175,
+     "announce_s": 167
+    },
+    {
+     "family": "slime",
+     "wave": 2,
+     "arrive_s": 180,
+     "announce_s": 172
+    }
+   ],
+   "guest_count": 7
+  },
+  "3": {
+   "waves": [
+    [
+     "moonwolf",
+     "ghost",
+     "moonwolf"
+    ],
+    [
+     "ghost",
+     "moonwolf",
+     "ghost"
+    ],
+    [
+     "moonwolf",
+     "ghost",
+     "slime",
+     "moonwolf"
+    ]
+   ],
+   "schedule": [
+    {
+     "family": "moonwolf",
+     "wave": 0,
+     "arrive_s": 20,
+     "announce_s": 12
+    },
+    {
+     "family": "ghost",
+     "wave": 0,
+     "arrive_s": 25,
+     "announce_s": 17
+    },
+    {
+     "family": "moonwolf",
+     "wave": 0,
+     "arrive_s": 30,
+     "announce_s": 22
+    },
+    {
+     "family": "ghost",
+     "wave": 1,
+     "arrive_s": 95,
+     "announce_s": 87
+    },
+    {
+     "family": "moonwolf",
+     "wave": 1,
+     "arrive_s": 100,
+     "announce_s": 92
+    },
+    {
+     "family": "ghost",
+     "wave": 1,
+     "arrive_s": 105,
+     "announce_s": 97
+    },
+    {
+     "family": "moonwolf",
+     "wave": 2,
+     "arrive_s": 165,
+     "announce_s": 157
+    },
+    {
+     "family": "ghost",
+     "wave": 2,
+     "arrive_s": 170,
+     "announce_s": 162
+    },
+    {
+     "family": "slime",
+     "wave": 2,
+     "arrive_s": 175,
+     "announce_s": 167
+    },
+    {
+     "family": "moonwolf",
+     "wave": 2,
+     "arrive_s": 180,
+     "announce_s": 172
+    }
+   ],
+   "guest_count": 10
+  },
+  "4": {
+   "waves": [
+    [
+     "moonwolf",
+     "ghost",
+     "moonwolf"
+    ],
+    [
+     "ghost",
+     "moonwolf",
+     "ghost"
+    ],
+    [
+     "moonwolf",
+     "ghost",
+     "slime",
+     "moonwolf",
+     "ghost"
+    ]
+   ],
+   "schedule": [
+    {
+     "family": "moonwolf",
+     "wave": 0,
+     "arrive_s": 20,
+     "announce_s": 12
+    },
+    {
+     "family": "ghost",
+     "wave": 0,
+     "arrive_s": 25,
+     "announce_s": 17
+    },
+    {
+     "family": "moonwolf",
+     "wave": 0,
+     "arrive_s": 30,
+     "announce_s": 22
+    },
+    {
+     "family": "ghost",
+     "wave": 1,
+     "arrive_s": 95,
+     "announce_s": 87
+    },
+    {
+     "family": "moonwolf",
+     "wave": 1,
+     "arrive_s": 100,
+     "announce_s": 92
+    },
+    {
+     "family": "ghost",
+     "wave": 1,
+     "arrive_s": 105,
+     "announce_s": 97
+    },
+    {
+     "family": "moonwolf",
+     "wave": 2,
+     "arrive_s": 160,
+     "announce_s": 152
+    },
+    {
+     "family": "ghost",
+     "wave": 2,
+     "arrive_s": 165,
+     "announce_s": 157
+    },
+    {
+     "family": "slime",
+     "wave": 2,
+     "arrive_s": 170,
+     "announce_s": 162
+    },
+    {
+     "family": "moonwolf",
+     "wave": 2,
+     "arrive_s": 175,
+     "announce_s": 167
+    },
+    {
+     "family": "ghost",
+     "wave": 2,
+     "arrive_s": 180,
+     "announce_s": 172
+    }
+   ],
+   "guest_count": 11
+  }
+ }
+}

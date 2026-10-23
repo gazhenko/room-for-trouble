@@ -183,3 +183,29 @@ func test_net05_stale_or_flooded_input_cannot_run_away() -> void:
 	r.step(1010 + NetRoom.STALE_INPUT_MS + 2000)
 	eq(st["x"], x1, "no runaway motion after the client stops sending")
 	eq(st["vx"], 0, "velocity settles to zero")
+
+func test_save_suspended_shift_round_trips_through_profile_json() -> void:
+	# Active-shift suspension (§21.4): the snapshot goes through the profile's
+	# JSON file and must resume to exactly the same mechanical future.
+	var a := make_sim("L14", 2)
+	a.start_now()
+	var r := FixedRng.new(5)
+	var log: Array = []
+	for t in 2400:
+		var fr: Array = []
+		for seat in 2:
+			fr.append(frame(seat, r.range_i(-127, 127), r.range_i(-127, 127), r.range_i(0, 3), r.range_i(0, 3) if r.range_i(0, 9) == 0 else 0))
+		log.append(fr)
+	for t in 1200:
+		a.step(log[t])
+	var snap := a.snapshot()
+	var txt := JSON.stringify(SaveService.normalize(snap))
+	var back: Dictionary = SaveService.normalize(JSON.parse_string(txt))
+	var b := make_sim("L14", 2)
+	b.restore(back)
+	eq(b.state_hash(), a.state_hash(), "restored state hashes identically")
+	for t in range(1200, 2400):
+		a.step(log[t])
+		b.step(log[t])
+	eq(b.state_hash(), a.state_hash(), "resumed shift continues identically")
+	eq(b.s["guests"].size(), a.s["guests"].size(), "guest table intact")

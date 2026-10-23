@@ -91,6 +91,9 @@ func _read_valid(path: String) -> Dictionary:
 	var d = JSON.parse_string(txt)
 	if not d is Dictionary:
 		return {}
+	# Pre-release v0 profiles had no checksum; migrate() upgrades them.
+	if int(d.get("schema_version", -1)) == 0 and not d.has("checksum"):
+		return normalize(d)
 	if str(d.get("checksum", "")) != checksum_of(d):
 		return {}
 	return normalize(d)

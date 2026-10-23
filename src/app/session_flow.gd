@@ -16,7 +16,26 @@ func boot(m) -> void:
 	party["pace_milli"] = int(Settings.g("pace_milli"))
 	if SaveService.recovered_from != "":
 		call_deferred("toast", Loc.t("ui.save.recovered"), "sys_postcard")
+	Net.notice.connect(func(key: String):
+		if key != "" and key != "ui.pause.title":
+			toast(Loc.t(key), "ui_online"))
+	Net.client_disconnected.connect(_on_net_lost)
 	show_title()
+
+## The service is gone for good during an online shift: never pretend the
+## local client is authoritative; offer the way home (§11.5).
+func _on_net_lost(reason_key: String) -> void:
+	if current_shift == null or not current_cfg.get("online", false) or not is_instance_valid(current_shift):
+		return
+	InputRouter.gameplay = false
+	var c := ChoiceScreen.new()
+	c.setup(Loc.t("ui.online.lost_title"), Loc.t(reason_key), [
+		[Loc.t("ui.online.return_hub"), "ui_hub", func():
+			current_shift = null
+			Net.leave_room()
+			Net.disconnect_client()
+			show_hub()]], "ui_online")
+	overlay(c)
 
 # ------------------------------------------------------------ screen stack
 

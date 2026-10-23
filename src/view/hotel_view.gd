@@ -27,6 +27,7 @@ var _last: Dictionary = {}
 var _this: Dictionary = {}
 var _hl: Dictionary = {}          # seat -> {key, nodes}
 var _bell_ring_t := 0.0
+var _prebuilt: Dictionary = {}    # guest id -> hidden rig built at load
 var _flow_arrows: Array = []
 var _fx: Array = []               # transient effects [{node, t, life, kind, data}]
 var local_seats: Array = []       # sim seats controlled on this machine (for highlights)
@@ -142,6 +143,23 @@ func _build_room_dressing() -> void:
 		tint.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		add_child(tint)
 		heat_tints[letter] = tint
+
+## Builds every scheduled guest's rig and every item mesh up front, so an
+## arrival never stalls a frame on procedural mesh construction.
+func prewarm(state: Dictionary) -> void:
+	for gid in state.get("guests", {}):
+		var key := int(gid)
+		if guest_rigs.has(key) or _prebuilt.has(key):
+			continue
+		var g: Dictionary = state["guests"][gid]
+		var rig := ModelActors.guest(g["fam"], g.get("var", ""))
+		rig.visible = false
+		add_child(rig)
+		_prebuilt[key] = rig
+	for kind in ModelItems.KINDS:
+		ModelItems.build(kind).free()
+	for fam in ModelItems.FAMILIES:
+		ModelItems.build("ticket", {"family": fam}).free()
 
 # ------------------------------------------------------------ interpolation
 
@@ -402,9 +420,14 @@ func _sync_guests(alpha: float, dt: float) -> void:
 		var key := int(gid)
 		seen[key] = true
 		if not guest_rigs.has(key):
-			var rig := ModelActors.guest(g["fam"], g.get("var", ""))
+			var rig: ActorRig = _prebuilt.get(key, null)
+			if rig != null:
+				_prebuilt.erase(key)
+				rig.visible = true
+			else:
+				rig = ModelActors.guest(g["fam"], g.get("var", ""))
+				add_child(rig)
 			rig.reduced_motion = reduced_motion
-			add_child(rig)
 			guest_rigs[key] = rig
 			if g["fam"] == "ghost":
 				_set_dither(rig, 0.88)

@@ -14,6 +14,7 @@ signal client_disconnected(reason_key: String)
 signal notice(reason_key: String)
 
 const TICK := 1.0 / 30.0
+const START_READY_AFTER_S := 20.0
 
 var mode := "offline"
 var online := false
@@ -109,7 +110,7 @@ func shutdown() -> void:
 	_log("info", "graceful shutdown: notifying %d rooms" % rooms.size())
 	for rid in rooms:
 		var r: NetRoom = rooms[rid]
-		_room_send(r, {"type": "notice", "reason": "ui.online.restored"})
+		_room_send(r, {"type": "notice", "reason": "ui.online.restarting"})
 		_save_checkpoint(r)
 	get_tree().create_timer(1.0).timeout.connect(func(): get_tree().quit(0))
 
@@ -350,12 +351,18 @@ func _lobby(pid: int, d: Dictionary) -> void:
 	var is_leader := sid == r.leader
 	r.last_activity = Time.get_unix_time_from_system()
 	match action:
-		"ready": s["ready"] = true
+		"ready":
+			s["ready"] = true
+			if r.ready_wait_since <= 0.0:
+				r.ready_wait_since = Time.get_unix_time_from_system()
 		"unready":
 			s["ready"] = false
 			r.countdown = 0.0
+			r.start_only_ready = false
 			if r.phase == "countdown":
 				r.phase = "lobby"
+			if not r.any_ready():
+				r.ready_wait_since = 0.0
 		"char":
 			if v is String and v in SimC.STAFF_IDS:
 				s["char"] = v
@@ -392,12 +399,15 @@ func _lobby(pid: int, d: Dictionary) -> void:
 				r.phase = "countdown"
 				r.countdown = 3.0
 		"start_ready":
-			if is_leader and r.phase == "lobby":
-				for s2 in r.seats:
-					if not s2["ready"]:
-						s2["connected"] = s2["connected"]
+			# Leader only, after 20 s of waiting, with at least one ready seat.
+			var waited: bool = r.ready_wait_since > 0.0 and Time.get_unix_time_from_system() - r.ready_wait_since >= START_READY_AFTER_S
+			if is_leader and r.phase == "lobby" and waited and r.any_ready() and not r.all_ready():
+				r.start_only_ready = true
 				r.phase = "countdown"
 				r.countdown = 3.0
+				for s2 in r.seats:
+					if s2["connected"] and not s2["ready"]:
+						_send(int(s2["peer"]), {"type": "notice", "reason": "ui.online.sitting_out"})
 		"pause":
 			if r.phase == "shift" and not r.paused:
 				if not r.auto_pause_used.get(sid, false):

@@ -48,6 +48,8 @@ if [ "$SKIP_TESTS" = 0 ]; then
   tail -1 build/net_e2e.txt
   tests/net/run_quad.sh > build/net_quad.txt 2>&1 || { tail -18 build/net_quad.txt; exit 1; }
   tail -1 build/net_quad.txt
+  tests/net/run_ready.sh > build/net_ready.txt 2>&1 || { tail -9 build/net_ready.txt; exit 1; }
+  tail -1 build/net_ready.txt
 fi
 
 export_one() { # preset path

@@ -15,6 +15,7 @@ var shot_i := 0
 var perf := false
 var samples: Array = []
 var _perf_t := 0.0
+var _skip := 0
 
 func _ready() -> void:
 	for a in OS.get_cmdline_user_args():
@@ -28,8 +29,6 @@ func _ready() -> void:
 		elif a.begins_with("--size="):
 			var p := a.substr(7).split("x")
 			DisplayServer.window_set_size(Vector2i(int(p[0]), int(p[1])))
-	if DisplayServer.window_get_size() == Vector2i(1280, 720) or true:
-		pass
 	var l0 := CanvasLayer.new(); add_child(l0)
 	var stage := PixelStage.new(); l0.add_child(stage)
 	var l1 := CanvasLayer.new(); l1.layer = 1; add_child(l1)
@@ -55,9 +54,12 @@ func _ready() -> void:
 
 func _process(dt: float) -> void:
 	t += dt / maxf(0.01, Engine.time_scale)
-	if perf and t > 3.0:
-		var t0 := Time.get_ticks_usec()
-		samples.append({"frame_ms": dt * 1000.0 / maxf(0.01, Engine.time_scale), "process_ms": Performance.get_monitor(Performance.TIME_PROCESS) * 1000.0,
+	# Frames right after a screenshot (synchronous PNG save) are not game frames.
+	if _skip > 0:
+		_skip -= 1
+	elif perf and t > 3.0:
+		samples.append({"frame_ms": dt * 1000.0 / maxf(0.01, Engine.time_scale), "hotel_s": int(shift.sim.s["hotel_q"]) / SimC.HOTEL_Q_PER_S,
+			"process_ms": Performance.get_monitor(Performance.TIME_PROCESS) * 1000.0,
 			"draw_calls": Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME),
 			"objects": Performance.get_monitor(Performance.RENDER_TOTAL_OBJECTS_IN_FRAME),
 			"primitives": Performance.get_monitor(Performance.RENDER_TOTAL_PRIMITIVES_IN_FRAME),
@@ -77,6 +79,7 @@ func _process(dt: float) -> void:
 		img.save_png(ProjectSettings.globalize_path("res://").path_join(path))
 		print("saved %s at hotel %.0fs phase %s" % [path, hotel_t, shift.sim.s["phase"]])
 		shot_i += 1
+		_skip = 3
 		Engine.time_scale = speed
 		if shot_i >= shots:
 			if perf:
@@ -105,4 +108,10 @@ func _report_perf() -> void:
 	for i in 60:
 		shift.sim.step(bot.frames())
 	sim_ms = (Time.get_ticks_usec() - tt) / 60000.0
+	var by_time := samples.duplicate()
+	by_time.sort_custom(func(a, b): return a["frame_ms"] > b["frame_ms"])
+	var spikes: Array = []
+	for smp2 in by_time.slice(0, 5):
+		spikes.append("%.1fms@%ds" % [smp2["frame_ms"], smp2["hotel_s"]])
+	print("PERF spikes ", ", ".join(spikes))
 	print("PERF level=%s humans=%d size=%s renderer=%s adapter=%s frames=%d avg_ms=%.2f p95_ms=%.2f max_ms=%.2f sim_tick_ms=%.3f max=%s" % [level, humans, DisplayServer.window_get_size(), RenderingServer.get_current_rendering_method(), RenderingServer.get_video_adapter_name(), n, avg, fr[int(n * 0.95)], fr[n - 1], sim_ms, JSON.stringify(mx)])

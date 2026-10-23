@@ -50,6 +50,7 @@ func _ready() -> void:
 	await _seat_lobby()
 	await _pause_menu()
 	await _rebind()
+	await _keyboard()
 	print("== UI01: %d checks, %d failures ==" % [checks, failures.size()])
 	for f in failures:
 		print("   ✗ ", f)
@@ -244,3 +245,42 @@ func _rebind() -> void:
 	InputRouter.reset_bindings(0)
 	var b2: Array = InputRouter.bindings_for(0).get("work", [])
 	_check(not b2.is_empty() and int(b2[0].get("b", -1)) == JOY_BUTTON_X, "rebind: reset restores X")
+
+func _key(code: int, loc := KEY_LOCATION_UNSPECIFIED) -> void:
+	for pressed in [true, false]:
+		var ev := InputEventKey.new()
+		ev.physical_keycode = code
+		ev.keycode = code
+		ev.location = loc
+		ev.pressed = pressed
+		Input.parse_input_event(ev)
+		await _frames(2)
+
+func _keyboard() -> void:
+	# Keyboard slot 1 alone can drive the menus: S moves, E accepts, Left Shift backs out.
+	InputRouter.reset_all()
+	InputRouter.join("kb1")
+	Session.show_main_menu()
+	await _frames(6)
+	var first := get_viewport().gui_get_focus_owner()
+	await _key(KEY_S)
+	var second := get_viewport().gui_get_focus_owner()
+	_check(first != null and second != null and first != second, "keyboard: S moves menu focus")
+	var target: Button = null
+	var list: Array = []
+	_focusables(Session.screen, list)
+	for c in list:
+		if c is Button and (c as Button).text == Loc.t("ui.menu.settings"):
+			target = c
+	if target == null:
+		_check(false, "keyboard: settings button exists")
+		return
+	target.grab_focus()
+	await _frames(1)
+	await _key(KEY_E)
+	await _frames(4)
+	_check(Session.screen is SettingsScreen, "keyboard: E opens Settings")
+	await _key(KEY_SHIFT, KEY_LOCATION_LEFT)
+	await _frames(4)
+	_check(Session.screen is MainMenuScreen, "keyboard: Left Shift backs out")
+	print("UI01 keyboard: checked")

@@ -8,6 +8,7 @@ var state := "menu"     # menu | connecting | code | room
 var code_text := ""
 var status_label: Label
 var pending := ""        # "create" | "join"
+var _room_recv_ms := 0
 
 func _init() -> void:
 	super._init()
@@ -16,7 +17,9 @@ func _ready() -> void:
 	Net.client_connected.connect(_on_connected)
 	Net.client_failed.connect(_on_failed)
 	Net.room_joined.connect(_on_joined)
-	Net.lobby_updated.connect(func(_v): if state == "room": _build_room())
+	Net.lobby_updated.connect(func(_v):
+		_room_recv_ms = Time.get_ticks_msec()
+		if state == "room": _build_room())
 	Net.shift_started.connect(_on_shift)
 	Net.client_disconnected.connect(_on_failed)
 	InputRouter.unjoined_press.connect(_on_unjoined)
@@ -182,6 +185,7 @@ func _on_seat_nav(router_seat: int, dir: Vector2i) -> void:
 	Net.lobby(sid, "char", ch)
 
 func _build_room() -> void:
+	var keep := focus_index()
 	_clear()
 	var view: Dictionary = Net.c_room
 	var v := card(Loc.t("ui.online.room_title", {"code": NetProtocol.pretty_code(view.get("code", ""))}), 900, "ui_online")
@@ -219,7 +223,21 @@ func _build_room() -> void:
 		for d in diffs:
 			dl.append(Loc.t("ui.diff." + d))
 		add_cycle(v, Loc.t("ui.diff.label"), diffs, dl, sel.get("difficulty", "family"), func(val): Net.lobby(int(view["leader"]), "difficulty", val))
-		add_button(v, Loc.t("ui.online.start_ready"), "ui_play", func(): Net.lobby(int(view["leader"]), "start_ready"))
+		# "Start with ready players" unlocks 20 s after the first seat readied (§11.4).
+		var wait := float(view.get("ready_wait_s", -1.0))
+		var some_ready := false
+		var all_ready := true
+		for s3 in view.get("seats", []):
+			if s3["connected"]:
+				some_ready = some_ready or s3["ready"]
+				all_ready = all_ready and s3["ready"]
+		if some_ready and not all_ready and wait >= 0.0:
+			var left := int(ceil(Net.START_READY_AFTER_S - wait - (Time.get_ticks_msec() - _room_recv_ms) / 1000.0))
+			if left <= 0:
+				add_button(v, Loc.t("ui.online.start_ready"), "ui_play", func(): Net.lobby(int(view["leader"]), "start_ready"))
+			else:
+				add_button(v, Loc.t("ui.online.start_ready_in", {"n": left}), "ui_play", func(): pass, true)
+				get_tree().create_timer(minf(1.0, float(left))).timeout.connect(func(): if is_inside_tree() and state == "room": _build_room())
 	else:
 		v.add_child(UiKit.label("%s — %s · %s" % [sel.get("level_id", ""), Loc.t("level.%s.title" % sel.get("level_id", "L01")), Loc.t("ui.diff." + str(sel.get("difficulty", "family")))], 20, UiKit.INK, HORIZONTAL_ALIGNMENT_CENTER))
 	v.add_child(UiKit.label(Loc.t("ui.lobby.hint_couch"), 16, Color("#6E655B"), HORIZONTAL_ALIGNMENT_CENTER))
@@ -227,7 +245,7 @@ func _build_room() -> void:
 		v.add_child(UiKit.label(Loc.t("ui.lobby.starting", {"n": int(ceil(float(view.get("countdown", 3))))}), 24, UiKit.CORAL.darkened(0.3), HORIZONTAL_ALIGNMENT_CENTER))
 	add_button(v, Loc.t("ui.pause.leave"), "ui_arrow_left", _back_out)
 	on_back(_back_out)
-	focus_first()
+	restore_focus_index(keep)
 
 func _on_shift(info: Dictionary) -> void:
 	var cfg := {"online": true, "mode": info["cfg"].get("mode", "campaign"), "layout": info["layout"], "mirror": info["mirror"],

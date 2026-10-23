@@ -30,6 +30,8 @@ var last_activity := 0.0
 var disconnect_since: Dictionary = {}  # seat -> time
 var gus_forced := false
 var lobby_seq: Dictionary = {}
+var ready_wait_since := 0.0    # when the first seat readied (for "Start with ready players")
+var start_only_ready := false  # this countdown was started by the leader without everyone
 
 func peers() -> Array:
 	var out: Array = []
@@ -73,9 +75,17 @@ func add_seats(peer_id: int, n: int, chars: Array, token_hash: String) -> Array:
 func lobby_view() -> Dictionary:
 	var ss: Array = []
 	for s in seats:
-		ss.append({"id": s["id"], "ready": s["ready"], "char": s["char"], "cos": s["cos"], "connected": s["connected"], "peer": s["peer"]})
+		ss.append({"id": s["id"], "ready": s["ready"], "char": s["char"], "cos": s["cos"], "connected": s["connected"],
+			"peer": s["peer"], "sitting_out": s.get("sitting_out", false)})
+	var wait := Time.get_unix_time_from_system() - ready_wait_since if ready_wait_since > 0.0 else -1.0
 	return {"room_id": id, "code": code, "leader": leader, "seats": ss, "selection": selection, "phase": phase,
-		"countdown": countdown, "paused": paused, "shift_id": shift_id}
+		"countdown": countdown, "paused": paused, "shift_id": shift_id, "ready_wait_s": wait}
+
+func any_ready() -> bool:
+	for s in seats:
+		if s["connected"] and s["ready"]:
+			return true
+	return false
 
 func all_ready() -> bool:
 	if seats.is_empty():
@@ -90,7 +100,9 @@ func start_shift(content, content_hash: String) -> void:
 	var sc: Array = []
 	var humans := 0
 	for s in seats:
-		if s["connected"]:
+		# "Start with ready players" never silently starts an unready character (§11.4).
+		s["sitting_out"] = start_only_ready and s["connected"] and not s["ready"]
+		if s["connected"] and not s["sitting_out"]:
 			sc.append({"seat": s["id"], "char": s["char"], "cos": s["cos"], "assists": s.get("assists", {})})
 			humans += 1
 	var cfg := {"mode": selection.get("mode", "campaign"), "level_id": selection["level_id"], "humans": maxi(1, humans),
@@ -107,6 +119,8 @@ func start_shift(content, content_hash: String) -> void:
 	result = {}
 	auto_pause_used.clear()
 	paused = false
+	start_only_ready = false
+	ready_wait_since = 0.0
 	for s in seats:
 		s["ready"] = false
 

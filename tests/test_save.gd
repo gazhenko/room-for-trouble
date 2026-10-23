@@ -84,3 +84,59 @@ func test_net01_protocol_rejects_bad_input() -> void:
 	eq(NetProtocol.normalize_code("abcd-oil1"), "ABCD0111", "O→0 and I/L→1, case-insensitive")
 	var payload := {"type": "state_snapshot", "s": {"x": [1, 2, 3]}}
 	eq(NetProtocol.decode_server(NetProtocol.encode_server(payload)), payload, "server payload round-trips")
+
+## Fixture files in tests/fixtures/saves/ (regenerate: tools/dev/make_save_fixtures.gd).
+func _install(dir: String, files: Dictionary):
+	var ss = _service(dir)
+	for name in files:
+		var src := FileAccess.get_file_as_string("res://tests/fixtures/saves/" + files[name])
+		var f := FileAccess.open(dir.path_join(name), FileAccess.WRITE)
+		f.store_string(src)
+		f.close()
+	return ss
+
+func test_save01_fixture_valid_v1_loads() -> void:
+	var ss = _install("user://test_saves_f1", {"p.json": "v1_valid.json"})
+	ss.load_profile("p")
+	eq(ss.recovered_from, "", "valid file needs no recovery")
+	eq(ss.profile["completed_levels"].size(), 5, "five completed shifts")
+	check("L06" in ss.profile["accessible_levels"], "next shift accessible")
+	check("first_hello" in ss.profile["unlocked_cosmetic_sets"], "cosmetic unlock kept")
+	ss.free()
+
+func test_save01_fixture_truncated_primary_recovers_backup() -> void:
+	var ss = _install("user://test_saves_f2", {"p.json": "v1_truncated.json", "p.json.bak1": "v1_valid.json"})
+	ss.load_profile("p")
+	eq(ss.recovered_from, "bak1", "power-cut primary falls back to the backup")
+	eq(ss.profile["completed_levels"].size(), 5, "durable stamps survive")
+	ss.free()
+
+func test_save01_fixture_tampered_is_not_trusted() -> void:
+	var ss = _install("user://test_saves_f3", {"p.json": "v1_tampered.json", "p.json.bak2": "v1_valid.json"})
+	ss.load_profile("p")
+	eq(ss.recovered_from, "bak2", "checksum mismatch → older valid backup")
+	check(not "L24" in ss.profile["completed_levels"], "edited progress not accepted")
+	ss.free()
+
+func test_save01_fixture_v0_file_migrates_on_load() -> void:
+	var ss = _install("user://test_saves_f4", {"p.json": "v0_prerelease.json"})
+	ss.load_profile("p")
+	eq(ss.profile["schema_version"], 1, "migrated to schema 1")
+	eq(ss.profile["completed_levels"], ["L01", "L02"], "v0 levels carried over")
+	eq(ss.profile["selected_staff"], "moss", "v0 fields kept")
+	ss.free()
+
+func test_save01_disk_write_failure_keeps_previous_save() -> void:
+	var dir := "user://test_saves_f5"
+	var ss = _install(dir, {"p.json": "v1_valid.json"})
+	ss.load_profile("p")
+	ss.root_dir = dir.path_join("missing/deeper")   # unwritable target: open() fails
+	ss.profile["completed_levels"].append("L06")
+	check(not ss.save(), "save reports failure")
+	eq(ss.last_error, "ui.save.write_failed", "clear recoverable message key")
+	ss.root_dir = dir
+	var ss2 = _service_keep(dir)
+	ss2.load_profile("p")
+	eq(ss2.profile["completed_levels"].size(), 5, "previous good save intact")
+	ss2.free()
+	ss.free()

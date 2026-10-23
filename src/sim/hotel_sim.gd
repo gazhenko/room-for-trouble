@@ -500,8 +500,17 @@ func snapshot() -> Dictionary:
 		"level": level.get("id", ""), "rng": rng.state, "cos_rng": cos_rng.state,
 		"tut": tutorial.save_state() if tutorial != null else {}}
 
+## Tables keyed by integer ids; JSON (saves, checkpoints) turns keys into strings.
+const INT_KEYED := ["items", "guests", "clouds", "puddles", "trunks", "pings"]
+
 func restore(snap: Dictionary) -> void:
 	s = snap["s"].duplicate(true)
+	for table in INT_KEYED:
+		if s.has(table) and s[table] is Dictionary:
+			var fixed := {}
+			for k in s[table]:
+				fixed[int(k) if str(k).is_valid_int() else k] = s[table][k]
+			s[table] = fixed
 	rng.state = int(snap["rng"])
 	cos_rng.state = int(snap["cos_rng"])
 	if tutorial != null and snap.has("tut"):

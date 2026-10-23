@@ -31,6 +31,9 @@ func _ready() -> void:
 		["scrapbook", func(): Session.open_scrapbook()],
 		["wardrobe", func(): Session.open_wardrobe()],
 		["credits", func(): Session.open_credits()],
+		["licences", func():
+			Session.open_credits()
+			Session.screen._licences(Session.screen.find_child("*VBoxContainer*", true, false))],
 		["level_pre", func(): Session.play_story("L05.pre", func(): pass)],
 		["level_pre_L12", func(): Session.play_story("L12.pre", func(): pass)],
 		["level_pre_L20", func(): Session.play_story("L20.pre", func(): pass)],
@@ -49,6 +52,20 @@ func _ready() -> void:
 		["playground", func(): Session.start_playground()],
 		["ending", func(): Session.play_story("E00", func(): pass)],
 	]
+	if DevOverlay.enabled():
+		steps.append(["dev_tools", func():
+			Session.show_main_menu()
+			var dt := DevToolsScreen.new()
+			Session.push(dt)
+			dt.level_id = "L14"
+			dt.out.text = DevToolsScreen.validate("L14") + "\n\n" + DevToolsScreen.preview_waves("L14")])
+		steps.append(["dev_overlay", func():
+			Session._run_shift(Session._base_cfg({"mode": "campaign", "level_id": "L14", "seed": 5}))
+			Session.current_shift.sim.start_now()
+			var ev := InputEventKey.new()
+			ev.keycode = KEY_F2
+			ev.pressed = true
+			Input.parse_input_event(ev)])
 	# Every pre-shift beat, for set-dressing review (--only=pre_).
 	for i in range(1, 25):
 		var sid := "L%02d.pre" % i

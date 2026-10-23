@@ -25,6 +25,10 @@ func _build_main() -> void:
 	add_button(v, Loc.t("ui.menu.settings"), "ui_settings", func(): Session.open_settings())
 	add_button(v, Loc.t("ui.menu.scrapbook"), "ui_scrapbook", func(): Session.open_scrapbook())
 	add_button(v, Loc.t("ui.menu.credits"), "ui_credits", func(): Session.open_credits())
+	if DevOverlay.enabled():
+		add_button(v, "Developer tools", "sys_help", func():
+			_join_menu_device()
+			Session.push(DevToolsScreen.new()))
 	if not OS.has_feature("web"):
 		add_button(v, Loc.t("ui.menu.quit"), "ui_close", func(): get_tree().quit())
 	on_back(func(): Session.show_title())

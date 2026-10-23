@@ -1,0 +1,67 @@
+{
+	"accessible_levels": [
+		"L01",
+		"L02",
+		"L03",
+		"L04",
+		"L05",
+		"L06"
+	],
+	"best_results": {
+		"L01|family|2|none|none": {
+			"percent": 92.0,
+			"stars": 3.0
+		}
+	},
+	"checksum": "e875ab341d21d1b42bd17442d77a29dbd43d7a3104ff482a5942fd0813d70a4d",
+	"completed_levels": [
+		"L01",
+		"L02",
+		"L03",
+		"L04",
+		"L05",
+		"L24"
+	],
+	"created_at": "2026-10-01T10:00:00Z",
+	"discover_guests": false,
+	"earned_ribbons": [
+		"L01:A Good Fit",
+		"L03:Fresh Sheets"
+	],
+	"postcards": {
+		"L01": {
+			"outfit": "default",
+			"staff": [
+				"pip",
+				"moss"
+			]
+		}
+	},
+	"profile_id": "00000000-0000-4000-8000-000000000001",
+	"recent_committed_result_ids": [
+		"L01-1-1",
+		"L02-1-2"
+	],
+	"schema_version": 1.0,
+	"seen_coaches": [],
+	"seen_story_panels": [],
+	"selected_cosmetic_set": "default",
+	"selected_staff": "pip",
+	"settings": {},
+	"stats": {
+		"guests_welcomed": 0.0,
+		"handoffs": 0.0,
+		"shifts": 0.0
+	},
+	"suspended_shift": {},
+	"tutorial_status": {
+		"T01": "done",
+		"T02": "unseen",
+		"T03": "unseen"
+	},
+	"unlocked_cosmetic_sets": [
+		"default",
+		"first_hello"
+	],
+	"updated_at": "2026-10-23T03:30:44Z"
+}

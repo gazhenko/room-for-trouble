@@ -1,1 +1,130 @@
-# placeholder
+# Room for Trouble
+
+*A cozy cooperative monster-hotel game for 1–4 players.*
+
+The Hearth & Hiccup is open, and the guests are monsters with very particular needs:
+
+- A dragon who likes it toasty
+- A yeti who sneezes when it's warm
+- A ghost who needs quiet
+- A moonwolf who sings
+- A sprout who wants a damp room
+- A slime who keeps losing a slipper
+
+Together, the team greets guests, chooses rooms, carries towels and snacks, washes the
+sheets and opens or closes vents and curtains. Every room you assign changes the hotel
+around it. Nobody loses, and there is always a next move.
+
+![Planning a shift on Radiator Row](docs/images/planning.png)
+
+## What's in the game
+
+- **Couch co-op for 1–4 players** on one screen: keyboard (two players can share one
+  keyboard) and controllers in any mix. Each player has their own bindings and assists.
+- **Private online rooms**: share an 8-character code. Up to 4 seats per room, from any mix
+  of local and remote players, with reconnect after drops.
+- **The full campaign**:
+  - 3 tutorials and 24 authored shifts in 6 chapters, on 6 floor layouts
+  - an opening, five chapter bridges and an ending, plus a pre-shift beat, a live gag and a
+    postcard for every shift
+  - progress never depends on stars
+- **Six guest families**, each with its own comfort need, quirk, helper ability and look:
+  Slime, Yeti, Dragon, Ghost, Moonwolf and Sprout.
+- **Hotel systems**:
+  - room tickets, welcome gifts, towel and snack requests
+  - laundry and stock
+  - relocation, thermostats, vent gates and curtains
+  - moisture trays, puddles and steam
+  - lifts, the shutter, festival trunks (carried with a friend, or dragged alone) and parcels
+- **The hub hotel**, a **Scrapbook** (24 postcards, a guest guide, ribbons and story
+  replays), a **Wardrobe** with 8 unlockable cosmetic sets, **Quick Shift** with 8 modifiers
+  and a visible seed, and the **Playground** sandbox.
+- **Accessibility**:
+  - Cozy, Family and Busy pace
+  - per-seat assists: Auto Catch, toggle Work, Quick Step on/toggle/off, Steady Feet
+  - full remapping, UI scale, readable font, high contrast and colour-safe palettes
+  - reduced motion and transparency, captions with speaker names, sound visualisations,
+    mono audio and read-aloud
+  - controller-only navigation everywhere
+
+![The opening](docs/images/opening.png)
+
+## Controls
+
+| Action | Keyboard 1 | Keyboard 2 | Controller |
+|---|---|---|---|
+| Move | W A S D | Arrow keys | Left stick / D-pad |
+| **Carry** (pick up, put down, hand over, choose) | E | Right Ctrl | A / Cross |
+| **Work** (clean, wash, hang, use) | Space | Right Shift | X / Square |
+| Quick Step (back in menus) | Left Shift | . | B / Circle |
+| Ping (tap: "help here", hold: phrase wheel) | Q | / | Y / Triangle |
+| Hint, and *ready* during planning | R | , | LB / L1 |
+| Inspect a room | Tab | \ | RB / R1 |
+| Pause | Esc | Enter | Start / Options |
+
+Press **Carry** on any unused device in the seat lobby to join. Every binding can be changed
+per player in **Settings → Controls**.
+
+## Running it
+
+**Packaged builds:** unzip the package for your platform and run `RoomForTrouble` (or
+`Room for Trouble.app` on macOS). Saves go to the platform's user data folder (macOS:
+`~/Library/Application Support/Godot/app_userdata/Room for Trouble/profiles/`). Three
+rotating backups are kept, and a damaged save recovers automatically.
+
+**From source:** install [Godot 4.7.2-stable](https://godotengine.org/download/archive/4.7.2-stable/), then:
+
+```bash
+godot --path .                      # play
+godot --headless --path . --script res://tests/run_all.gd   # run the tests
+tools/build.sh                      # full release build (see BUILD.md)
+```
+
+**Online:** the game connects to the endpoint in **Settings → Online**. To run your own
+service, see [OPERATIONS.md](OPERATIONS.md) for the Docker + Caddy stack, the health probe,
+checkpoints and rollout. Local play never needs the network.
+
+## Documentation
+
+| Document | Contents |
+|---|---|
+| [BUILD.md](BUILD.md) | Toolchain, build and test commands, generators, smoke tests |
+| [OPERATIONS.md](OPERATIONS.md) | Deploying and operating the private-room service |
+| [DECISIONS.md](DECISIONS.md) | Implementation decisions and departures from the brief |
+| [KNOWN_ISSUES.md](KNOWN_ISSUES.md) | What is unfinished, unverified or imperfect |
+| [CHANGELOG.md](CHANGELOG.md) | Release history |
+| [CREDITS.md](CREDITS.md) · [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) | Credits and licences |
+| [docs/DESIGN_BRIEF.md](docs/DESIGN_BRIEF.md) | The complete design (the product contract) |
+| [docs/COMPLETION_MATRIX.md](docs/COMPLETION_MATRIX.md) | Every required feature, with its verification evidence |
+| [docs/REFERENCE_RUNS.md](docs/REFERENCE_RUNS.md) | 126 scripted reference runs with metrics |
+| [docs/PLAYTEST_REPORT.md](docs/PLAYTEST_REPORT.md) | Family playtest status and procedure |
+| [docs/PERFORMANCE.md](docs/PERFORMANCE.md) | Measured frame time, draw calls and memory |
+| [docs/TUNING_LOG.md](docs/TUNING_LOG.md) | Balance changes and their evidence |
+| [docs/ASSET_REGISTER.md](docs/ASSET_REGISTER.md) | Provenance and licence of every asset |
+
+## Project layout
+
+```
+src/sim/      pure fixed-tick simulation (HotelSim + system modules, replay)
+src/app/      main scene, session flow, input routing, shift/hub/playground/story screens
+src/view/     pixel stage, hotel view, procedural models, audio director
+src/ui/       HUD, captions, menus and screens
+src/net/      private-room service, client and protocol
+src/save/     versioned, checksummed, backed-up profiles
+src/content/  content registry and localization
+src/dev/      reference bot and shipping smoke test
+data/         campaign manifest, guests, items, layouts, story, localization, icons
+assets/export audio, fonts, app icon
+tools/        build, validation, content/audio/icon generators, dev scenes
+tests/        headless suites, UI traversal, online end-to-end
+server/deploy Dockerfile, Compose + Caddy, systemd unit
+```
+
+## Status
+
+Version 1.0.0 is a complete local and online game, built and tested on macOS (Apple
+Silicon). The Linux build was smoke-tested in a clean x86-64 container with a software
+renderer. Windows, the Steam Deck, a public WSS endpoint and real family playtests have
+**not** been verified yet; [KNOWN_ISSUES.md](KNOWN_ISSUES.md) lists exactly what remains.
+
+Built with [Claude Code](https://claude.com/claude-code) for the project owner.

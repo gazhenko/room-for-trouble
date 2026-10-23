@@ -252,6 +252,8 @@ UI = {
     "ui.scrap.saved": "Saved {path}",
     "ui.scrap.save_failed": "Couldn't save the picture here.",
     "ui.credits.scroll": "Scroll",
+    "ui.credits.licences": "Licences",
+    "ui.credits.components": "Components inside the Godot Engine",
     "ui.wardrobe.wearing": "Now wearing: {name}",
     "ui.wardrobe.note": "Outfits only change how helpers look.",
     "ui.quick.level": "Shift",
@@ -287,6 +289,11 @@ UI = {
     "ui.online.full": "That room is full.",
     "ui.online.no_room": "We couldn't find that room code.",
     "ui.online.underway": "This shift is underway — join at the next welcome.",
+    "ui.online.restarting": "The hotel server is restarting. Hold on — we'll reconnect.",
+    "ui.online.sitting_out": "The team started without you this time. You'll join at the next welcome.",
+    "ui.online.lost_title": "The connection didn't come back",
+    "ui.online.return_hub": "Return to the hub",
+    "ui.online.start_ready_in": "Start with ready players (in {n} s)",
     "ui.online.room_title": "Room {code}",
     "ui.online.share": "Share this code with your group:",
     "ui.online.leader": "Leader",
@@ -312,6 +319,7 @@ UI = {
 }
 
 SETTINGS = {
+    "ui.settings.shared_kb_note": "Two players can share one keyboard (WASD and the arrow keys). Some keyboards can't register many keys at once, so a press may be missed. If that happens, try a controller.",
     "ui.settings.title": "Settings",
     "ui.settings.tab_gameplay": "Play",
     "ui.settings.tab_controls": "Controls",
@@ -337,7 +345,6 @@ SETTINGS = {
     "ui.settings.h_remap": "Buttons",
     "ui.settings.press_new": "Press a new button for {action}…",
     "ui.settings.reset_binds": "Reset buttons",
-    "ui.settings.shared_kb_note": "Two players can share a keyboard, but some keyboards miss many keys at once.",
     "ui.settings.ui_scale": "Text and icon size",
     "ui.settings.pixel_size": "Pixel size",
     "ui.settings.px_chunky": "Chunky",

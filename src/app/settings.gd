@@ -39,6 +39,17 @@ func _load() -> void:
 	for k in stored:
 		if k != "seats":
 			data[k] = stored[k]
+	# Operators can ship a default endpoint beside the executable (endpoint.txt)
+	# or set RFT_ENDPOINT per launch; a player's own choice otherwise persists.
+	var env_ep := OS.get_environment("RFT_ENDPOINT")
+	var file_ep := ""
+	var ep_file := OS.get_executable_path().get_base_dir().path_join("endpoint.txt")
+	if FileAccess.file_exists(ep_file):
+		file_ep = FileAccess.get_file_as_string(ep_file).strip_edges()
+	if env_ep != "":
+		data["endpoint"] = env_ep
+	elif file_ep != "" and data["endpoint"] == DEFAULTS["endpoint"]:
+		data["endpoint"] = file_ep
 	seats = []
 	var ss: Array = stored.get("seats", [])
 	for i in 4:

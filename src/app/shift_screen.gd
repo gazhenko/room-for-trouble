@@ -29,6 +29,8 @@ var _gag_played: Dictionary = {}
 var _fam_cache: Array = []
 var _story_hook: Callable
 var frame_source: Callable   # dev/autoplay: replaces InputRouter frames
+var dev_hold := false         # DevOverlay inspector: hold the clock…
+var dev_steps := 0            # …and run this many single ticks
 
 func setup(p_stage: PixelStage, p_captions: Captions, p_cfg: Dictionary) -> void:
 	stage = p_stage
@@ -76,6 +78,7 @@ func _build_view() -> void:
 		_fam_cache = SimInteract.introduced_families(sim)
 		view.capture_tick(sim.s)
 		view.capture_tick(sim.s)
+		view.prewarm(sim.s)
 	InputRouter.gameplay = true
 	InputRouter.clear_edges()
 	if not InputRouter.menu_pause.is_connected(_on_pause_pressed):
@@ -87,6 +90,8 @@ func _build_view() -> void:
 		chapter = 1
 	Audio.play_music("planning")
 	_planning_intro()
+	if DevOverlay.enabled():
+		add_child(DevOverlay.new(self))
 
 func _planning_intro() -> void:
 	if sim and sim.s["phase"] == "planning":
@@ -112,6 +117,12 @@ func _process(dt: float) -> void:
 		return
 	if online:
 		_process_online(dt)
+		return
+	if dev_hold:
+		while dev_steps > 0 and not _done:
+			dev_steps -= 1
+			_tick()
+		view.sync(1.0, dt)
 		return
 	acc += minf(dt, 0.25)
 	var ticks := 0
@@ -524,6 +535,8 @@ func _process_online(dt: float) -> void:
 	if st.is_empty():
 		return
 	if st.get("_snap_id", -1) != net_state.get("_snap_id", -2):
+		if net_state.is_empty():
+			view.prewarm(st)
 		net_state = st
 		view.capture_tick(st)
 		_decorate_online(st)

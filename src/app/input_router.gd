@@ -504,15 +504,20 @@ func pad_family(seat: int) -> String:
 
 ## Short label for an action on this seat's device ("A", "E", "Space", "✕").
 func glyph(seat: int, action: String) -> Dictionary:
+	var device := ""
+	var binds: Dictionary
 	if seat < 0 or not seats[seat]["active"]:
-		return {"text": action.substr(0, 1).to_upper(), "shape": "key"}
-	var s: Dictionary = seats[seat]
-	var binds := bindings_for(seat)
+		# Nobody joined yet: show the default for the device that last used a menu.
+		device = "pad" if last_menu_device.begins_with("pad") else last_menu_device
+		binds = DEFAULT_PAD if device == "pad" else (DEFAULT_KB2 if device == "kb2" else DEFAULT_KB1)
+	else:
+		device = seats[seat]["device"]
+		binds = bindings_for(seat)
 	var arr: Array = binds.get(action, [])
 	if arr.is_empty():
 		return {"text": "?", "shape": "key"}
 	var b: Dictionary = arr[0]
-	if s["device"] != "pad":
+	if device != "pad":
 		var code := int(b.get("k", 0))
 		var name := OS.get_keycode_string(DisplayServer.keyboard_get_keycode_from_physical(code) if code < KEY_SPECIAL else code)
 		if code == KEY_SHIFT: name = "LShift" if int(b.get("loc", 0)) == KEY_LOCATION_LEFT else "RShift"
@@ -525,7 +530,7 @@ func glyph(seat: int, action: String) -> Dictionary:
 		if code == KEY_ENTER: name = "Enter"
 		return {"text": name, "shape": "key"}
 	var btn := int(b.get("b", 0))
-	var fam := pad_family(seat)
+	var fam := pad_family(seat) if seat >= 0 and seats[seat]["active"] else "xbox"
 	var xbox := {JOY_BUTTON_A: "A", JOY_BUTTON_B: "B", JOY_BUTTON_X: "X", JOY_BUTTON_Y: "Y",
 		JOY_BUTTON_LEFT_SHOULDER: "LB", JOY_BUTTON_RIGHT_SHOULDER: "RB", JOY_BUTTON_START: "≡", JOY_BUTTON_BACK: "⧉",
 		JOY_BUTTON_DPAD_UP: "↑", JOY_BUTTON_DPAD_DOWN: "↓", JOY_BUTTON_DPAD_LEFT: "←", JOY_BUTTON_DPAD_RIGHT: "→"}

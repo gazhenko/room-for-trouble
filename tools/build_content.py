@@ -109,12 +109,13 @@ for L in manifest["levels"]:
     fams = [variant_fam.get(f, f) for f in fams]
     for j, f in enumerate(fams[:6]):
         x = -1.0 * (len(fams[:6]) - 1) * 0.5 + j * 1.0
-        gactors.append(ST.A(names[f] if j < 1 else f"guest:{f}", round(x, 2), -0.6, "happy" if j % 2 == 0 else "wave",
-                            slippers=(f == "slime"), mask=(f == "ghost")))
+        # Guests stand on the photo riser behind the staff so every face shows.
+        gactors.append(ST.A(names[f] if j < 1 else f"guest:{f}", round(x, 2), -0.85, "happy" if j % 2 == 0 else "wave",
+                            slippers=(f == "slime"), mask=(f == "ghost"), y=0.42))
     props = [{"kind": prop, "pos": [2.8, 0.0, -1.2]}] if prop else []
     fx = {"P1": [6.0, 9.6], "P2": [13.0, 9.6], "P3": [13.0, 9.6], "P4": [13.0, 9.6], "P5": [18.0, 9.8], "P6": [13.0, 9.6]}[layout]
     pq = ST.P(f"{lid}.post", "postcard_still", pcap, pspeaker, 6,
-              [staff_actor, ST.A("nana", -2.6, 0.2, "wave"), ST.A("gus", 2.6, 0.7, "happy")] + gactors,
+              [staff_actor, ST.A("nana", -2.25, 0.35, "wave", 20), ST.A("gus", 2.3, 0.75, "happy", -20)] + gactors,
               props, focus=fx, layout=layout, actors_rel=True, sting="sting_postcard")
     level_scenes.append({"id": f"{lid}.post", "layout": layout, "music": "title_loop",
                          "title_key": f"story.{lid}.post.title", "panels": [panel_out(pq, lid, 1)]})

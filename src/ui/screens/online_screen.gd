@@ -51,7 +51,7 @@ func _build_menu() -> void:
 	state = "menu"
 	var v := card(Loc.t("ui.menu.online"), 680, "ui_online")
 	var seats := InputRouter.active_seats()
-	v.add_child(UiKit.label(Loc.t("ui.lobby.hint_couch") + "  (%d)" % seats.size(), 18, UiKit.INK, HORIZONTAL_ALIGNMENT_CENTER))
+	v.add_child(UiKit.label(Loc.t("ui.online.local_seats", {"n": seats.size()}), 18, UiKit.INK, HORIZONTAL_ALIGNMENT_CENTER))
 	add_button(v, Loc.t("ui.online.create"), "ui_hub", func(): _go("create"))
 	add_button(v, Loc.t("ui.online.join"), "ui_online", func(): _build_code())
 	status_label = UiKit.label(Loc.t("ui.online.endpoint", {"url": Settings.g("endpoint")}), 16, Color("#6E655B"), HORIZONTAL_ALIGNMENT_CENTER)

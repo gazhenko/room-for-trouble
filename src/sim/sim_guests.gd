@@ -723,6 +723,28 @@ static func path_to(sim: HotelSim, fx: int, fz: int, tx: int, tz: int) -> Array:
 		out.append([tx, tz])
 	return out
 
+## Fills the layout's path cache for the common guest trips (queue → room,
+## room → room, room → exit/Cozy Corner) so the first assignment never costs
+## a frame. Pure: results are identical with or without warming.
+static func warm_paths(sim: HotelSim) -> void:
+	var L := sim.L
+	var starts: Array = []
+	for p in L.fixtures["pedestals"]:
+		starts.append(Vector2i(p.x * SimC.UM, int((p.y + L.queue_offset_z) * SimC.UM)))
+	var ends: Array = []
+	for letter in L.active_rooms:
+		ends.append(bedside(sim, letter))
+	var ent: Vector2i = L.entrance[0]
+	var exit_pt := Vector2i(ent.x * SimC.UM - 2_000_000, int((ent.y + 0.5) * SimC.UM))
+	var cozy := Vector2i(int(L.cozy_corner.x * SimC.UM), int(L.cozy_corner.y * SimC.UM))
+	for a in starts:
+		for b in ends + [cozy]:
+			path_to(sim, a.x, a.y, b.x, b.y)
+	for a2 in ends:
+		for b2 in ends + [exit_pt]:
+			if a2 != b2:
+				path_to(sim, a2.x, a2.y, b2.x, b2.y)
+
 static func _astar(L: LayoutDef, a: Vector2i, b: Vector2i) -> Array:
 	var W := LayoutDef.NAV_W
 	var H := LayoutDef.NAV_H
@@ -732,6 +754,17 @@ static func _astar(L: LayoutDef, a: Vector2i, b: Vector2i) -> Array:
 		b = _nearest_open(L, b)
 	var start := a.y * W + a.x
 	var goal := b.y * W + b.x
+	# Guest nav is static per layout, so results are memoised on the layout.
+	var ck := start * W * H + goal
+	if L.astar_cache.has(ck):
+		return (L.astar_cache[ck] as Array).duplicate()
+	var cells := _astar_search(L, a, b, start, goal)
+	L.astar_cache[ck] = cells
+	return cells.duplicate()
+
+static func _astar_search(L: LayoutDef, a: Vector2i, b: Vector2i, start: int, goal: int) -> Array:
+	var W := LayoutDef.NAV_W
+	var H := LayoutDef.NAV_H
 	var g_cost := PackedInt32Array(); g_cost.resize(W * H); g_cost.fill(1 << 30)
 	var came := PackedInt32Array(); came.resize(W * H); came.fill(-1)
 	var closed := PackedByteArray(); closed.resize(W * H)

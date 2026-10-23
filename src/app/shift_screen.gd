@@ -79,6 +79,7 @@ func _build_view() -> void:
 		view.capture_tick(sim.s)
 		view.capture_tick(sim.s)
 		view.prewarm(sim.s)
+		SimGuests.warm_paths(sim)
 	InputRouter.gameplay = true
 	InputRouter.clear_edges()
 	if not InputRouter.menu_pause.is_connected(_on_pause_pressed):
@@ -88,6 +89,7 @@ func _build_view() -> void:
 	var chapter := int(hud.level.get("chapter", 1))
 	if cfg.get("mode", "") in ["tutorial"]:
 		chapter = 1
+	Audio.preload_chapter(maxi(1, chapter))
 	Audio.play_music("planning")
 	_planning_intro()
 	if DevOverlay.enabled():
@@ -99,6 +101,8 @@ func _planning_intro() -> void:
 
 func _exit_tree() -> void:
 	InputRouter.gameplay = false
+	if captions:
+		captions.bottom_offset = 70.0
 	if InputRouter.menu_pause.is_connected(_on_pause_pressed):
 		InputRouter.menu_pause.disconnect(_on_pause_pressed)
 	if InputRouter.device_missing.is_connected(_on_device_missing):
@@ -197,6 +201,8 @@ func useful_jobs(st: Dictionary) -> Array:
 
 func _tutorial_hud() -> void:
 	var tdef: Dictionary = sim.tutorial.current()
+	# Captions sit above the tutorial card while it is shown.
+	captions.bottom_offset = 70.0 if tdef.is_empty() else 165.0
 	if tdef.is_empty():
 		hud.tutorial = {}
 		return
@@ -324,11 +330,9 @@ func _feedback(events: Array) -> void:
 			"finish_prompt":
 				Audio.sfx("bell_ring")
 			"tutorial_step":
-				var td: Dictionary = sim.tutorial.current() if sim and sim.tutorial != null else {}
-				var key: String = td.get("caption", "")
-				if td.has("caption_multi") and sim.s["humans"] >= 2:
-					key = td["caption_multi"]
-				captions.push(td.get("speaker", "nana"), Loc.t(key), "teaching", 5.0)
+				# The tutorial card already shows the step with its speaker; the
+				# caption bar would only repeat it on top of the card.
+				Audio.sfx("chime", -8.0)
 			"nana_helps":
 				captions.push("nana", Loc.t("tut.nana_helps"), "teaching", 3.0)
 			"coach":

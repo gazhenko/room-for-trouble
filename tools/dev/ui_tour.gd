@@ -33,7 +33,7 @@ func _ready() -> void:
 		["credits", func(): Session.open_credits()],
 		["licences", func():
 			Session.open_credits()
-			Session.screen._licences(Session.screen.find_child("*VBoxContainer*", true, false))],
+			Session.screen._licences(Session.screen.body_box)],
 		["level_pre", func(): Session.play_story("L05.pre", func(): pass)],
 		["level_pre_L12", func(): Session.play_story("L12.pre", func(): pass)],
 		["level_pre_L20", func(): Session.play_story("L20.pre", func(): pass)],

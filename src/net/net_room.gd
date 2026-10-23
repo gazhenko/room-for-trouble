@@ -112,6 +112,7 @@ func start_shift(content, content_hash: String) -> void:
 		cfg["layout"] = "P6"
 	sim = HotelSim.new(content, cfg)
 	sim.record_inputs = true
+	SimGuests.warm_paths(sim)
 	phase = "shift"
 	inputs.clear()
 	baselines.clear()

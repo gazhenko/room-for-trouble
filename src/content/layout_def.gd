@@ -40,6 +40,7 @@ var hall: Rect2i
 var tiles := PackedByteArray()      # 1 = wall
 var boxes: Array = []               # [x0,z0,x1,z1,tag] µm solid fixture footprints
 var nav_block := PackedByteArray()  # guest nav (static)
+var astar_cache: Dictionary = {}     # start*cells+goal -> cell path (pure function of nav_block)
 
 static func build(base: Dictionary, tpl: Dictionary, mirror: bool) -> LayoutDef:
 	var L := LayoutDef.new()

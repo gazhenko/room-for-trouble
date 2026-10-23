@@ -58,6 +58,11 @@ func _process(dt: float) -> void:
 	if _skip > 0:
 		_skip -= 1
 	elif perf and t > 3.0:
+		if dt * 1000.0 / maxf(0.01, Engine.time_scale) > 25.0:
+			var kinds: Array = []
+			for e in shift.sim.events:
+				kinds.append(e["type"])
+			print("SPIKE %.1fms hotel %ds events %s" % [dt * 1000.0, int(shift.sim.s["hotel_q"]) / SimC.HOTEL_Q_PER_S, kinds])
 		samples.append({"frame_ms": dt * 1000.0 / maxf(0.01, Engine.time_scale), "hotel_s": int(shift.sim.s["hotel_q"]) / SimC.HOTEL_Q_PER_S,
 			"process_ms": Performance.get_monitor(Performance.TIME_PROCESS) * 1000.0,
 			"draw_calls": Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME),

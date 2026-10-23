@@ -8,7 +8,7 @@ than it is.
 
 | Area | Status | What remains |
 |---|---|---|
-| **Windows** | Exported (`build/windows/RoomForTrouble.exe`, x86-64, embedded PCK); never launched | Run `RoomForTrouble.exe -- --smoke-test` on a real Windows 10/11 PC, then play couch co-op with controllers. The `.exe` has no embedded icon (`modify_resources=false`: rcedit/Wine are not in the toolchain). |
+| **Windows** | Exported (`build/windows/RoomForTrouble.exe` plus `RoomForTrouble.pck`, x86-64); never launched on Windows | Run `RoomForTrouble.exe -- --smoke-test` on a real Windows 10/11 PC, then play couch co-op with controllers. The `.exe` has no embedded icon (`modify_resources=false`: rcedit/Wine are not in the toolchain). |
 | **Linux desktop** | Smoke test passes in a clean x86-64 Debian container under Xvfb, with Mesa llvmpipe and the Compatibility renderer (`tools/smoke_linux.sh`) | Test on a real Linux desktop GPU with the Forward+ renderer. |
 | **Steam Deck** | Not tested | 800p layout, Deck controls and glyphs, suspend/resume and focus changes on the device (§24.4). |
 | **macOS** | Fully played and smoke-tested from the exported `.app` on an M1 Pro | Unsigned and not notarized, so Gatekeeper warns on first launch (right-click → Open). Signing and notarization need the owner's Apple Developer credentials. |
@@ -19,13 +19,13 @@ than it is.
 ## Known imperfections
 
 - **Draw calls exceed the 150-call budget in big scenes.** On L24 with 4 players there are
-  up to about 620 draw calls. On the M1 Pro, frame time stays around 5–6 ms at 720p (see
-  `docs/PERFORMANCE.md`). Low-end and integrated GPUs, and the Steam Deck, are unmeasured.
+  up to about 620 draw calls (Forward+). On the M1 Pro, p95 frame time is 5.6 ms at 720p,
+  800p and 1080p (see `docs/PERFORMANCE.md`). Low-end and integrated GPUs, and the Steam Deck, are unmeasured.
   The procedural meshes are cached and shared, but stations are not yet merged or
   multimesh-instanced.
-- **Occasional frame-time spikes** of up to about 100 ms happen when a new mesh kind is
-  first built (for example the first trunk or cloud in a session). Later instances reuse the
-  cached mesh.
+- **Rare single-frame hitches.** Three of six measured runs showed one isolated 78–133 ms
+  CPU-side frame. Repeated first-occurrence spikes were fixed by building rigs, meshes and
+  paths at load. The remaining one is not fully attributed (see `docs/PERFORMANCE.md`).
 - **The bot scores lower with 2–4 players than solo** in later chapters, because of simple
   bot coordination such as two bots chasing the same job. This reflects the driver, not
   necessarily human play; see `docs/REFERENCE_RUNS.md`.

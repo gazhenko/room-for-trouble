@@ -124,9 +124,11 @@ These scenes need a window. Run them with `godot --path . <scene> -- <args>`.
   the server image).
 - Audio generation is byte-identical: fixed seeds and fixed Ogg stream serials.
 - Content generation is deterministic: sorted keys and no timestamps.
-- Exports embed the PCK, so there is no hidden dependency on the developer folder. Exports
-  include only `*.json`, the font licences and the icon sources. `tests/`, `tools/`,
-  `docs/`, `server/` and `build/` are excluded.
+- Every export is self-contained, with no hidden dependency on the developer folder. The
+  Windows and Linux games ship `RoomForTrouble.pck` beside the executable (keep them
+  together). macOS keeps it inside the `.app`, and the server embeds it. Exports include
+  only `*.json`, the font licences and the icon sources. `tests/`, `tools/`, `docs/`,
+  `server/` and `build/` are excluded.
 - macOS exports are unsigned and not notarized. They are **candidate** builds until signed
   on real hardware with the owner's credentials. No credentials are kept in this repository.
 - The Windows `.exe` is exported with `modify_resources=false`, so the icon is not embedded

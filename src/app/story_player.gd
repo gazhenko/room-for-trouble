@@ -159,6 +159,8 @@ func _ensure_photo_set() -> void:
 	mk.box(Vector3(-2.8, 1.95, -2.22), Vector3(2.0, 0.55, 0.05), Art.GOLD)
 	mk.box(Vector3(-2.8, 1.95, -2.19), Vector3(1.8, 0.4, 0.03), Art.INK)
 	mk.flat(Vector3(0, 0.01, 0.2), Vector2(6.0, 2.6), Art.CORAL.lerp(Art.CREAM, 0.4))
+	# A low riser for the back row of guests (group-photo staging).
+	mk.box(Vector3(0, 0.2, -0.85), Vector3(6.0, 0.4, 0.95), Art.WALNUT, Art.WALNUT.lightened(0.25))
 	_photo_set.add_child(Art.mesh_instance(mk.commit()))
 	set_root.add_child(_photo_set)
 

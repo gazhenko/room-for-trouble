@@ -151,7 +151,7 @@ again, run `tools/build.sh`. It writes `build/test_report.txt`, `build/ui_report
 | Open credits/licences → exit cleanly | ✅ | The smoke test opens Credits; Credits → Licences shows the full texts; the process exits 0 |
 | Repeat on an offline machine | ✅ | The Linux container smoke run has no network service for the game; local play needs none |
 | Dedicated server without GPU, display or audio | ✅ | `tools/smoke_linux.sh` (headless server + probe in a container) |
-| The package references no absolute development paths | ✅ | The exports embed the PCK; `res://`/`user://` paths only; the Linux run in a clean container passes |
+| The package references no absolute development paths | ✅ | Self-contained exports (the PCK sits beside the executable, inside the `.app`, or embedded in the server). Only `res://` and `user://` paths are used. The Linux run in a clean container passes. |
 
 ## Design sections: feature inventory
 

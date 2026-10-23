@@ -213,6 +213,13 @@ func stop_music() -> void:
 func sting(id: String) -> void:
 	sfx(id, 0.0, 1.0, "Music")
 
+## Loads a chapter's four music stems ahead of time (no hitch at shift start).
+func preload_chapter(chapter: int) -> void:
+	if not enabled:
+		return
+	for stem in STEMS:
+		_stream("ch%d_%s" % [chapter, stem])
+
 func start_chapter(chapter: int) -> void:
 	if not enabled:
 		return

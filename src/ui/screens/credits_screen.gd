@@ -2,6 +2,8 @@ class_name CreditsScreen
 extends Screen
 ## Credits and third-party licence notices, readable with a controller.
 
+var body_box: VBoxContainer
+
 func _init() -> void:
 	super._init()
 	var v := card(Loc.t("ui.menu.credits"), 900, "ui_credits")
@@ -10,6 +12,7 @@ func _init() -> void:
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	v.add_child(scroll)
 	var body := UiKit.vbox(6)
+	body_box = body
 	body.custom_minimum_size = Vector2(840, 0)
 	scroll.add_child(body)
 	var data = JSON.parse_string(FileAccess.get_file_as_string("res://data/credits.json")) if FileAccess.file_exists("res://data/credits.json") else {}

@@ -673,6 +673,7 @@
  "ui.online.full": "That room is full.",
  "ui.online.join": "Join Room",
  "ui.online.leader": "Leader",
+ "ui.online.local_seats": "Players on this device: {n}. Press Carry on another controller or keyboard to add one.",
  "ui.online.lost_title": "The connection didn't come back",
  "ui.online.no_room": "We couldn't find that room code.",
  "ui.online.restarting": "The hotel server is restarting. Hold on — we'll reconnect.",

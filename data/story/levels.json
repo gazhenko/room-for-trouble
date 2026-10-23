@@ -81,31 +81,32 @@
       {
        "id": "nana",
        "pos": [
-        -2.6,
-        0.2
+        -2.25,
+        0.35
        ],
        "pose": "wave",
-       "face": 0
+       "face": 20
       },
       {
        "id": "gus",
        "pos": [
-        2.6,
-        0.7
+        2.3,
+        0.75
        ],
        "pose": "happy",
-       "face": 0
+       "face": -20
       },
       {
        "id": "mallow",
        "pos": [
         0.0,
-        -0.6
+        -0.85
        ],
        "pose": "happy",
        "face": 0,
        "slippers": true,
-       "mask": false
+       "mask": false,
+       "y": 0.42
       }
      ],
      "props": [
@@ -205,31 +206,32 @@
       {
        "id": "nana",
        "pos": [
-        -2.6,
-        0.2
+        -2.25,
+        0.35
        ],
        "pose": "wave",
-       "face": 0
+       "face": 20
       },
       {
        "id": "gus",
        "pos": [
-        2.6,
-        0.7
+        2.3,
+        0.75
        ],
        "pose": "happy",
-       "face": 0
+       "face": -20
       },
       {
        "id": "mallow",
        "pos": [
         0.0,
-        -0.6
+        -0.85
        ],
        "pose": "happy",
        "face": 0,
        "slippers": true,
-       "mask": false
+       "mask": false,
+       "y": 0.42
       }
      ],
      "props": [],
@@ -311,31 +313,32 @@
       {
        "id": "nana",
        "pos": [
-        -2.6,
-        0.2
+        -2.25,
+        0.35
        ],
        "pose": "wave",
-       "face": 0
+       "face": 20
       },
       {
        "id": "gus",
        "pos": [
-        2.6,
-        0.7
+        2.3,
+        0.75
        ],
        "pose": "happy",
-       "face": 0
+       "face": -20
       },
       {
        "id": "mallow",
        "pos": [
         0.0,
-        -0.6
+        -0.85
        ],
        "pose": "happy",
        "face": 0,
        "slippers": true,
-       "mask": false
+       "mask": false,
+       "y": 0.42
       }
      ],
      "props": [
@@ -435,31 +438,32 @@
       {
        "id": "nana",
        "pos": [
-        -2.6,
-        0.2
+        -2.25,
+        0.35
        ],
        "pose": "wave",
-       "face": 0
+       "face": 20
       },
       {
        "id": "gus",
        "pos": [
-        2.6,
-        0.7
+        2.3,
+        0.75
        ],
        "pose": "happy",
-       "face": 0
+       "face": -20
       },
       {
        "id": "mallow",
        "pos": [
         0.0,
-        -0.6
+        -0.85
        ],
        "pose": "happy",
        "face": 0,
        "slippers": true,
-       "mask": false
+       "mask": false,
+       "y": 0.42
       }
      ],
      "props": [
@@ -554,42 +558,44 @@
       {
        "id": "nana",
        "pos": [
-        -2.6,
-        0.2
+        -2.25,
+        0.35
        ],
        "pose": "wave",
-       "face": 0
+       "face": 20
       },
       {
        "id": "gus",
        "pos": [
-        2.6,
-        0.7
+        2.3,
+        0.75
        ],
        "pose": "happy",
-       "face": 0
+       "face": -20
       },
       {
        "id": "flurry",
        "pos": [
         -0.5,
-        -0.6
+        -0.85
        ],
        "pose": "happy",
        "face": 0,
        "slippers": false,
-       "mask": false
+       "mask": false,
+       "y": 0.42
       },
       {
        "id": "guest:slime",
        "pos": [
         0.5,
-        -0.6
+        -0.85
        ],
        "pose": "wave",
        "face": 0,
        "slippers": true,
-       "mask": false
+       "mask": false,
+       "y": 0.42
       }
      ],
      "props": [],
@@ -689,42 +695,44 @@
       {
        "id": "nana",
        "pos": [
-        -2.6,
-        0.2
+        -2.25,
+        0.35
        ],
        "pose": "wave",
-       "face": 0
+       "face": 20
       },
       {
        "id": "gus",
        "pos": [
-        2.6,
-        0.7
+        2.3,
+        0.75
        ],
        "pose": "happy",
-       "face": 0
+       "face": -20
       },
       {
        "id": "cinder",
        "pos": [
         -0.5,
-        -0.6
+        -0.85
        ],
        "pose": "happy",
        "face": 0,
        "slippers": false,
-       "mask": false
+       "mask": false,
+       "y": 0.42
       },
       {
        "id": "guest:yeti",
        "pos": [
         0.5,
-        -0.6
+        -0.85
        ],
        "pose": "wave",
        "face": 0,
        "slippers": false,
-       "mask": false
+       "mask": false,
+       "y": 0.42
       }
      ],
      "props": [
@@ -819,42 +827,44 @@
       {
        "id": "nana",
        "pos": [
-        -2.6,
-        0.2
+        -2.25,
+        0.35
        ],
        "pose": "wave",
-       "face": 0
+       "face": 20
       },
       {
        "id": "gus",
        "pos": [
-        2.6,
-        0.7
+        2.3,
+        0.75
        ],
        "pose": "happy",
-       "face": 0
+       "face": -20
       },
       {
        "id": "cinder",
        "pos": [
         -0.5,
-        -0.6
+        -0.85
        ],
        "pose": "happy",
        "face": 0,
        "slippers": false,
-       "mask": false
+       "mask": false,
+       "y": 0.42
       },
       {
        "id": "guest:yeti",
        "pos": [
         0.5,
-        -0.6
+        -0.85
        ],
        "pose": "wave",
        "face": 0,
        "slippers": false,
-       "mask": false
+       "mask": false,
+       "y": 0.42
       }
      ],
      "props": [
@@ -945,53 +955,56 @@
       {
        "id": "nana",
        "pos": [
-        -2.6,
-        0.2
+        -2.25,
+        0.35
        ],
        "pose": "wave",
-       "face": 0
+       "face": 20
       },
       {
        "id": "gus",
        "pos": [
-        2.6,
-        0.7
+        2.3,
+        0.75
        ],
        "pose": "happy",
-       "face": 0
+       "face": -20
       },
       {
        "id": "cinder",
        "pos": [
         -1.0,
-        -0.6
+        -0.85
        ],
        "pose": "happy",
        "face": 0,
        "slippers": false,
-       "mask": false
+       "mask": false,
+       "y": 0.42
       },
       {
        "id": "guest:yeti",
        "pos": [
         0.0,
-        -0.6
+        -0.85
        ],
        "pose": "wave",
        "face": 0,
        "slippers": false,
-       "mask": false
+       "mask": false,
+       "y": 0.42
       },
       {
        "id": "guest:slime",
        "pos": [
         1.0,
-        -0.6
+        -0.85
        ],
        "pose": "happy",
        "face": 0,
        "slippers": true,
-       "mask": false
+       "mask": false,
+       "y": 0.42
       }
      ],
      "props": [],
@@ -1068,42 +1081,44 @@
       {
        "id": "nana",
        "pos": [
-        -2.6,
-        0.2
+        -2.25,
+        0.35
        ],
        "pose": "wave",
-       "face": 0
+       "face": 20
       },
       {
        "id": "gus",
        "pos": [
-        2.6,
-        0.7
+        2.3,
+        0.75
        ],
        "pose": "happy",
-       "face": 0
+       "face": -20
       },
       {
        "id": "whisp",
        "pos": [
         -0.5,
-        -0.6
+        -0.85
        ],
        "pose": "happy",
        "face": 0,
        "slippers": false,
-       "mask": true
+       "mask": true,
+       "y": 0.42
       },
       {
        "id": "guest:slime",
        "pos": [
         0.5,
-        -0.6
+        -0.85
        ],
        "pose": "wave",
        "face": 0,
        "slippers": true,
-       "mask": false
+       "mask": false,
+       "y": 0.42
       }
      ],
      "props": [],
@@ -1203,42 +1218,44 @@
       {
        "id": "nana",
        "pos": [
-        -2.6,
-        0.2
+        -2.25,
+        0.35
        ],
        "pose": "wave",
-       "face": 0
+       "face": 20
       },
       {
        "id": "gus",
        "pos": [
-        2.6,
-        0.7
+        2.3,
+        0.75
        ],
        "pose": "happy",
-       "face": 0
+       "face": -20
       },
       {
        "id": "luna",
        "pos": [
         -0.5,
-        -0.6
+        -0.85
        ],
        "pose": "happy",
        "face": 0,
        "slippers": false,
-       "mask": false
+       "mask": false,
+       "y": 0.42
       },
       {
        "id": "guest:ghost",
        "pos": [
         0.5,
-        -0.6
+        -0.85
        ],
        "pose": "wave",
        "face": 0,
        "slippers": false,
-       "mask": true
+       "mask": true,
+       "y": 0.42
       }
      ],
      "props": [
@@ -1333,53 +1350,56 @@
       {
        "id": "nana",
        "pos": [
-        -2.6,
-        0.2
+        -2.25,
+        0.35
        ],
        "pose": "wave",
-       "face": 0
+       "face": 20
       },
       {
        "id": "gus",
        "pos": [
-        2.6,
-        0.7
+        2.3,
+        0.75
        ],
        "pose": "happy",
-       "face": 0
+       "face": -20
       },
       {
        "id": "luna",
        "pos": [
         -1.0,
-        -0.6
+        -0.85
        ],
        "pose": "happy",
        "face": 0,
        "slippers": false,
-       "mask": false
+       "mask": false,
+       "y": 0.42
       },
       {
        "id": "guest:ghost",
        "pos": [
         0.0,
-        -0.6
+        -0.85
        ],
        "pose": "wave",
        "face": 0,
        "slippers": false,
-       "mask": true
+       "mask": true,
+       "y": 0.42
       },
       {
        "id": "guest:slime",
        "pos": [
         1.0,
-        -0.6
+        -0.85
        ],
        "pose": "happy",
        "face": 0,
        "slippers": true,
-       "mask": false
+       "mask": false,
+       "y": 0.42
       }
      ],
      "props": [],
@@ -1470,53 +1490,56 @@
       {
        "id": "nana",
        "pos": [
-        -2.6,
-        0.2
+        -2.25,
+        0.35
        ],
        "pose": "wave",
-       "face": 0
+       "face": 20
       },
       {
        "id": "gus",
        "pos": [
-        2.6,
-        0.7
+        2.3,
+        0.75
        ],
        "pose": "happy",
-       "face": 0
+       "face": -20
       },
       {
        "id": "luna",
        "pos": [
         -1.0,
-        -0.6
+        -0.85
        ],
        "pose": "happy",
        "face": 0,
        "slippers": false,
-       "mask": false
+       "mask": false,
+       "y": 0.42
       },
       {
        "id": "guest:ghost",
        "pos": [
         0.0,
-        -0.6
+        -0.85
        ],
        "pose": "wave",
        "face": 0,
        "slippers": false,
-       "mask": true
+       "mask": true,
+       "y": 0.42
       },
       {
        "id": "guest:dragon",
        "pos": [
         1.0,
-        -0.6
+        -0.85
        ],
        "pose": "happy",
        "face": 0,
        "slippers": false,
-       "mask": false
+       "mask": false,
+       "y": 0.42
       }
      ],
      "props": [
@@ -1611,31 +1634,32 @@
       {
        "id": "nana",
        "pos": [
-        -2.6,
-        0.2
+        -2.25,
+        0.35
        ],
        "pose": "wave",
-       "face": 0
+       "face": 20
       },
       {
        "id": "gus",
        "pos": [
-        2.6,
-        0.7
+        2.3,
+        0.75
        ],
        "pose": "happy",
-       "face": 0
+       "face": -20
       },
       {
        "id": "fern",
        "pos": [
         0.0,
-        -0.6
+        -0.85
        ],
        "pose": "happy",
        "face": 0,
        "slippers": false,
-       "mask": false
+       "mask": false,
+       "y": 0.42
       }
      ],
      "props": [
@@ -1730,53 +1754,56 @@
       {
        "id": "nana",
        "pos": [
-        -2.6,
-        0.2
+        -2.25,
+        0.35
        ],
        "pose": "wave",
-       "face": 0
+       "face": 20
       },
       {
        "id": "gus",
        "pos": [
-        2.6,
-        0.7
+        2.3,
+        0.75
        ],
        "pose": "happy",
-       "face": 0
+       "face": -20
       },
       {
        "id": "fern",
        "pos": [
         -1.0,
-        -0.6
+        -0.85
        ],
        "pose": "happy",
        "face": 0,
        "slippers": false,
-       "mask": false
+       "mask": false,
+       "y": 0.42
       },
       {
        "id": "guest:dragon",
        "pos": [
         0.0,
-        -0.6
+        -0.85
        ],
        "pose": "wave",
        "face": 0,
        "slippers": false,
-       "mask": false
+       "mask": false,
+       "y": 0.42
       },
       {
        "id": "guest:yeti",
        "pos": [
         1.0,
-        -0.6
+        -0.85
        ],
        "pose": "happy",
        "face": 0,
        "slippers": false,
-       "mask": false
+       "mask": false,
+       "y": 0.42
       }
      ],
      "props": [],
@@ -1858,42 +1885,44 @@
       {
        "id": "nana",
        "pos": [
-        -2.6,
-        0.2
+        -2.25,
+        0.35
        ],
        "pose": "wave",
-       "face": 0
+       "face": 20
       },
       {
        "id": "gus",
        "pos": [
-        2.6,
-        0.7
+        2.3,
+        0.75
        ],
        "pose": "happy",
-       "face": 0
+       "face": -20
       },
       {
        "id": "mallow",
        "pos": [
         -0.5,
-        -0.6
+        -0.85
        ],
        "pose": "happy",
        "face": 0,
        "slippers": true,
-       "mask": false
+       "mask": false,
+       "y": 0.42
       },
       {
        "id": "guest:sprout",
        "pos": [
         0.5,
-        -0.6
+        -0.85
        ],
        "pose": "wave",
        "face": 0,
        "slippers": false,
-       "mask": false
+       "mask": false,
+       "y": 0.42
       }
      ],
      "props": [],
@@ -1975,86 +2004,92 @@
       {
        "id": "nana",
        "pos": [
-        -2.6,
-        0.2
+        -2.25,
+        0.35
        ],
        "pose": "wave",
-       "face": 0
+       "face": 20
       },
       {
        "id": "gus",
        "pos": [
-        2.6,
-        0.7
+        2.3,
+        0.75
        ],
        "pose": "happy",
-       "face": 0
+       "face": -20
       },
       {
        "id": "fern",
        "pos": [
         -2.5,
-        -0.6
+        -0.85
        ],
        "pose": "happy",
        "face": 0,
        "slippers": false,
-       "mask": false
+       "mask": false,
+       "y": 0.42
       },
       {
        "id": "guest:slime",
        "pos": [
         -1.5,
-        -0.6
+        -0.85
        ],
        "pose": "wave",
        "face": 0,
        "slippers": true,
-       "mask": false
+       "mask": false,
+       "y": 0.42
       },
       {
        "id": "guest:dragon",
        "pos": [
         -0.5,
-        -0.6
+        -0.85
        ],
        "pose": "happy",
        "face": 0,
        "slippers": false,
-       "mask": false
+       "mask": false,
+       "y": 0.42
       },
       {
        "id": "guest:yeti",
        "pos": [
         0.5,
-        -0.6
+        -0.85
        ],
        "pose": "wave",
        "face": 0,
        "slippers": false,
-       "mask": false
+       "mask": false,
+       "y": 0.42
       },
       {
        "id": "guest:moonwolf",
        "pos": [
         1.5,
-        -0.6
+        -0.85
        ],
        "pose": "happy",
        "face": 0,
        "slippers": false,
-       "mask": false
+       "mask": false,
+       "y": 0.42
       },
       {
        "id": "guest:ghost",
        "pos": [
         2.5,
-        -0.6
+        -0.85
        ],
        "pose": "wave",
        "face": 0,
        "slippers": false,
-       "mask": true
+       "mask": true,
+       "y": 0.42
       }
      ],
      "props": [
@@ -2145,53 +2180,56 @@
       {
        "id": "nana",
        "pos": [
-        -2.6,
-        0.2
+        -2.25,
+        0.35
        ],
        "pose": "wave",
-       "face": 0
+       "face": 20
       },
       {
        "id": "gus",
        "pos": [
-        2.6,
-        0.7
+        2.3,
+        0.75
        ],
        "pose": "happy",
-       "face": 0
+       "face": -20
       },
       {
        "id": "cinder",
        "pos": [
         -1.0,
-        -0.6
+        -0.85
        ],
        "pose": "happy",
        "face": 0,
        "slippers": false,
-       "mask": false
+       "mask": false,
+       "y": 0.42
       },
       {
        "id": "guest:ghost",
        "pos": [
         0.0,
-        -0.6
+        -0.85
        ],
        "pose": "wave",
        "face": 0,
        "slippers": false,
-       "mask": true
+       "mask": true,
+       "y": 0.42
       },
       {
        "id": "guest:sprout",
        "pos": [
         1.0,
-        -0.6
+        -0.85
        ],
        "pose": "happy",
        "face": 0,
        "slippers": false,
-       "mask": false
+       "mask": false,
+       "y": 0.42
       }
      ],
      "props": [],
@@ -2277,53 +2315,56 @@
       {
        "id": "nana",
        "pos": [
-        -2.6,
-        0.2
+        -2.25,
+        0.35
        ],
        "pose": "wave",
-       "face": 0
+       "face": 20
       },
       {
        "id": "gus",
        "pos": [
-        2.6,
-        0.7
+        2.3,
+        0.75
        ],
        "pose": "happy",
-       "face": 0
+       "face": -20
       },
       {
        "id": "cinder",
        "pos": [
         -1.0,
-        -0.6
+        -0.85
        ],
        "pose": "happy",
        "face": 0,
        "slippers": false,
-       "mask": false
+       "mask": false,
+       "y": 0.42
       },
       {
        "id": "guest:moonwolf",
        "pos": [
         0.0,
-        -0.6
+        -0.85
        ],
        "pose": "wave",
        "face": 0,
        "slippers": false,
-       "mask": false
+       "mask": false,
+       "y": 0.42
       },
       {
        "id": "guest:sprout",
        "pos": [
         1.0,
-        -0.6
+        -0.85
        ],
        "pose": "happy",
        "face": 0,
        "slippers": false,
-       "mask": false
+       "mask": false,
+       "y": 0.42
       }
      ],
      "props": [],
@@ -2400,53 +2441,56 @@
       {
        "id": "nana",
        "pos": [
-        -2.6,
-        0.2
+        -2.25,
+        0.35
        ],
        "pose": "wave",
-       "face": 0
+       "face": 20
       },
       {
        "id": "gus",
        "pos": [
-        2.6,
-        0.7
+        2.3,
+        0.75
        ],
        "pose": "happy",
-       "face": 0
+       "face": -20
       },
       {
        "id": "cinder",
        "pos": [
         -1.0,
-        -0.6
+        -0.85
        ],
        "pose": "happy",
        "face": 0,
        "slippers": false,
-       "mask": false
+       "mask": false,
+       "y": 0.42
       },
       {
        "id": "guest:yeti",
        "pos": [
         0.0,
-        -0.6
+        -0.85
        ],
        "pose": "wave",
        "face": 0,
        "slippers": false,
-       "mask": false
+       "mask": false,
+       "y": 0.42
       },
       {
        "id": "guest:ghost",
        "pos": [
         1.0,
-        -0.6
+        -0.85
        ],
        "pose": "happy",
        "face": 0,
        "slippers": false,
-       "mask": true
+       "mask": true,
+       "y": 0.42
       }
      ],
      "props": [],
@@ -2537,53 +2581,56 @@
       {
        "id": "nana",
        "pos": [
-        -2.6,
-        0.2
+        -2.25,
+        0.35
        ],
        "pose": "wave",
-       "face": 0
+       "face": 20
       },
       {
        "id": "gus",
        "pos": [
-        2.6,
-        0.7
+        2.3,
+        0.75
        ],
        "pose": "happy",
-       "face": 0
+       "face": -20
       },
       {
        "id": "cinder",
        "pos": [
         -1.0,
-        -0.6
+        -0.85
        ],
        "pose": "happy",
        "face": 0,
        "slippers": false,
-       "mask": false
+       "mask": false,
+       "y": 0.42
       },
       {
        "id": "guest:moonwolf",
        "pos": [
         0.0,
-        -0.6
+        -0.85
        ],
        "pose": "wave",
        "face": 0,
        "slippers": false,
-       "mask": false
+       "mask": false,
+       "y": 0.42
       },
       {
        "id": "guest:sprout",
        "pos": [
         1.0,
-        -0.6
+        -0.85
        ],
        "pose": "happy",
        "face": 0,
        "slippers": false,
-       "mask": false
+       "mask": false,
+       "y": 0.42
       }
      ],
      "props": [
@@ -2683,53 +2730,56 @@
       {
        "id": "nana",
        "pos": [
-        -2.6,
-        0.2
+        -2.25,
+        0.35
        ],
        "pose": "wave",
-       "face": 0
+       "face": 20
       },
       {
        "id": "gus",
        "pos": [
-        2.6,
-        0.7
+        2.3,
+        0.75
        ],
        "pose": "happy",
-       "face": 0
+       "face": -20
       },
       {
        "id": "cinder",
        "pos": [
         -1.0,
-        -0.6
+        -0.85
        ],
        "pose": "happy",
        "face": 0,
        "slippers": false,
-       "mask": false
+       "mask": false,
+       "y": 0.42
       },
       {
        "id": "guest:ghost",
        "pos": [
         0.0,
-        -0.6
+        -0.85
        ],
        "pose": "wave",
        "face": 0,
        "slippers": false,
-       "mask": true
+       "mask": true,
+       "y": 0.42
       },
       {
        "id": "guest:sprout",
        "pos": [
         1.0,
-        -0.6
+        -0.85
        ],
        "pose": "happy",
        "face": 0,
        "slippers": false,
-       "mask": false
+       "mask": false,
+       "y": 0.42
       }
      ],
      "props": [
@@ -2829,64 +2879,68 @@
       {
        "id": "nana",
        "pos": [
-        -2.6,
-        0.2
+        -2.25,
+        0.35
        ],
        "pose": "wave",
-       "face": 0
+       "face": 20
       },
       {
        "id": "gus",
        "pos": [
-        2.6,
-        0.7
+        2.3,
+        0.75
        ],
        "pose": "happy",
-       "face": 0
+       "face": -20
       },
       {
        "id": "cinder",
        "pos": [
         -1.5,
-        -0.6
+        -0.85
        ],
        "pose": "happy",
        "face": 0,
        "slippers": false,
-       "mask": false
+       "mask": false,
+       "y": 0.42
       },
       {
        "id": "guest:yeti",
        "pos": [
         -0.5,
-        -0.6
+        -0.85
        ],
        "pose": "wave",
        "face": 0,
        "slippers": false,
-       "mask": false
+       "mask": false,
+       "y": 0.42
       },
       {
        "id": "guest:slime",
        "pos": [
         0.5,
-        -0.6
+        -0.85
        ],
        "pose": "happy",
        "face": 0,
        "slippers": true,
-       "mask": false
+       "mask": false,
+       "y": 0.42
       },
       {
        "id": "guest:sprout",
        "pos": [
         1.5,
-        -0.6
+        -0.85
        ],
        "pose": "wave",
        "face": 0,
        "slippers": false,
-       "mask": false
+       "mask": false,
+       "y": 0.42
       }
      ],
      "props": [
@@ -2986,86 +3040,92 @@
       {
        "id": "nana",
        "pos": [
-        -2.6,
-        0.2
+        -2.25,
+        0.35
        ],
        "pose": "wave",
-       "face": 0
+       "face": 20
       },
       {
        "id": "gus",
        "pos": [
-        2.6,
-        0.7
+        2.3,
+        0.75
        ],
        "pose": "happy",
-       "face": 0
+       "face": -20
       },
       {
        "id": "cinder",
        "pos": [
         -2.5,
-        -0.6
+        -0.85
        ],
        "pose": "happy",
        "face": 0,
        "slippers": false,
-       "mask": false
+       "mask": false,
+       "y": 0.42
       },
       {
        "id": "guest:yeti",
        "pos": [
         -1.5,
-        -0.6
+        -0.85
        ],
        "pose": "wave",
        "face": 0,
        "slippers": false,
-       "mask": false
+       "mask": false,
+       "y": 0.42
       },
       {
        "id": "guest:slime",
        "pos": [
         -0.5,
-        -0.6
+        -0.85
        ],
        "pose": "happy",
        "face": 0,
        "slippers": true,
-       "mask": false
+       "mask": false,
+       "y": 0.42
       },
       {
        "id": "guest:ghost",
        "pos": [
         0.5,
-        -0.6
+        -0.85
        ],
        "pose": "wave",
        "face": 0,
        "slippers": false,
-       "mask": true
+       "mask": true,
+       "y": 0.42
       },
       {
        "id": "guest:moonwolf",
        "pos": [
         1.5,
-        -0.6
+        -0.85
        ],
        "pose": "happy",
        "face": 0,
        "slippers": false,
-       "mask": false
+       "mask": false,
+       "y": 0.42
       },
       {
        "id": "guest:sprout",
        "pos": [
         2.5,
-        -0.6
+        -0.85
        ],
        "pose": "wave",
        "face": 0,
        "slippers": false,
-       "mask": false
+       "mask": false,
+       "y": 0.42
       }
      ],
      "props": [
@@ -3183,86 +3243,92 @@
       {
        "id": "nana",
        "pos": [
-        -2.6,
-        0.2
+        -2.25,
+        0.35
        ],
        "pose": "wave",
-       "face": 0
+       "face": 20
       },
       {
        "id": "gus",
        "pos": [
-        2.6,
-        0.7
+        2.3,
+        0.75
        ],
        "pose": "happy",
-       "face": 0
+       "face": -20
       },
       {
        "id": "cinder",
        "pos": [
         -2.5,
-        -0.6
+        -0.85
        ],
        "pose": "happy",
        "face": 0,
        "slippers": false,
-       "mask": false
+       "mask": false,
+       "y": 0.42
       },
       {
        "id": "guest:yeti",
        "pos": [
         -1.5,
-        -0.6
+        -0.85
        ],
        "pose": "wave",
        "face": 0,
        "slippers": false,
-       "mask": false
+       "mask": false,
+       "y": 0.42
       },
       {
        "id": "guest:slime",
        "pos": [
         -0.5,
-        -0.6
+        -0.85
        ],
        "pose": "happy",
        "face": 0,
        "slippers": true,
-       "mask": false
+       "mask": false,
+       "y": 0.42
       },
       {
        "id": "guest:sprout",
        "pos": [
         0.5,
-        -0.6
+        -0.85
        ],
        "pose": "wave",
        "face": 0,
        "slippers": false,
-       "mask": false
+       "mask": false,
+       "y": 0.42
       },
       {
        "id": "guest:ghost",
        "pos": [
         1.5,
-        -0.6
+        -0.85
        ],
        "pose": "happy",
        "face": 0,
        "slippers": false,
-       "mask": true
+       "mask": true,
+       "y": 0.42
       },
       {
        "id": "guest:moonwolf",
        "pos": [
         2.5,
-        -0.6
+        -0.85
        ],
        "pose": "wave",
        "face": 0,
        "slippers": false,
-       "mask": false
+       "mask": false,
+       "y": 0.42
       }
      ],
      "props": [

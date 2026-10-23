@@ -291,6 +291,7 @@ UI = {
     "ui.online.underway": "This shift is underway — join at the next welcome.",
     "ui.online.restarting": "The hotel server is restarting. Hold on — we'll reconnect.",
     "ui.online.sitting_out": "The team started without you this time. You'll join at the next welcome.",
+    "ui.online.local_seats": "Players on this device: {n}. Press Carry on another controller or keyboard to add one.",
     "ui.online.lost_title": "The connection didn't come back",
     "ui.online.return_hub": "Return to the hub",
     "ui.online.start_ready_in": "Start with ready players (in {n} s)",

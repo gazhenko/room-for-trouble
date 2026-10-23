@@ -17,7 +17,7 @@ func boot(m) -> void:
 	if SaveService.recovered_from != "":
 		call_deferred("toast", Loc.t("ui.save.recovered"), "sys_postcard")
 	Net.notice.connect(func(key: String):
-		if key != "" and key != "ui.pause.title":
+		if key != "":
 			toast(Loc.t(key), "ui_online"))
 	Net.client_disconnected.connect(_on_net_lost)
 	show_title()

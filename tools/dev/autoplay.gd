@@ -12,6 +12,9 @@ var shift: ShiftScreen
 var bot: ReferenceBot
 var t := 0.0
 var shot_i := 0
+var perf := false
+var samples: Array = []
+var _perf_t := 0.0
 
 func _ready() -> void:
 	for a in OS.get_cmdline_user_args():
@@ -21,7 +24,12 @@ func _ready() -> void:
 		elif a.begins_with("--out="): out = a.substr(6)
 		elif a.begins_with("--speed="): speed = float(a.substr(8))
 		elif a.begins_with("--shots="): shots = int(a.substr(8))
-	DisplayServer.window_set_size(Vector2i(1280, 720))
+		elif a == "--perf": perf = true
+		elif a.begins_with("--size="):
+			var p := a.substr(7).split("x")
+			DisplayServer.window_set_size(Vector2i(int(p[0]), int(p[1])))
+	if DisplayServer.window_get_size() == Vector2i(1280, 720) or true:
+		pass
 	var l0 := CanvasLayer.new(); add_child(l0)
 	var stage := PixelStage.new(); l0.add_child(stage)
 	var l1 := CanvasLayer.new(); l1.layer = 1; add_child(l1)
@@ -47,6 +55,14 @@ func _ready() -> void:
 
 func _process(dt: float) -> void:
 	t += dt / maxf(0.01, Engine.time_scale)
+	if perf and t > 3.0:
+		var t0 := Time.get_ticks_usec()
+		samples.append({"frame_ms": dt * 1000.0 / maxf(0.01, Engine.time_scale), "process_ms": Performance.get_monitor(Performance.TIME_PROCESS) * 1000.0,
+			"draw_calls": Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME),
+			"objects": Performance.get_monitor(Performance.RENDER_TOTAL_OBJECTS_IN_FRAME),
+			"primitives": Performance.get_monitor(Performance.RENDER_TOTAL_PRIMITIVES_IN_FRAME),
+			"mem_mb": Performance.get_monitor(Performance.MEMORY_STATIC) / 1048576.0,
+			"vram_mb": Performance.get_monitor(Performance.RENDER_VIDEO_MEM_USED) / 1048576.0})
 	var due := secs * float(shot_i + 1) / float(shots)
 	var hotel_t := float(shift.sim.s["hotel_q"]) / SimC.HOTEL_Q_PER_S
 	if not has_meta("p"):
@@ -63,4 +79,30 @@ func _process(dt: float) -> void:
 		shot_i += 1
 		Engine.time_scale = speed
 		if shot_i >= shots:
+			if perf:
+				_report_perf()
 			get_tree().quit()
+
+func _report_perf() -> void:
+	var fr: Array = []
+	var keys := ["process_ms", "draw_calls", "objects", "primitives", "mem_mb", "vram_mb"]
+	var mx := {}
+	for smp in samples:
+		fr.append(smp["frame_ms"])
+		for k in keys:
+			mx[k] = maxf(float(mx.get(k, 0.0)), float(smp[k]))
+	fr.sort()
+	var n := fr.size()
+	if n == 0:
+		return
+	var avg := 0.0
+	for v in fr:
+		avg += v
+	avg /= n
+	var sim_ms := 0.0
+	# Simulation cost per tick measured directly.
+	var tt := Time.get_ticks_usec()
+	for i in 60:
+		shift.sim.step(bot.frames())
+	sim_ms = (Time.get_ticks_usec() - tt) / 60000.0
+	print("PERF level=%s humans=%d size=%s renderer=%s adapter=%s frames=%d avg_ms=%.2f p95_ms=%.2f max_ms=%.2f sim_tick_ms=%.3f max=%s" % [level, humans, DisplayServer.window_get_size(), RenderingServer.get_current_rendering_method(), RenderingServer.get_video_adapter_name(), n, avg, fr[int(n * 0.95)], fr[n - 1], sim_ms, JSON.stringify(mx)])

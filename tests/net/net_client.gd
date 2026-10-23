@@ -55,7 +55,9 @@ func _process(_dt: float) -> bool:
 
 func _on_connected() -> void:
 	obs["connected"] = true
-	if role == "a":
+	if role == "r" and not obs["seats"].is_empty():
+		return
+	if role == "a" or role == "r":
 		net.create_room(1, ["pip"])
 	else:
 		var code := ""
@@ -73,6 +75,8 @@ func _on_joined(info: Dictionary) -> void:
 		return
 	obs["room"] = info["room_code"]
 	obs["seats"] = info["seat_ids"]
+	if role == "r":
+		net.lobby(int(obs["seats"][0]), "ready")
 	if role == "a":
 		var f := FileAccess.open(dir.path_join("code.txt"), FileAccess.WRITE)
 		f.store_string(NetProtocol.pretty_code(info["room_code"]))
@@ -128,6 +132,15 @@ func _play(st: Dictionary) -> void:
 		if drift.y > 400_000 and absf(drift.x) < 100_000:
 			obs["other_seat_forged_moved"] = true
 	var hs := int(st.get("hotel_s", 0))
+	# NET04: ask the runner to restart the service mid-shift, then keep playing.
+	if role == "r":
+		obs["hotel_s_max"] = maxi(int(obs["hotel_s_max"]), hs)
+		if hs >= 12 and not obs.has("restart_requested"):
+			obs["restart_requested"] = hs
+			FileAccess.open(dir.path_join("restart_now"), FileAccess.WRITE).store_string("1")
+		if obs.has("restart_requested") and obs["reconnected"] and hs >= int(obs["restart_requested"]) + 6:
+			obs["resumed_after_restart_at"] = hs
+			phase = "done"
 	# NET02: b drops its connection mid-shift and reconnects with its token.
 	if role == "b" and hs >= 8 and not reconnect_done:
 		reconnect_done = true

@@ -286,7 +286,9 @@ func room_assignable(letter: String) -> String:
 
 ## frames: Array of {seat, ax, az, held, pressed}
 func step(frames: Array) -> void:
-	events.clear()
+	# Events emitted during setup (e.g. the first tutorial step) surface on tick 0.
+	if s["tick"] > 0:
+		events.clear()
 	var fmap := {}
 	for f in frames:
 		fmap[int(f.get("seat", 0))] = f

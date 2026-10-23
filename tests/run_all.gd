@@ -23,7 +23,15 @@ func _initialize() -> void:
 	var total_fail := 0
 	var total_checks := 0
 	var t0 := Time.get_ticks_msec()
-	for path in SUITES:
+	var suites: Array = []
+	for f in DirAccess.get_files_at("res://tests"):
+		if f.begins_with("test_") and f.ends_with(".gd") and f != "test_base.gd":
+			suites.append("res://tests/" + f)
+	suites.sort()
+	# The long reference-run suite goes last.
+	suites.erase("res://tests/test_campaign_bot.gd")
+	suites.append("res://tests/test_campaign_bot.gd")
+	for path in suites:
 		if not ResourceLoader.exists(path):
 			continue
 		var script: GDScript = load(path)

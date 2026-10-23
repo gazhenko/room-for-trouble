@@ -89,6 +89,7 @@ func _build_stations() -> void:
 	_place("bell", ModelStations.build("group_bell", {}), _v(F["group_bell"]))
 	_place("stand", ModelStations.build("festival_stand", {}), _v(F["festival_stand"]))
 	_place("goal_pad", ModelStations.build("goal_pad", {}), _v(F["goal_pad"], 0.01))
+	_no_shadows(stations["goal_pad"])
 	for i in L.lift_pads.size():
 		_place("lift:%d" % i, ModelStations.build("lift_pad", {"index": i}), _v(L.lift_pads[i], 0.01))
 	if L.shutter.x >= 0:
@@ -113,6 +114,8 @@ func _build_room_dressing() -> void:
 		_place("thermo:" + letter, ModelStations.build("thermostat", opts), Vector3(tp.x, 0, tp.y + (0.2 if g["side"] == "north" else -0.2)), flip)
 		_place("tray:" + letter, ModelStations.build("water_tray", opts), _v(g["tray"]))
 		_place("drop:" + letter, ModelStations.build("drop_pad", opts), _v(g["drop"], 0.01))
+		_no_shadows(stations["drop:" + letter])
+		_no_shadows(stations["tray:" + letter])
 		_place("rail:" + letter, ModelStations.build("curtain_rail", opts), _v(g["door"]), flip)
 		# Mess decals and heat tint overlay.
 		var mess := Node3D.new()
@@ -126,6 +129,7 @@ func _build_room_dressing() -> void:
 			mk.disc(Vector3(px, 0.02, pz), 0.12 + rng.randf() * 0.1, Color("#B9A58C"), 6)
 			mk.sphere(Vector3(px + 0.15, 0.04, pz), 0.05, Color("#D8CBB5"), 2, 4)
 		mess.add_child(Art.mesh_instance(mk.commit()))
+		_no_shadows(mess)
 		add_child(mess)
 		mess_nodes[letter] = mess
 		var tint := MeshInstance3D.new()
@@ -369,6 +373,11 @@ func _set_dither(rig: Node3D, a: float) -> void:
 			m.set_shader_parameter("dither_alpha", a)
 			mi.material_override = m
 
+## Small props skip the shadow pass (halves their draw calls; §19.6 budget).
+func _no_shadows(n: Node) -> void:
+	for mi in _meshes(n):
+		(mi as MeshInstance3D).cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+
 func _meshes(n: Node) -> Array:
 	var out: Array = []
 	for c in n.get_children():
@@ -465,6 +474,7 @@ func _sync_items(alpha: float) -> void:
 			if it["k"] == "festival_parcel":
 				extra["index"] = key % 3
 			var node := ModelItems.build(it["k"], extra)
+			_no_shadows(node)
 			add_child(node)
 			item_nodes[key] = node
 		var n: Node3D = item_nodes[key]

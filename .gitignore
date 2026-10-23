@@ -5,3 +5,5 @@ build/
 .DS_Store
 __pycache__/
 tools/audio/.venv/
+server/deploy/.env
+server/deploy/.env.test

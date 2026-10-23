@@ -134,7 +134,7 @@ static func button(text: String, icon_name := "", min_w := 320) -> Button:
 	b.focus_mode = Control.FOCUS_ALL
 	b.alignment = HORIZONTAL_ALIGNMENT_LEFT if icon_name != "" else HORIZONTAL_ALIGNMENT_CENTER
 	if icon_name != "" and Icons.has(icon_name):
-		b.icon = Icons.tex(icon_name)
+		b.icon = icon_tex(icon_name)
 		b.expand_icon = false
 		b.add_theme_constant_override("icon_max_width", 32)
 		b.add_theme_constant_override("h_separation", 14)
@@ -142,9 +142,17 @@ static func button(text: String, icon_name := "", min_w := 320) -> Button:
 	b.pressed.connect(func(): Audio.ui("ui_confirm"))
 	return b
 
+## Icon texture in the player's chosen palette (colour-blind variants and
+## high contrast remap fills; shapes and outlines never change).
+static func icon_tex(name: String) -> Texture2D:
+	var variant: String = "high_contrast" if Settings.g("high_contrast") else str(Settings.g("palette"))
+	if variant == "default":
+		return Icons.tex(name)
+	return Icons.tinted(name, variant)
+
 static func icon(name: String, px := 32) -> TextureRect:
 	var tr := TextureRect.new()
-	tr.texture = Icons.tex(name)
+	tr.texture = icon_tex(name)
 	tr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
@@ -207,7 +215,7 @@ static func draw_text_outlined(ci: CanvasItem, pos: Vector2, text: String, size:
 	ci.draw_string(f, p, text, align if width > 0 else HORIZONTAL_ALIGNMENT_LEFT, width, size, col)
 
 static func draw_icon(ci: CanvasItem, name: String, center_pos: Vector2, px: float, modulate := Color.WHITE) -> void:
-	var tex := Icons.tex(name)
+	var tex := icon_tex(name)
 	if tex == null:
 		return
 	ci.draw_texture_rect(tex, Rect2(center_pos - Vector2(px, px) * 0.5, Vector2(px, px)), false, modulate)

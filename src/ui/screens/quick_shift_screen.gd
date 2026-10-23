@@ -31,7 +31,13 @@ func _compatible(mid: String) -> bool:
 	return true
 
 func _build() -> void:
+	# Rebuilds keep the controller's place: refocus the control with the same name.
+	var refocus := ""
+	var fo := get_viewport().gui_get_focus_owner() if is_inside_tree() else null
+	if fo != null and is_ancestor_of(fo):
+		refocus = fo.name
 	for c in get_children():
+		remove_child(c)
 		c.queue_free()
 	_first_focus = null
 	var v := card(Loc.t("ui.select.quick"), 900, "ui_quick")
@@ -46,16 +52,16 @@ func _build() -> void:
 	add_cycle(v, Loc.t("ui.quick.level"), ids, labels, level_id, func(val):
 		level_id = val
 		mods = mods.filter(func(m): return _compatible_after(m))
-		_build())
+		_build()).name = "level"
 	var diffs := ["cozy", "family", "busy"]
 	var dl: Array = []
 	for d in diffs:
 		dl.append(Loc.t("ui.diff." + d))
-	add_cycle(v, Loc.t("ui.diff.label"), diffs, dl, difficulty, func(val): difficulty = val)
+	add_cycle(v, Loc.t("ui.diff.label"), diffs, dl, difficulty, func(val): difficulty = val).name = "difficulty"
 	var reseed := func():
 		seed_v = randi() % 100000
 		_build()
-	add_button(v, Loc.t("ui.quick.seed", {"seed": seed_v}), "ui_quick", reseed, false, 460)
+	add_button(v, Loc.t("ui.quick.seed", {"seed": seed_v}), "ui_quick", reseed, false, 460).name = "seed"
 	v.add_child(UiKit.label(Loc.t("ui.quick.mods", {"n": mods.size()}), 20, UiKit.PLUM.darkened(0.3)))
 	var grid := GridContainer.new()
 	grid.columns = 2
@@ -66,6 +72,7 @@ func _build() -> void:
 		var on = mid in mods
 		var ok = on or (_compatible(mid) and mods.size() < 2)
 		var b := UiKit.button(("✓ " if on else "") + Loc.t("mod.%s.name" % mid), Content.modifiers[mid].get("icon", "sys_help"), 400)
+		b.name = "mod_" + mid
 		b.disabled = not ok
 		var mv: String = mid
 		b.pressed.connect(func():
@@ -85,7 +92,11 @@ func _build() -> void:
 	add_button(row, Loc.t("ui.quick.start"), "ui_play", func(): Session.start_quick(level_id, difficulty, seed_v, mods), false, 280)
 	add_button(row, Loc.t("ui.back"), "ui_arrow_left", func(): Session.pop(), false, 200)
 	on_back(func(): Session.pop())
-	focus_first()
+	var again := find_child(refocus, true, false) if refocus != "" else null
+	if again is Control:
+		(again as Control).call_deferred("grab_focus")
+	else:
+		focus_first()
 
 func _compatible_after(mid: String) -> bool:
 	var m: Dictionary = Content.modifiers.get(mid, {})

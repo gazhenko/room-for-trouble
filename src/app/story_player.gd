@@ -11,8 +11,9 @@ const CAMERAS := {
 	"lobby_group": {"pos": [6.0, 5.0, 15.5], "look": [5.0, 0.7, 9.4], "fov": 32},
 	"desk_close": {"pos": [3.4, 2.5, 12.6], "look": [2.4, 0.9, 9.3], "fov": 30},
 	"guest_close": {"pos": [0.0, 2.1, 4.8], "look": [0.0, 0.9, 0.0], "fov": 30, "relative": true},
-	"room_door": {"pos": [0.0, 2.6, 4.2], "look": [0.0, 0.8, 0.0], "fov": 30, "relative": true},
-	"fixture_close": {"pos": [0.0, 2.2, 3.4], "look": [0.0, 0.7, 0.0], "fov": 30, "relative": true},
+	"room_door": {"pos": [0.6, 3.0, 5.2], "look": [0.6, 0.9, 0.4], "fov": 30, "relative": true},
+	"fixture_close": {"pos": [0.6, 3.2, 5.4], "look": [0.6, 0.8, 0.4], "fov": 30, "relative": true},
+	"high_close": {"pos": [-0.8, 6.0, 5.0], "look": [-0.6, 0.5, -0.2], "fov": 30, "relative": true},
 	"festival_wide": {"pos": [17.0, 9.0, 20.0], "look": [17.0, 0.6, 9.5], "fov": 34},
 	"postcard_still": {"pos": [0.0, 3.2, 6.4], "look": [0.0, 0.8, 0.0], "fov": 28, "relative": true},
 }
@@ -39,6 +40,7 @@ var _layout := ""
 var _caption := ""
 var _speaker := ""
 var _credits := false
+var _finished := false
 
 func setup(p_stage: PixelStage, p_captions: Captions, p_scene: Dictionary, p_then: Callable) -> void:
 	stage = p_stage
@@ -60,7 +62,9 @@ func _ready() -> void:
 	_next()
 
 func _exit_tree() -> void:
-	captions.clear()
+	# The next scene may already own the captions: drop only this scene's line.
+	if not _finished and _caption != "":
+		captions.drop(_caption)
 	for pair in [[InputRouter.menu_accept, _on_accept], [InputRouter.menu_back, _on_skip], [InputRouter.menu_pause, _on_skip]]:
 		if pair[0].is_connected(pair[1]):
 			pair[0].disconnect(pair[1])
@@ -122,6 +126,7 @@ func _next() -> void:
 func _finish() -> void:
 	if not is_inside_tree():
 		return
+	_finished = true
 	captions.clear()
 	SaveService.mark_story_seen(scene.get("id", ""))
 	if then.is_valid():
@@ -165,8 +170,16 @@ func _stage(p: Dictionary) -> void:
 		set_root = Node3D.new()
 		stage.world.add_child(set_root)
 		var L := Content.layout(layout)
-		var sys := {"core": true, "thermal": layout != "P1", "sound": layout in ["P3", "P4", "P5", "P6"], "moisture": layout in ["P4", "P6"], "festival": layout in ["P1", "P6"]}
-		set_root.add_child(HotelBuilder.new().build(L, sys))
+		var sys := {"core": true, "thermal": layout != "P1", "sound": layout in ["P3", "P4", "P5", "P6"],
+			"moisture": layout in ["P4", "P5", "P6"], "festival": layout in ["P1", "P6"],
+			"shutter": layout == "P5", "lift": layout == "P5"}
+		# The real hotel set: shell, stations and made-up rooms, without mess.
+		var view := HotelView.new()
+		view.build(stage, L, sys, {})
+		view.reparent(set_root)
+		for letter in view.mess_nodes:
+			(view.mess_nodes[letter] as Node3D).visible = false
+			view._apply("bed:" + letter, {"bed": "Made", "occupied": false})
 		_layout = layout
 		actors.clear()
 	# Actors persist across panels by id; reposition/pose per panel.
@@ -193,7 +206,8 @@ func _stage(p: Dictionary) -> void:
 		if c.has_meta("prop"):
 			c.queue_free()
 	for pr in p.get("props", []):
-		var node := ModelProps.build(pr["kind"])
+		var kind: String = pr["kind"]
+		var node := ModelItems.build(kind.substr(5)) if kind.begins_with("item:") else ModelProps.build(kind)
 		var pp: Array = pr.get("pos", [0, 0, 0])
 		node.position = Vector3(pp[0], pp[1], pp[2])
 		node.rotation_degrees.y = float(pr.get("rot", 0))

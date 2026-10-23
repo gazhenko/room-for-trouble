@@ -498,7 +498,18 @@ func _finish() -> void:
 	res["gus"] = sim.s["gus"]["on"]
 	res["coach_seen"] = sim.s.get("coach_seen", [])
 	res["input_log_size"] = sim.input_log.size()
+	_write_replay()
 	finished.emit(res)
+
+func _write_replay() -> void:
+	# The last local shift is kept for bug reports (tools/dev/replay.gd).
+	if cfg.get("mode", "") not in ["campaign", "quick"] or sim.s.get("resumed", false):
+		return
+	DirAccess.make_dir_recursive_absolute("user://replays")
+	var f := FileAccess.open("user://replays/last_shift.json", FileAccess.WRITE)
+	if f:
+		f.store_string(JSON.stringify(SimReplay.capture(sim)))
+		f.close()
 
 func leave() -> void:
 	InputRouter.gameplay = false

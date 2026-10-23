@@ -9,12 +9,16 @@ var content: VBoxContainer
 var scroll: ScrollContainer
 var capture_label: Label
 var seat_sel := 0
+var _tab_switch := false
 
 func _init() -> void:
 	super._init()
 	_build()
 
 func _build() -> void:
+	# Tab switches focus the new tab; other redraws keep the controller's place.
+	var keep := -1 if _tab_switch else focus_index()
+	_tab_switch = false
 	for c in get_children():
 		c.queue_free()
 	_first_focus = null
@@ -29,6 +33,7 @@ func _build() -> void:
 		var tv = t
 		b.pressed.connect(func():
 			tab = tv
+			_tab_switch = true
 			_build())
 		tabs.add_child(b)
 		if t == tab:
@@ -50,7 +55,7 @@ func _build() -> void:
 		"online": _online()
 	var back := add_button(v, Loc.t("ui.back"), "ui_arrow_left", func(): Session.pop(), false, 260)
 	on_back(func(): Session.pop())
-	focus_first()
+	restore_focus_index(keep)
 
 func _setter(key: String) -> Callable:
 	return func(val): Settings.set_value(key, val)

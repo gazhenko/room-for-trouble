@@ -101,7 +101,7 @@ func _show_info(lid: String) -> void:
 		var names: Array = []
 		for f in fams:
 			names.append(Loc.t("guest.%s.name" % f))
-		info.text = Loc.t("level.%s.purpose" % lid) + "\n" + Loc.t("ui.select.guests", {"list": ", ".join(names)})
+		info.text = Loc.t("level.%s.blurb" % lid) + "\n" + Loc.t("ui.select.guests", {"list": ", ".join(names)})
 
 func _best_stars(lid: String) -> int:
 	var best := 0

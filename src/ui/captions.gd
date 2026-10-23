@@ -69,6 +69,11 @@ func clear() -> void:
 	lines.clear()
 	queue.clear()
 
+## Removes only the given line (a scene leaving must not wipe its successor's).
+func drop(text: String) -> void:
+	lines = lines.filter(func(l): return l["text"] != text)
+	queue = queue.filter(func(l): return l["text"] != text)
+
 func _process(dt: float) -> void:
 	_t += dt
 	for l in lines:

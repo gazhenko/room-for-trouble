@@ -17,6 +17,7 @@ var events: Array = []          # emitted this tick
 var systems: Dictionary = {}    # enabled systems set
 var schedule: Array = []        # arrival schedule
 var input_log: Array = []       # [tick, frames] for replay
+var cmd_log: Array = []         # [tick, name, args] external commands for replay
 var record_inputs := true
 var hashes: Array = []          # [tick, hash] every 5 action s
 var tutorial = null             # SimTutorial state machine (optional)
@@ -296,7 +297,10 @@ func step(frames: Array) -> void:
 		var compact: Array = []
 		for f in frames:
 			if int(f.get("ax", 0)) != 0 or int(f.get("az", 0)) != 0 or int(f.get("held", 0)) != 0 or int(f.get("pressed", 0)) != 0:
-				compact.append([int(f["seat"]), int(f.get("ax", 0)), int(f.get("az", 0)), int(f.get("held", 0)), int(f.get("pressed", 0))])
+				var c := [int(f["seat"]), int(f.get("ax", 0)), int(f.get("az", 0)), int(f.get("held", 0)), int(f.get("pressed", 0))]
+				if int(f.get("pick", -1)) != -1:
+					c.append(int(f["pick"]))
+				compact.append(c)
 		if not compact.is_empty():
 			input_log.append([s["tick"], compact])
 	_last_frames = fmap
@@ -366,8 +370,13 @@ func _planning_checks() -> void:
 		_set_phase("countdown")
 		emit("countdown", {})
 
+func _log_cmd(cmd: String, args: Array = []) -> void:
+	if record_inputs:
+		cmd_log.append([s["tick"], cmd, args])
+
 func start_now() -> void:
 	## Skip planning (used by tests, quick replays and "Start with ready players").
+	_log_cmd("start_now")
 	if s["phase"] == "planning":
 		_set_phase("countdown")
 
@@ -445,6 +454,7 @@ func begin_wrap(reason: String) -> void:
 # ---------------------------------------------------------------- staff presence
 
 func set_present(seat: int, present: bool) -> void:
+	_log_cmd("set_present", [seat, present])
 	var st := staff_by_seat(seat)
 	if st.is_empty():
 		return
@@ -454,6 +464,7 @@ func set_present(seat: int, present: bool) -> void:
 	emit("staff_present", {"seat": seat, "present": present})
 
 func back_to_lobby(seat: int) -> void:
+	_log_cmd("back_to_lobby", [seat])
 	var st := staff_by_seat(seat)
 	if st.is_empty():
 		return
@@ -470,7 +481,17 @@ func back_to_lobby(seat: int) -> void:
 	emit("back_to_lobby", {"seat": seat})
 
 func find_tools() -> void:
+	_log_cmd("find_tools")
 	SimInteract.find_tools(self)
+
+func leader_wrap() -> void:
+	## Leader's "end shift" from the pause menu (online or local).
+	_log_cmd("leader_wrap")
+	begin_wrap("leader")
+
+func enable_gus() -> void:
+	_log_cmd("enable_gus")
+	s["gus"]["on"] = true
 
 # ---------------------------------------------------------------- snapshots
 

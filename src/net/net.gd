@@ -175,14 +175,21 @@ func _c2s(data: PackedByteArray) -> void:
 func _send(pid: int, d: Dictionary) -> void:
 	if peer == null or peer.get_connection_status() != MultiplayerPeer.CONNECTION_CONNECTED:
 		return
-	if not peer_info.has(pid):
+	if not _open(pid):
 		return
 	_s2c.rpc_id(pid, NetProtocol.encode_server(d))
+
+func _open(pid: int) -> bool:
+	# Peers mid-close stay in the room list for a frame; skip them quietly.
+	if not peer_info.has(pid):
+		return false
+	var ws := peer.get_peer(pid)
+	return ws != null and ws.get_ready_state() == WebSocketPeer.STATE_OPEN
 
 func _room_send(r: NetRoom, d: Dictionary) -> void:
 	var bytes := NetProtocol.encode_server(d)
 	for p in r.peers():
-		if peer_info.has(p):
+		if _open(p):
 			_s2c.rpc_id(p, bytes)
 
 func _log_count(k: String) -> void:
@@ -411,10 +418,10 @@ func _lobby(pid: int, d: Dictionary) -> void:
 			if is_leader and r.sim != null:
 				match str(v):
 					"gus":
-						r.sim.s["gus"]["on"] = true
+						r.sim.enable_gus()
 						r.gus_forced = true
 					"end":
-						r.sim.begin_wrap("leader")
+						r.sim.leader_wrap()
 					_:
 						pass
 	if r.phase == "lobby" and r.all_ready() and action == "ready":

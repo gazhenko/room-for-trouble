@@ -35,7 +35,11 @@ static func max_size(type: String) -> int:
 static func parse_client(bytes: PackedByteArray) -> Dictionary:
 	if bytes.size() > MAX_OTHER or bytes.size() < 2:
 		return {}
-	var txt := bytes.get_string_from_utf8()
+	# Client messages are ASCII JSON objects; reject anything else before
+	# decoding so garbage cannot spam the service log with UTF-8 warnings.
+	if bytes[0] != 0x7B or bytes[bytes.size() - 1] != 0x7D:
+		return {}
+	var txt := bytes.get_string_from_ascii()
 	if txt.length() == 0:
 		return {}
 	var json := JSON.new()

@@ -50,7 +50,11 @@ func _initialize() -> void:
 				if not (aid in actors or aid.begins_with("guest:")):
 					err("story %s: unknown actor %s" % [p.get("id", sid), aid])
 			for pr in p.get("props", []):
-				if not props.is_empty() and not pr["kind"] in props:
+				var pk: String = pr["kind"]
+				if pk.begins_with("item:"):
+					if not pk.substr(5) in ModelItems.KINDS:
+						err("story %s: unknown item prop %s" % [p.get("id", sid), pk])
+				elif not props.is_empty() and not pk in props:
 					err("story %s: unknown prop %s" % [p.get("id", sid), pr["kind"]])
 	# Tutorials.
 	for tid in C.tutorials:

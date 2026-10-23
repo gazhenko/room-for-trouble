@@ -75,6 +75,30 @@ func add_button(box: Container, text: String, icon_name: String, cb: Callable, d
 		_first_focus = b
 	return b
 
+## Position of the focused control among this screen's focusable controls, so
+## a screen that redraws itself can keep the controller's place.
+func focus_index() -> int:
+	var fo := get_viewport().gui_get_focus_owner() if is_inside_tree() else null
+	if fo == null or not is_ancestor_of(fo):
+		return -1
+	return _focusables(self, []).find(fo)
+
+func restore_focus_index(idx: int) -> void:
+	var list := _focusables(self, [])
+	if idx >= 0 and not list.is_empty():
+		(list[mini(idx, list.size() - 1)] as Control).call_deferred("grab_focus")
+	else:
+		focus_first()
+
+func _focusables(n: Node, out: Array) -> Array:
+	for c in n.get_children():
+		if c.is_queued_for_deletion():
+			continue
+		if c is Control and (c as Control).focus_mode == Control.FOCUS_ALL and (c as Control).visible:
+			out.append(c)
+		_focusables(c, out)
+	return out
+
 func focus_first() -> void:
 	if _first_focus and is_instance_valid(_first_focus):
 		_first_focus.call_deferred("grab_focus")

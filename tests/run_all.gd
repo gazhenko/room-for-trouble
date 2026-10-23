@@ -35,6 +35,10 @@ func _initialize() -> void:
 		if not ResourceLoader.exists(path):
 			continue
 		var script: GDScript = load(path)
+		if script == null or not script.can_instantiate():
+			print("FAIL %s :: does not compile" % path.get_file())
+			total_fail += 1
+			continue
 		var suite = script.new()
 		suite.content = reg
 		for m in suite.get_method_list():

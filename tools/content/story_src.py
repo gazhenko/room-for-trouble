@@ -164,7 +164,7 @@ LEVELS = {
     "L06": (("desk_close", None, "Different rooms. Same welcome.", "nana", [NANA_DESK, A("cinder", 3.4, 9.1, "idle"), A("flurry", 4.4, 9.1, "idle")]),
             ("first_steam", 115, "", "(A sock-shaped cloud drifts past both luggage tags.)"),
             ("dot", "(Dot adds a second column to her checklist.)", ["dragon", "yeti"], "split_lamp")),
-    "L07": (("fixture_close", [8.0, 8.0], "Follow the little arrows.", "nana", [A("nana", 8.0, 9.0, "wave")]),
+    "L07": (("fixture_close", [8.0, 8.0], "Follow the little arrows.", "nana", [A("nana", 9.4, 8.9, "wave", -35)]),
             ("first_vent", 0, "dot", "(Dot solemnly fans the nearest pipe… then notices the real lever.)"),
             ("dot", "A useful improvement.", ["dragon", "yeti"], "fan")),
     "L08": (("lobby_group", None, "We can make this work.", "nana", [A("nana", 3.0, 9.4, "idle")]),
@@ -176,7 +176,7 @@ LEVELS = {
     "L10": (("lobby_group", None, "Both belong on the guest list.", "nana", [A("nana", 3.0, 9.4, "idle"), A("luna", 4.4, 9.2, "happy"), A("whisp", 5.6, 9.2, "idle")]),
             ("quiet_howl", 0, "luna", "(Luna smiles proudly at the tiny note and mouths “perfect.”)"),
             ("nana", "A big note and a little moon hang on the same welcome sign.", ["moonwolf", "ghost"], "fabric_stage")),
-    "L11": (("fixture_close", [8.0, 8.0], "Different little problems. Different little helpers.", "nana", [A("nana", 8.0, 9.0, "wave")]),
+    "L11": (("fixture_close", [8.0, 8.0], "Different little problems. Different little helpers.", "nana", [A("nana", 9.4, 8.9, "wave", -35)]),
             ("time", 140, "dot", "(Dot checks the correct symbol before touching the switch.)"),
             ("dot", "My checklist has pictures now.", ["moonwolf", "ghost", "slime"], None)),
     "L12": (("lobby_group", None, "A small rehearsal? … A considerate one.", "luna", [A("luna", 4.0, 9.4, "happy"), A("nana", 2.6, 9.2, "idle")]),
@@ -185,7 +185,7 @@ LEVELS = {
     "L13": (("guest_close", [2.6, 9.6], "Somewhere with a little moisture?", "fern", [A("fern", 2.6, 9.6, "happy")]),
             ("first_watering", 0, "fern", "(One leaf gives a tiny thumbs-up.)"),
             ("nana", "One bright new blossom.", ["sprout"], "flowerpot_trio")),
-    "L14": (("fixture_close", [20.0, 10.0], "A little warm, a little cool, a little water.", "nana", [A("nana", 20.0, 11.0, "wave")]),
+    "L14": (("fixture_close", [20.0, 10.0], "A little warm, a little cool, a little water.", "nana", [A("nana", 21.4, 10.6, "wave", -35)]),
             ("first_steam", 105, "fern", "(Fern offers the watering-can-shaped cloud a tiny flower.)"),
             ("nana", "Warm and cool cups beside a thriving potted plant.", ["sprout", "dragon", "yeti"], None)),
     "L15": (("lobby_group", None, "Many hands make light puddles.", "nana", [A("nana", 3.0, 9.4, "carry")]),
@@ -197,10 +197,10 @@ LEVELS = {
     "L17": (("wide_hotel", None, "There is usually another way to help.", "nana", [A("nana", 13.0, 10.4, "wave")]),
             ("shutter_closed", 60, "gus", "(Gus simply walks the lower route and politely waves.)"),
             ("nana", "Two arrows curve around the divider and meet at a heart.", ["dragon", "ghost", "sprout"], None)),
-    "L18": (("fixture_close", [24.0, 11.0], "A little lift, when you need one.", "nana", [A("nana", 23.0, 10.2, "wave")]),
+    "L18": (("high_close", [24.0, 11.0], "A little lift, when you need one.", "nana", [A("nana", 22.6, 10.6, "wave", 35)]),
             ("first_lift", 0, "gus", "(Gus rides the lift facing the wrong way and comes back with a sightseeing postcard.)"),
             ("nana", "Two lift symbols frame a towel with a travel sticker.", ["dragon", "moonwolf", "sprout"], None)),
-    "L19": (("room_door", [13.0, 8.0], "Sometimes a new corner helps.", "nana", [A("nana", 13.0, 8.8, "idle")]),
+    "L19": (("room_door", [14.0, 7.6], "Sometimes a new corner helps.", "nana", [A("nana", 15.2, 8.7, "wave", -30)]),
             ("first_relocation", 0, "", "(The moving guest pauses to admire the same hallway from a new angle.)"),
             ("nana", "One guest points between two windows with equal delight.", ["dragon", "yeti", "ghost"], None)),
     "L20": (("wide_hotel", None, "Another job with two good ends.", "nana", [A("nana", 3.0, 10.6, "wave")]),
@@ -218,4 +218,43 @@ LEVELS = {
     "L24": (("festival_wide", None, "One last welcome. Together.", "nana", [A("nana", 17.0, 9.6, "happy"), A("staff", 18.6, 10.4, "happy")]),
             ("time", 210, "", "(Guests begin a small, happy, in-place celebration.)"),
             ("nana", "Hearth & Hiccup — room for one more.", ["dragon", "yeti", "slime", "sprout", "ghost", "moonwolf"], "moon_stand")),
+}
+
+# Pre-shift set dressing: story props, or "item:<kind>" for gameplay items,
+# placed in world tile coordinates [x, height, z] near the beat's actors.
+def I(kind, x, z, rot=0, y=0.0, scale=None):
+    d = {"kind": kind if kind in PROP_KINDS else "item:" + kind, "pos": [x, y, z], "rot": rot}
+    if scale: d["scale"] = scale
+    return d
+
+PROP_KINDS = {"invitation", "checklist", "fan", "paper_moon", "lantern", "flower_crown", "tiny_suitcase",
+              "camera", "travel_hat_warm", "travel_hat_cool", "clipboard", "towel_puppet", "umbrella",
+              "slipper_flowerpot", "welcome_pennant", "sheet_sculpture", "split_lamp", "fabric_stage",
+              "flowerpot_trio", "mini_trunk", "moon_stand", "thank_you_garland"}
+
+PRE_PROPS = {
+    "L01": [I("welcome_slime", 2.9, 9.9, 20), I("invitation", 2.3, 9.8, -15)],
+    "L02": [I("towel", 2.4, 9.9, 10), I("towel", 2.8, 10.1, -25), I("snack", 3.2, 9.8)],
+    "L03": [I("linen_dirty", 3.8, 9.9, 30), I("linen_clean", 2.2, 9.9, -10)],
+    "L04": [I("festival_trunk", 5.6, 10.9, 90), I("tiny_suitcase", 4.2, 10.4, -20)],
+    "L05": [I("travel_hat_cool", 3.3, 9.9, 15), I("welcome_yeti", 1.9, 9.9)],
+    "L06": [I("travel_hat_warm", 3.4, 9.7, -10), I("travel_hat_cool", 4.4, 9.7, 10)],
+    "L07": [I("fan", 10.1, 9.3, -30), I("checklist", 8.4, 9.2, 20)],
+    "L08": [I("umbrella", 3.9, 9.8, 25), I("breezer", 2.2, 10.0)],
+    "L09": [I("welcome_ghost", 3.3, 9.9, 10)],
+    "L10": [I("curtain_roll", 5.0, 9.9, 80), I("welcome_moonwolf", 3.8, 9.9)],
+    "L11": [I("curtain_roll", 10.2, 9.3, 70), I("checklist", 8.4, 9.2, -10)],
+    "L12": [I("fabric_stage", 5.4, 9.0), I("towel_puppet", 4.6, 9.9, -15)],
+    "L13": [I("watering_can", 3.3, 9.9, -30), I("slipper_flowerpot", 1.9, 9.8)],
+    "L14": [I("watering_can", 22.2, 11.0, 30), I("breezer", 20.4, 10.9)],
+    "L15": [I("mop", 3.8, 9.8, 60), I("mop", 4.3, 10.2, 20)],
+    "L16": [I("flowerpot_trio", 14.0, 9.2), I("flower_crown", 12.2, 9.6)],
+    "L17": [I("welcome_pennant", 14.0, 10.6), I("checklist", 12.2, 10.8, 15)],
+    "L18": [I("towel", 24.0, 11.0, 20), I("snack", 23.3, 11.3)],
+    "L19": [I("move_ticket", 14.5, 8.9, -10)],
+    "L20": [I("festival_trunk", 5.0, 10.4, 90), I("festival_trunk", 6.8, 11.2, 80), I("clipboard", 3.9, 10.9)],
+    "L21": [I("lantern", 16.0, 9.2), I("lantern", 18.0, 9.2), I("festival_parcel", 17.8, 10.2, 15)],
+    "L22": [I("thank_you_garland", 4.6, 8.7)],
+    "L23": [I("clipboard", 4.8, 10.6, -20), I("towel", 2.4, 10.0)],
+    "L24": [I("paper_moon", 17.0, 8.4), I("lantern", 15.6, 9.1), I("lantern", 19.4, 9.1), I("moon_stand", 20.0, 10.2)],
 }

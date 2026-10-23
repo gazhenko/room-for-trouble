@@ -41,6 +41,7 @@ for L in manifest["levels"]:
     loc[f"level.{lid}.title"] = L["title"]
     loc[f"level.{lid}.purpose"] = purposes.get(lid, "")
     loc[f"level.{lid}.payoff"] = payoffs.get(lid, "")
+    loc[f"level.{lid}.blurb"] = S.LEVEL_BLURBS[lid]
     for rb in L["ribbons"]:
         loc[f"ribbon.{lid}.{rb['predicate']}"] = rb["label"]
 loc["level.L19.view"] = "A guest would love a new view. Try Move Room at their door."
@@ -90,9 +91,9 @@ gags = {}
 for L in manifest["levels"]:
     lid = L["id"]
     pre, mid, post = ST.LEVELS[lid]
-    cam, focus, cap, speaker, actors = pre
+    cam, focus, cap, speaker, actors = pre[:5]
     layout = L["layout"]
-    pp = ST.P(f"{lid}.pre", cam, cap, speaker, 6, actors, focus=focus, layout=layout)
+    pp = ST.P(f"{lid}.pre", cam, cap, speaker, 6, actors, ST.PRE_PROPS.get(lid, []), focus=focus, layout=layout)
     level_scenes.append({"id": f"{lid}.pre", "layout": layout, "music": "planning",
                          "title_key": f"story.{lid}.pre.title", "panels": [panel_out(pp, lid, 0)]})
     loc[f"story.{lid}.pre.title"] = f"{L['title']} — before the clock"

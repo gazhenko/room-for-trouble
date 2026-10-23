@@ -29,6 +29,7 @@ echo "== import"
 "$GODOT" --headless --editor --path . --quit >/dev/null 2>&1 || true
 "$GODOT" --headless --path . --import >/dev/null 2>&1 || true
 
+mkdir -p build
 echo "== validate"
 python3 tools/validate_manifest.py data/campaign_manifest.json
 "$GODOT" --headless --path . --script res://tools/validate_content.gd
@@ -38,9 +39,17 @@ if [ "$SKIP_TESTS" = 0 ]; then
   out=$("$GODOT" --headless --path . --script res://tests/run_all.gd 2>&1 | tee build/test_report.txt)
   if echo "$out" | grep -q "SCRIPT ERROR"; then echo "script errors during tests" >&2; exit 1; fi
   echo "$out" | tail -1
+  echo "$out" | grep -q " 0 failures" || { echo "test failures" >&2; exit 1; }
+  echo "== UI01 controller traversal"
+  "$GODOT" --headless --path . res://tests/ui/ui_focus_test.tscn > build/ui_report.txt 2>&1 || { tail -5 build/ui_report.txt; echo "UI01 failed" >&2; exit 1; }
+  grep "^== UI01" build/ui_report.txt
+  echo "== online: two clients (NET01/02/03) and four seats + abuse (NET03/05)"
+  tests/net/run_e2e.sh > build/net_e2e.txt 2>&1 || { tail -15 build/net_e2e.txt; exit 1; }
+  tail -1 build/net_e2e.txt
+  tests/net/run_quad.sh > build/net_quad.txt 2>&1 || { tail -18 build/net_quad.txt; exit 1; }
+  tail -1 build/net_quad.txt
 fi
 
-mkdir -p build
 export_one() { # preset path
   local preset="$1" out="$2"
   mkdir -p "$(dirname "$out")"

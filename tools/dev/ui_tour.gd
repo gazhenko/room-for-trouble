@@ -32,6 +32,8 @@ func _ready() -> void:
 		["wardrobe", func(): Session.open_wardrobe()],
 		["credits", func(): Session.open_credits()],
 		["level_pre", func(): Session.play_story("L05.pre", func(): pass)],
+		["level_pre_L12", func(): Session.play_story("L12.pre", func(): pass)],
+		["level_pre_L20", func(): Session.play_story("L20.pre", func(): pass)],
 		["planning", func(): Session._run_shift(Session._base_cfg({"mode": "campaign", "level_id": "L08"}))],
 		["pause", func(): Session.current_shift.open_pause(0)],
 		["tutorial", func(): Session.start_tutorial("T01")],
@@ -47,6 +49,10 @@ func _ready() -> void:
 		["playground", func(): Session.start_playground()],
 		["ending", func(): Session.play_story("E00", func(): pass)],
 	]
+	# Every pre-shift beat, for set-dressing review (--only=pre_).
+	for i in range(1, 25):
+		var sid := "L%02d.pre" % i
+		steps.append(["pre_L%02d" % i, func(): Session.play_story(sid, func(): pass)])
 	for st in steps:
 		if only != "" and not only in st[0]:
 			continue

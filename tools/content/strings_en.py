@@ -528,3 +528,32 @@ TUTORIALS = {
 CREDITS_EXTRA = {
     "story.E00.thanks": "Thank you for making room.",
 }
+
+# Player-facing shift blurbs for the shift list (the designer "purpose" text
+# stays in level.Lxx.purpose for tools and docs).
+LEVEL_BLURBS = {
+    "L01": "The very first guests are on their way. Greet them, pick a room, and bring the slippers.",
+    "L02": "Everybody wants a fresh towel at once! One of you can be the runner.",
+    "L03": "Strip the beds, wash the sheets and make every room cozy again.",
+    "L04": "A festival trunk turns up in the lobby. It is long, wobbly and nicer to carry with a friend.",
+    "L05": "A yeti checks in. Yetis like it cool, so watch the radiators.",
+    "L06": "A dragon and a yeti on the same floor. Toasty here, chilly there — plan the rooms together.",
+    "L07": "Warm puffs keep drifting down the hall. Find the vent that started it.",
+    "L08": "Frost on the doors, steam in the hall and guests at the desk. A big day on Radiator Row.",
+    "L09": "A ghost would love a quiet room. Let's find one.",
+    "L10": "Luna loves to sing and Whisp loves to snooze. Curtains help them both.",
+    "L11": "Warm guests, cool guests and quiet guests. Use vents and curtains together.",
+    "L12": "A little concert in the lobby! Keep the quiet rooms quiet while the music plays.",
+    "L13": "A sprout arrives at the conservatory. A sprinkle of water makes it happy.",
+    "L14": "Steam, sprouts and a dragon. Damp rooms are lovely — for some guests.",
+    "L15": "Puddles everywhere. Grab a mop and help each other stay on your feet.",
+    "L16": "All six kinds of guests at once. The conservatory is in full bloom.",
+    "L17": "The shutter in the split lobby opens and closes. There is always a way around.",
+    "L18": "The luggage lift is open for business. Send towels across instead of walking.",
+    "L19": "Some guests would love a new view. Move them to a happier room.",
+    "L20": "A very big delivery for the festival, right through a very busy hotel.",
+    "L21": "Hang the lanterns and welcome the guests — the festival is nearly here.",
+    "L22": "Happy guests like to help. Spot their ideas and say yes.",
+    "L23": "Every room is full and everyone is kind. The busiest day yet.",
+    "L24": "The festival night. There's room for everyone.",
+}

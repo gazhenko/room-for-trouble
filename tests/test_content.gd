@@ -80,7 +80,7 @@ func test_story_refs_and_loc() -> void:
 			if p.has("caption"):
 				check(loc.has(p["caption"]), "caption key %s exists" % p["caption"])
 	for L in content.levels:
-		for k in ["title", "mid", "postcard", "purpose"]:
+		for k in ["title", "mid", "postcard", "purpose", "blurb"]:
 			check(loc.has("level.%s.%s" % [L["id"], k]), "level.%s.%s exists" % [L["id"], k])
 		check(content.story.has(L["id"] + ".pre"), L["id"] + " has a pre-shift beat")
 		check(content.story.has(L["id"] + ".post"), L["id"] + " has a postcard")

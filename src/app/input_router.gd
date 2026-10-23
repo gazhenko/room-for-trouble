@@ -90,7 +90,8 @@ func bindings_for(seat: int) -> Dictionary:
 		for a in stored:
 			out[a] = stored[a]
 		return out
-	return defaults
+	# A copy: callers (rebind capture) edit the result before saving it.
+	return defaults.duplicate(true)
 
 func _kb_slot_for(code: int, loc: int) -> String:
 	var b1 = Settings.g("bind_kb1")

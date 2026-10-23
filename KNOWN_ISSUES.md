@@ -8,24 +8,24 @@ than it is.
 
 | Area | Status | What remains |
 |---|---|---|
-| **Windows** | Exported (`RoomForTrouble.exe` plus `RoomForTrouble.pck`, x86-64). The shipping smoke test **passes under Wine** (`tools/smoke_windows_wine.sh`: x86-64 Debian container, Wine, Mesa llvmpipe, Compatibility renderer): boot, a full L01 shift, save, reload, Playground, Settings and Credits. It has **never run on real Windows**. | Run `RoomForTrouble.exe -- --smoke-test` on a real Windows 10/11 PC (Forward+ via D3D12/Vulkan), then play couch co-op with controllers. The `.exe` has no embedded icon (`modify_resources=false`, because rcedit is not in the toolchain). |
+| **Windows** | Exported (`RoomForTrouble.exe` plus `RoomForTrouble.pck`, x86-64). Under Wine (x86-64 Debian container, Mesa) the shipping smoke test **passes with both renderers**: Forward+ on Vulkan via lavapipe, and Compatibility on OpenGL (`tools/smoke_windows_wine.sh`). It has **never run on real Windows**. | Run `RoomForTrouble.exe -- --smoke-test` on a real Windows 10/11 PC and play couch co-op with controllers. The `.exe` has no embedded icon (`modify_resources=false`, because rcedit is not in the toolchain). |
 | **Linux desktop** | Smoke test passes in a clean x86-64 Debian container under Xvfb, with Mesa llvmpipe and the Compatibility renderer (`tools/smoke_linux.sh`) | Test on a real Linux desktop GPU with the Forward+ renderer. |
 | **Steam Deck** | Not tested | 800p layout, Deck controls and glyphs, suspend/resume and focus changes on the device (§24.4). |
-| **macOS** | Fully played and smoke-tested from the exported `.app` on an M1 Pro | Unsigned and not notarized, so Gatekeeper warns on first launch (right-click → Open). Signing and notarization need the owner's Apple Developer credentials. |
-| **Physical controllers** | No controller was connected during development. Controller behaviour was exercised with synthetic joypad events (UI01 traversal, seat lobby, rebind, pause), and the device-routing code is unit-tested. | Test the §24.4 matrix with real hardware: one keyboard plus three pads, four pads, mixed Xbox/PlayStation glyphs, unplug/replug, reassignment after reconnect, rumble. |
-| **Public online endpoint** | The service, Docker image and Caddy TLS stack work locally, including `wss://` through Caddy with a local CA, restart recovery and abuse handling | Deploy to a real host and domain (owner decision), then run `tests/net/run_e2e.sh wss://<domain>/game` across the internet. There has been no long-running soak or load test, and no test under real packet loss or latency. Capacity figures in `OPERATIONS.md` are estimates. |
+| **macOS** | Fully played and smoke-tested from the exported `.app` on an M1 Pro, including online. The bundle is **ad-hoc signed** with hardened runtime: `codesign --verify --deep --strict` passes. | It is not notarized, so on a downloaded copy Gatekeeper asks the player to choose Open Anyway (System Settings → Privacy & Security). Notarization needs a paid Developer ID certificate; this machine has only an Apple Development identity. |
+| **Physical controllers** | **No physical controller was available.** The exported Linux build was tested with **four kernel-level virtual gamepads** (uinput/evdev with udev; Xbox 360 and DualShock 4 identities, recognised by Godot's controller database) (`tools/smoke_linux_gamepads.sh`). That covers Carry-to-join, mixed glyph families, each stick moving only its own staff, Start/B, unplug (seat marked missing, team paused) and a different controller reclaiming the seat. Menu traversal and rebinding are covered by UI01. | Test the §24.4 matrix with real hardware: one keyboard plus three pads, four pads, rumble, Bluetooth reconnects, and Steam Input on a Deck. |
+| **Public online endpoint** | The service, Docker image and Caddy TLS stack work locally: `wss://` through Caddy with a local CA, restart recovery, abuse handling, and the full two-client e2e suite against the **exported Linux server behind a 100 ± 20 ms, 2%-loss link** (`tests/net/run_netem.sh`, Linux `tc netem`). | Deploy to a real host and domain (owner decision), then run `tests/net/run_e2e.sh wss://<domain>/game` across the internet. There has been no long-running soak or load test. |
 | **Family playtests** | **None conducted** | See `docs/PLAYTEST_REPORT.md` for the procedure. Balance and "is it fun" are unvalidated with people. Reference runs come from a scripted bot. |
 
 ## Known imperfections
 
-- **Draw calls exceed the 150-call budget in big scenes.** On L24 with 4 players there are
-  up to about 620 draw calls (Forward+). On the M1 Pro, p95 frame time is 5.6 ms at 720p,
-  800p and 1080p (see `docs/PERFORMANCE.md`). Low-end and integrated GPUs, and the Steam Deck, are unmeasured.
-  The procedural meshes are cached and shared, but stations are not yet merged or
-  multimesh-instanced.
-- **Rare single-frame hitches.** Three of six measured runs showed one isolated 78–133 ms
-  CPU-side frame. Repeated first-occurrence spikes were fixed by building rigs, meshes and
-  paths at load. The remaining one is not fully attributed (see `docs/PERFORMANCE.md`).
+- **Draw calls.** The busiest floor (L24, four players) peaks at 154 draw calls on Standard
+  graphics and 131 on Low (the brief budgets 150 on the low preset), down from 622. That's
+  after merging station bodies and baking each character into one skinned mesh. The HUD
+  adds about 200 2D draws on top. Low-end and integrated GPUs and the Steam Deck are
+  unmeasured.
+- **Frame pacing has only been measured on one machine.** On the M1 Pro, final-build
+  frame times never exceeded 10.8 ms (Forward+) or 15.8 ms (Compatibility) across seven
+  runs; see `docs/PERFORMANCE.md`.
 - **The bot scores lower with 2–4 players than solo** in later chapters, because of simple
   bot coordination such as two bots chasing the same job. This reflects the driver, not
   necessarily human play; see `docs/REFERENCE_RUNS.md`.

@@ -87,7 +87,7 @@ if want server; then
   package_dir build/server "RoomForTrouble-$VERSION-server-linux-x86_64"
 fi
 if want macos; then
-  echo "== export macOS (candidate: unsigned, not notarized)"
+  echo "== export macOS (candidate: ad-hoc signed, not notarized)"
   rm -rf build/macos && export_one macOS build/macos/RoomForTrouble.zip
 fi
 

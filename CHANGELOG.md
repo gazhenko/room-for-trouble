@@ -45,6 +45,10 @@ First complete build of the game described in `docs/DESIGN_BRIEF.md`.
 
 ### Engineering
 
+- Characters are single skinned meshes, station bodies are one merged floor mesh, and only
+  main masses cast shadows. The busiest floor dropped from 622 to 154 draw calls (131 on
+  the new Low graphics preset).
+
 - A pure, integer, fixed-tick (30 Hz) deterministic simulation shared by local play, the
   online service, tests, the reference bot and replays.
 - An authoritative WebSocket room service with strict schema validation, rate limits,

@@ -32,7 +32,7 @@ var frame_source: Callable   # dev/autoplay: replaces InputRouter frames
 var dev_hold := false         # DevOverlay inspector: hold the clock…
 var dev_steps := 0            # …and run this many single ticks
 var _focused := false
-var _local_frames := 0
+var _wall := 0.0
 
 func setup(p_stage: PixelStage, p_captions: Captions, p_cfg: Dictionary) -> void:
 	stage = p_stage
@@ -117,6 +117,12 @@ func _exit_tree() -> void:
 # ------------------------------------------------------------ loop
 
 func _process(dt: float) -> void:
+	# The frame clock stops while the machine sleeps, so a wall-clock jump is what
+	# tells us a Deck woke from suspend: come back paused.
+	var now := Time.get_unix_time_from_system()
+	if _wall > 0.0 and now - _wall > 1.5:
+		_auto_pause()
+	_wall = now
 	if _invalid_cd > 0.0:
 		_invalid_cd -= dt
 	if paused or _done:
@@ -131,11 +137,6 @@ func _process(dt: float) -> void:
 			dev_steps -= 1
 			_tick()
 		view.sync(1.0, dt)
-		return
-	# A frame gap this long means the machine slept (a Deck suspend): come back paused.
-	_local_frames += 1
-	if dt > 1.5 and _local_frames > 10 and not frame_source.is_valid():
-		_auto_pause()
 		return
 	acc += minf(dt, 0.25)
 	var ticks := 0

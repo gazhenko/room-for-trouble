@@ -104,6 +104,31 @@ quick tunnel (needs `cloudflared`; the tunnel closes when the script ends).
 `tools/verify_artifacts.sh` runs all of the above (and the macOS smoke test on a Mac) and
 writes `build/verify_summary.txt`.
 
+## Installing on a Steam Deck over the network
+
+1. On the build machine, render the library art once
+   (`godot --path . res://tools/deck/steam_art.tscn`).
+2. Run `tools/deck/serve.sh`. It packs `build/linux/` with the art and serves it on port
+   8765.
+3. On the Deck, in Desktop Mode → Konsole, run:
+
+   ```sh
+   curl -fsSL <build machine IP>:8765/deck | bash
+   ```
+
+The installer:
+- verifies the checksum
+- installs to `~/Games/RoomForTrouble`, keeping saves and any `endpoint.txt`
+- adds a Desktop Mode menu entry
+- adds the game to Steam as the non-Steam shortcut *Room for Trouble* with its library art
+
+Run the same command again to update. Play from Game Mode, so that Steam Input presents the
+Deck's controls as a gamepad.
+
+`bash <(curl -fsSL <IP>:8765/ssh)` optionally authorises the build machine's SSH key and
+starts `sshd` (it asks for the Deck's sudo password). After that, builds can be pushed with
+`rsync` and logs read from `~/.local/share/godot/app_userdata/Room for Trouble/logs/`.
+
 ## Tests
 
 | Command | What it covers |

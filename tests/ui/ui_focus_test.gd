@@ -239,6 +239,11 @@ func _pause_menu() -> void:
 		await _press(JOY_BUTTON_B)
 		await _frames(6)
 		_check(not sh.paused and InputRouter.gameplay, "pause: B resumes after a focus pause")
+		sh._wall -= 30.0   # as if the machine slept for 30 s
+		await _frames(6)
+		_check(sh.paused, "pause: waking from sleep pauses a local shift")
+		await _press(JOY_BUTTON_B)
+		await _frames(6)
 	Session.leave_shift()
 	await _frames(10)
 

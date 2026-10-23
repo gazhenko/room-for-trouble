@@ -34,7 +34,7 @@ func _initialize() -> void:
 			err("%s: missing story beats" % L["id"])
 	# Story staging: cameras, props, actors, captions.
 	var props := ModelProps.kinds() if ResourceLoader.exists("res://src/view/models/model_props.gd") else PackedStringArray()
-	var cams := ["wide_hotel", "lobby_group", "desk_close", "guest_close", "room_door", "fixture_close", "festival_wide", "postcard_still"]
+	var cams := ["wide_hotel", "lobby_group", "desk_close", "guest_close", "room_door", "fixture_close", "high_close", "festival_wide", "postcard_still"]  # = StoryPlayer.CAMERAS + postcard_still
 	var actors := ["nana", "gus", "dot", "staff", "mallow", "flurry", "cinder", "whisp", "luna", "fern"]
 	for sid in C.story:
 		var sc: Dictionary = C.story[sid]

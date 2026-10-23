@@ -230,6 +230,15 @@ func _pause_menu() -> void:
 	await _press(JOY_BUTTON_B)
 	await _frames(6)
 	_check(InputRouter.gameplay, "pause: B resumes play")
+	var sh: ShiftScreen = Session.screen as ShiftScreen
+	if sh != null:
+		sh.notification(NOTIFICATION_APPLICATION_FOCUS_IN)
+		sh.notification(NOTIFICATION_APPLICATION_FOCUS_OUT)
+		await _frames(6)
+		_check(sh.paused and get_viewport().gui_get_focus_owner() != null, "pause: losing window focus pauses a local shift")
+		await _press(JOY_BUTTON_B)
+		await _frames(6)
+		_check(not sh.paused and InputRouter.gameplay, "pause: B resumes after a focus pause")
 	Session.leave_shift()
 	await _frames(10)
 

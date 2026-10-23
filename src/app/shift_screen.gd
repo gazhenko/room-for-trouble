@@ -31,6 +31,8 @@ var _story_hook: Callable
 var frame_source: Callable   # dev/autoplay: replaces InputRouter frames
 var dev_hold := false         # DevOverlay inspector: hold the clock…
 var dev_steps := 0            # …and run this many single ticks
+var _focused := false
+var _local_frames := 0
 
 func setup(p_stage: PixelStage, p_captions: Captions, p_cfg: Dictionary) -> void:
 	stage = p_stage
@@ -47,6 +49,7 @@ func setup(p_stage: PixelStage, p_captions: Captions, p_cfg: Dictionary) -> void
 	if not online:
 		sim = HotelSim.new(Content, cfg)
 	_build_view()
+	_focused = DisplayServer.window_is_focused()
 
 func _build_view() -> void:
 	for c in stage.world.get_children():
@@ -128,6 +131,11 @@ func _process(dt: float) -> void:
 			dev_steps -= 1
 			_tick()
 		view.sync(1.0, dt)
+		return
+	# A frame gap this long means the machine slept (a Deck suspend): come back paused.
+	_local_frames += 1
+	if dt > 1.5 and _local_frames > 10 and not frame_source.is_valid():
+		_auto_pause()
 		return
 	acc += minf(dt, 0.25)
 	var ticks := 0
@@ -428,6 +436,19 @@ func _rumble(seat: int, weak: float, strong: float, dur: float) -> void:
 	InputRouter.rumble(sim_to_router[seat], weak, strong, dur)
 
 # ------------------------------------------------------------ pause
+
+func _notification(what: int) -> void:
+	# Leaving the game mid-shift (alt-tab, the Steam overlay) pauses local play.
+	if what == NOTIFICATION_APPLICATION_FOCUS_IN:
+		_focused = true
+	elif what == NOTIFICATION_APPLICATION_FOCUS_OUT and _focused:
+		_auto_pause()
+
+func _auto_pause() -> void:
+	if online or paused or _done or frame_source.is_valid() or not is_inside_tree():
+		return
+	var seats: Array = router_to_sim.keys()
+	open_pause(seats.min() if not seats.is_empty() else 0)
 
 func _on_pause_pressed(router_seat: int) -> void:
 	if _done:

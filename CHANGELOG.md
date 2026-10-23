@@ -40,6 +40,10 @@ First complete build of the game described in `docs/DESIGN_BRIEF.md`.
 
 - Menus fit any UI scale: at 175% on a 720p screen, oversized cards shrink to fit instead of
   clipping. The HUD arrival strip never covers the clock, and seat tags never cover prompts.
+- The Steam Deck and Steam's Game Mode start fullscreen, using the full 1280×800 panel
+  instead of a letterboxed 720p window.
+- A local shift pauses itself when the game loses focus (alt-tab, the Steam overlay) or
+  the machine wakes from sleep.
 
 - An Overcooked-style fixed perspective camera over a pixel-art 3D scene: low-resolution
   render, integer upscale, toon shading with dithered bands, and an outline pass on Forward+.

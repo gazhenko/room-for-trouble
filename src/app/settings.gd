@@ -36,6 +36,10 @@ func _ready() -> void:
 func _load() -> void:
 	var stored: Dictionary = SaveService.profile.get("settings", {})
 	data = DEFAULTS.duplicate(true)
+	# Steam's Game Mode (gamescope) would letterbox a 720p window on the Deck's
+	# 1280×800 panel, so handheld and couch sessions start fullscreen.
+	if steam_deck() or OS.get_environment("XDG_CURRENT_DESKTOP") == "gamescope":
+		data["fullscreen"] = true
 	for k in stored:
 		if k != "seats":
 			data[k] = stored[k]
@@ -58,6 +62,15 @@ func _load() -> void:
 			for k in ss[i]:
 				s[k] = ss[i][k]
 		seats.append(s)
+
+## True on Steam Deck hardware, in either Game Mode or Desktop Mode.
+static func steam_deck() -> bool:
+	if OS.get_environment("SteamDeck") == "1":
+		return true
+	if OS.get_name() != "Linux":
+		return false
+	var f := FileAccess.open("/sys/devices/virtual/dmi/id/board_vendor", FileAccess.READ)
+	return f != null and f.get_line().strip_edges() == "Valve"
 
 func g(key: String):
 	return data.get(key, DEFAULTS.get(key))

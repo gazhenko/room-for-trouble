@@ -9,6 +9,7 @@ func _ready() -> void:
 	for a in OS.get_cmdline_user_args():
 		if a.begins_with("--out="): out = a.substr(6)
 		elif a.begins_with("--only="): only = a.substr(7)
+		elif a == "--pseudo": Loc.pseudo = true
 		elif a.begins_with("--set="):
 			var kv := a.substr(6).split("=", true, 1)
 			var v: Variant = kv[1]
@@ -72,6 +73,16 @@ func _ready() -> void:
 			ev.keycode = KEY_F2
 			ev.pressed = true
 			Input.parse_input_event(ev)])
+	# Every panel of the cinematics (--only=cine_).
+	for scene in [["O00", 9], ["B01", 4], ["B02", 4], ["B03", 4], ["B04", 4], ["B05", 4], ["E00", 10]]:
+		for pi in scene[1]:
+			var sid2: String = scene[0]
+			var adv: int = pi
+			steps.append(["cine_%s_%d" % [sid2, pi], func():
+				Session.play_story(sid2, func(): pass)
+				await get_tree().process_frame
+				for k in adv:
+					Session.screen._next()])
 	# Every pre-shift beat, for set-dressing review (--only=pre_).
 	for i in range(1, 25):
 		var sid := "L%02d.pre" % i

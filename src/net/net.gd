@@ -610,7 +610,16 @@ func connect_to(url: String) -> void:
 	peer.outbound_buffer_size = 65536
 	var tls: TLSOptions = null
 	if url.begins_with("wss://"):
-		tls = TLSOptions.client_unsafe() if Settings.g("allow_insecure_tls") == true else TLSOptions.client()
+		# Self-signed endpoints (local test CAs) need an explicit opt-in.
+		var insecure: bool = Settings.g("allow_insecure_tls") == true or OS.get_environment("RFT_ALLOW_INSECURE_TLS") == "1"
+		var ca_file := OS.get_environment("RFT_TLS_CA_FILE")
+		if ca_file != "" and FileAccess.file_exists(ca_file):
+			# Private deployments: trust an operator-provided CA (verification stays on).
+			var cert := X509Certificate.new()
+			if cert.load(ca_file) == OK:
+				tls = TLSOptions.client(cert)
+		if tls == null:
+			tls = TLSOptions.client_unsafe() if insecure else TLSOptions.client()
 	var err := peer.create_client(url, tls)
 	if err != OK:
 		client_failed.emit("ui.online.failed")

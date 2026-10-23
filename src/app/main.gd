@@ -10,11 +10,11 @@ var toast_layer: Control
 
 func _ready() -> void:
 	var args := OS.get_cmdline_user_args()
-	if "--server" in args or OS.has_feature("dedicated_server"):
-		Net.start_server_from_args(args)
-		return
 	if "--probe" in args or "--healthcheck" in args:
 		Net.run_probe(args)
+		return
+	if "--server" in args or OS.has_feature("dedicated_server"):
+		Net.start_server_from_args(args)
 		return
 	get_window().title = "Room for Trouble"
 	get_window().min_size = Vector2i(960, 540)
@@ -49,6 +49,10 @@ func _ready() -> void:
 	Settings.changed.connect(func(_k): _layout_ui())
 	_layout_ui()
 	Session.boot(self)
+	if "--smoke-test" in args:
+		var smoke = load("res://src/dev/smoke_test.gd").new()
+		smoke.setup(self)
+		add_child(smoke)
 
 func _layout_ui() -> void:
 	var sc := Settings.effective_ui_scale()

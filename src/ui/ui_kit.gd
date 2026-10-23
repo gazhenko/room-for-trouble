@@ -23,8 +23,8 @@ static func font() -> Font:
 	if Settings.g("readable_font"):
 		return readable_font()
 	if _font == null:
-		_font = FontFile.new()
-		_font.load_dynamic_font("res://assets/export/fonts/PixelifySans.ttf")
+		# Imported font resources work in exported builds (raw .ttf files are not packed).
+		_font = (load("res://assets/export/fonts/PixelifySans.ttf") as FontFile).duplicate()
 		_font.antialiasing = TextServer.FONT_ANTIALIASING_NONE
 		_font.hinting = TextServer.HINTING_NONE
 		_font.subpixel_positioning = TextServer.SUBPIXEL_POSITIONING_DISABLED
@@ -33,8 +33,7 @@ static func font() -> Font:
 
 static func readable_font() -> Font:
 	if _font_readable == null:
-		_font_readable = FontFile.new()
-		_font_readable.load_dynamic_font("res://assets/export/fonts/Nunito.ttf")
+		_font_readable = (load("res://assets/export/fonts/Nunito.ttf") as FontFile).duplicate()
 		_font_readable.antialiasing = TextServer.FONT_ANTIALIASING_GRAY
 	return _font_readable
 

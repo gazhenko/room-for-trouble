@@ -150,14 +150,24 @@ func _drive(st: Dictionary) -> Dictionary:
 	var goal: Vector2i = t["stand"]
 	var pos := Vector2i(st["x"], st["z"])
 	var d := SimMove.dist(pos.x, pos.y, goal.x, goal.y)
-	if d > 180_000:
+	var anchor: Vector2i = t["anchor"]
+	var fv := Vector2(anchor - pos)
+	var hl: String = st["hl_c"] if t["action"] == "carry" else st["hl_w"]
+	var ok: bool = st["hl_c_ok"] if t["action"] == "carry" else st["hl_w_ok"]
+	var want: String = t["key"]
+	var working: bool = t["action"] == "work" and st["work_key"] == want
+	if working:
+		stats["work_ticks"] += 1
+		return {"seat": seat, "ax": 0, "az": 0, "held": SimC.BTN_WORK, "pressed": 0}
+	var ready := hl == want and ok
+	if not ready and d > 300_000:
 		if not t.has("path") or t.get("goal_used", Vector2i(-1, -1)) != goal or int(t.get("pi", 0)) >= t["path"].size():
 			t["path"] = path(pos, goal)
 			t["pi"] = 0
 			t["goal_used"] = goal
 			stats["repaths"] += 1
 		var wp: Vector2i = t["path"][int(t["pi"])]
-		if SimMove.dist(pos.x, pos.y, wp.x, wp.y) < 160_000:
+		if SimMove.dist(pos.x, pos.y, wp.x, wp.y) < 200_000:
 			t["pi"] = int(t["pi"]) + 1
 			if int(t["pi"]) >= t["path"].size():
 				t["pi"] = t["path"].size() - 1
@@ -173,27 +183,15 @@ func _drive(st: Dictionary) -> Dictionary:
 			t.erase("path")
 			stuck[key + "n"] = 0
 			v = v.rotated(1.4)
-		v = v.normalized() * 127.0
+		var mag := clampf(float(d) / 700_000.0, 0.35, 1.0) * 127.0
+		v = v.normalized() * mag
 		return {"seat": seat, "ax": int(v.x), "az": int(v.y), "held": 0, "pressed": 0}
-	# At the stand point: face the anchor, then act when highlighted.
-	var anchor: Vector2i = t["anchor"]
-	var fv := Vector2(anchor - pos)
-	var face_ok := true
-	if fv.length() > 300_000:
-		var dot = (st["fx"] * fv.x + st["fz"] * fv.y) / (1000.0 * fv.length())
-		face_ok = dot > 0.8
-	if not face_ok:
-		var n := fv.normalized() * 40.0
-		return {"seat": seat, "ax": int(n.x), "az": int(n.y), "held": 0, "pressed": 0}
-	var hl: String = st["hl_c"] if t["action"] == "carry" else st["hl_w"]
-	var ok: bool = st["hl_c_ok"] if t["action"] == "carry" else st["hl_w_ok"]
-	var want: String = t["key"]
-	if hl != want or not ok:
+	if not ready:
 		t["wait"] = int(t.get("wait", 0)) + 1
-		if int(t["wait"]) > 45:
+		if int(t["wait"]) > 60:
 			claims.erase(t.get("claim", ""))
 			tasks.erase(seat)
-		var nudge := fv.normalized() * 30.0
+		var nudge := fv.normalized() * 32.0
 		return {"seat": seat, "ax": int(nudge.x), "az": int(nudge.y), "held": 0, "pressed": 0}
 	if t["action"] == "carry":
 		if not st["act"].is_empty():

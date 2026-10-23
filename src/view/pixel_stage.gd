@@ -86,6 +86,9 @@ func _init() -> void:
 	post.custom_aabb = AABB(Vector3(-1e4, -1e4, -1e4), Vector3(2e4, 2e4, 2e4))
 	camera.add_child(post)
 	post.position = Vector3(0, 0, -2.0)
+	# The outline pass reads the normal buffer, which only Forward+ provides.
+	if RenderingServer.get_current_rendering_method() != "forward_plus":
+		post.visible = false
 
 func _ready() -> void:
 	resized.connect(_apply_scale)
@@ -98,6 +101,7 @@ func set_pixel_lines(lines: int) -> void:
 
 func set_outlines(on: bool) -> void:
 	(post.material_override as ShaderMaterial).set_shader_parameter("enabled", 1.0 if on else 0.0)
+	post.visible = on and RenderingServer.get_current_rendering_method() == "forward_plus"
 
 func pixel_factor() -> int:
 	var h := get_viewport().get_visible_rect().size.y

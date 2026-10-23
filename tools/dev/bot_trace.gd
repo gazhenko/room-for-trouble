@@ -18,6 +18,9 @@ func _initialize() -> void:
 		for st in sim.s["staff"]:
 			var task: Dictionary = bot.tasks.get(st["seat"], {})
 			var desc := "%s/%s" % [task.get("key", "-"), task.get("action", "")]
+			if t % 90 == 0 and t > 90 * 30 and t < 160 * 30:
+				var it2 := sim.item(st["held"])
+				print("   dbg t=%.1f pos=(%.2f,%.2f) f=(%d,%d) hl_w=%s ok=%s why=%s ch=%s trayD=%d humD=%d stand=%s act=%s" % [t / 30.0, st["x"] / 1e6, st["z"] / 1e6, st["fx"], st["fz"], st["hl_w"], st["hl_w_ok"], st["hl_w_why"], it2.get("ch", -1), sim.room("D")["tray"], sim.room("D")["hum"], task.get("stand", Vector2i.ZERO), st["act"]])
 			if last.get(st["seat"], "") != desc:
 				last[st["seat"]] = desc
 				print("t=%5.1f s%d pos=(%.1f,%.1f) held=%s task=%s hl_c=%s hl_w=%s" % [t / 30.0, st["seat"], st["x"] / 1e6, st["z"] / 1e6, SimInteract.held_kind(sim, st), desc, st["hl_c"], st["hl_w"]])

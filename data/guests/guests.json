@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "guests": [
+    {
+      "id": "slime",
+      "stay_s": 70,
+      "welcome_item_id": "welcome_slime",
+      "comfort": {"heat_min": -40, "heat_max": 40},
+      "quirk": {"type": "slipper_flip", "mechanical": false, "warning_s": 0},
+      "trail": {"every_m": 3, "max_per_visit": 3},
+      "helper": {"type": "slipstream", "puddles": 3, "sparkle_s": 12},
+      "named_variant": "mallow",
+      "visual_rig": "slime",
+      "icon": "fam_slime",
+      "letter": "S",
+      "loc": {"name": "guest.slime.name", "delight": "guest.slime.delight", "need": "guest.slime.need", "helper": "guest.slime.helper"}
+    },
+    {
+      "id": "yeti",
+      "stay_s": 75,
+      "welcome_item_id": "welcome_yeti",
+      "comfort": {"heat_min": -65, "heat_max": -15},
+      "occupied_heat": -3,
+      "quirk": {"type": "sneeze", "mechanical": true, "warning_s": 4, "own_heat": -25, "neighbor_heat": -8},
+      "helper": {"type": "cool_company", "heat_toward": -35, "heat_step": 20, "snack_stock": 1},
+      "named_variant": "flurry",
+      "visual_rig": "yeti",
+      "icon": "fam_yeti",
+      "letter": "Y",
+      "loc": {"name": "guest.yeti.name", "delight": "guest.yeti.delight", "need": "guest.yeti.need", "helper": "guest.yeti.helper"}
+    },
+    {
+      "id": "dragon",
+      "stay_s": 75,
+      "welcome_item_id": "welcome_dragon",
+      "comfort": {"heat_min": 15, "heat_max": 65},
+      "occupied_heat": 3,
+      "quirk": {"type": "hiccup", "mechanical": true, "warning_s": 4, "own_heat": 25, "neighbor_heat": 8},
+      "helper": {"type": "warm_laundry", "linen_stock": 1},
+      "named_variant": "cinder",
+      "visual_rig": "dragon",
+      "icon": "fam_dragon",
+      "letter": "D",
+      "loc": {"name": "guest.dragon.name", "delight": "guest.dragon.delight", "need": "guest.dragon.need", "helper": "guest.dragon.helper"}
+    },
+    {
+      "id": "ghost",
+      "stay_s": 70,
+      "welcome_item_id": "welcome_ghost",
+      "comfort": {"noise_max": 20},
+      "quirk": {"type": "towel_float", "mechanical": false, "warning_s": 0, "radius_m": 2},
+      "helper": {"type": "gentle_delivery"},
+      "named_variant": "whisp",
+      "visual_rig": "ghost",
+      "icon": "fam_ghost",
+      "letter": "G",
+      "loc": {"name": "guest.ghost.name", "delight": "guest.ghost.delight", "need": "guest.ghost.need", "helper": "guest.ghost.helper"}
+    },
+    {
+      "id": "moonwolf",
+      "stay_s": 75,
+      "welcome_item_id": "welcome_moonwolf",
+      "comfort": {"heat_min": -60, "heat_max": 60},
+      "quirk": {"type": "howl", "mechanical": true, "warning_s": 4, "pulse": 72},
+      "helper": {"type": "humming_along", "patience_s": 10, "patience_cap_s": 50},
+      "named_variant": "luna",
+      "visual_rig": "moonwolf",
+      "icon": "fam_moonwolf",
+      "letter": "W",
+      "loc": {"name": "guest.moonwolf.name", "delight": "guest.moonwolf.delight", "need": "guest.moonwolf.need", "helper": "guest.moonwolf.helper"}
+    },
+    {
+      "id": "sprout",
+      "stay_s": 80,
+      "welcome_item_id": "welcome_sprout",
+      "comfort": {"heat_min": -20, "heat_max": 60, "humidity_min": 55},
+      "occupied_humidity": 1,
+      "quirk": {"type": "bloom", "mechanical": true, "warning_s": 0, "puddle_above_humidity": 85},
+      "helper": {"type": "little_bloom", "humidity": 20, "humidity_cap": 80, "puddles": 1},
+      "named_variant": "fern",
+      "visual_rig": "sprout",
+      "icon": "fam_sprout",
+      "letter": "P",
+      "loc": {"name": "guest.sprout.name", "delight": "guest.sprout.delight", "need": "guest.sprout.need", "helper": "guest.sprout.helper"}
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "items": [
+    {"id": "ticket", "category": "ticket", "carry": "small", "unique": true, "destinations": ["door_plaque"], "reuse": "returns_to_pedestal", "icon": "item_ticket"},
+    {"id": "move_ticket", "category": "ticket", "carry": "small", "unique": true, "destinations": ["door_plaque"], "reuse": "returns_to_door", "icon": "item_move_ticket"},
+    {"id": "linen_clean", "category": "linen", "carry": "small", "unique": false, "destinations": ["bed", "return_shelf"], "reuse": "consumed", "icon": "item_linen_clean"},
+    {"id": "linen_dirty", "category": "linen", "carry": "small", "unique": false, "destinations": ["hamper"], "reuse": "consumed", "icon": "item_linen_dirty"},
+    {"id": "towel", "category": "service", "carry": "small", "unique": false, "destinations": ["guest_request", "return_shelf"], "reuse": "consumed", "icon": "item_towel"},
+    {"id": "snack", "category": "service", "carry": "small", "unique": false, "destinations": ["guest_request", "return_shelf"], "reuse": "consumed", "icon": "item_snack"},
+    {"id": "welcome_slime", "category": "gift", "family": "slime", "carry": "small", "unique": false, "destinations": ["plinth", "return_shelf"], "reuse": "reusable", "icon": "gift_slime"},
+    {"id": "welcome_yeti", "category": "gift", "family": "yeti", "carry": "small", "unique": false, "destinations": ["plinth", "return_shelf"], "reuse": "reusable", "icon": "gift_yeti"},
+    {"id": "welcome_dragon", "category": "gift", "family": "dragon", "carry": "small", "unique": false, "destinations": ["plinth", "return_shelf"], "reuse": "reusable", "icon": "gift_dragon"},
+    {"id": "welcome_ghost", "category": "gift", "family": "ghost", "carry": "small", "unique": false, "destinations": ["plinth", "return_shelf"], "reuse": "reusable", "icon": "gift_ghost"},
+    {"id": "welcome_moonwolf", "category": "gift", "family": "moonwolf", "carry": "small", "unique": false, "destinations": ["plinth", "return_shelf"], "reuse": "reusable", "icon": "gift_moonwolf"},
+    {"id": "welcome_sprout", "category": "gift", "family": "sprout", "carry": "small", "unique": false, "destinations": ["plinth", "return_shelf"], "reuse": "reusable", "icon": "gift_sprout"},
+    {"id": "curtain_roll", "category": "curtain", "carry": "small", "unique": true, "destinations": ["curtain_rail", "curtain_tray"], "reuse": "reusable", "icon": "item_curtain"},
+    {"id": "mop", "category": "tool", "carry": "small", "unique": true, "destinations": ["tool_dock"], "reuse": "tool", "icon": "tool_mop"},
+    {"id": "watering_can", "category": "tool", "carry": "small", "unique": true, "destinations": ["tool_dock"], "reuse": "tool", "icon": "tool_can"},
+    {"id": "breezer", "category": "tool", "carry": "small", "unique": true, "destinations": ["tool_dock"], "reuse": "tool", "icon": "tool_breezer"},
+    {"id": "festival_trunk", "category": "goal", "carry": "heavy", "unique": true, "destinations": ["festival_stand"], "reuse": "goal", "icon": "item_trunk"},
+    {"id": "festival_parcel", "category": "goal", "carry": "small", "unique": true, "destinations": ["festival_stand"], "reuse": "goal", "icon": "item_parcel"}
+  ]
+}

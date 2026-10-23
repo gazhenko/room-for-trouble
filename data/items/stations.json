@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "stations": [
+    {"id": "reception", "footprint": [0.75, 0.75], "interactions": ["inspect"], "visual": "reception"},
+    {"id": "pedestal", "footprint": [0, 0], "interactions": ["take_ticket"], "visual": "pedestal"},
+    {"id": "welcome_kiosk", "footprint": [0.75, 0.75], "interactions": ["take_gift", "cycle_gift"], "dispense_s": 1.2, "visual": "kiosk"},
+    {"id": "linen_shelf", "footprint": [0.75, 0.75], "interactions": ["take_linen", "emergency_press"], "stock_initial": "active_room_count+2", "stock_cap": 12, "take_s": 0.15, "press_s": 3.0, "visual": "linen_shelf"},
+    {"id": "hamper", "footprint": [0.75, 0.75], "interactions": ["deliver_dirty"], "cycle_s": 8, "queue_cap": 8, "deliver_s": 0.3, "visual": "hamper"},
+    {"id": "towel_shelf", "footprint": [0.75, 0.75], "interactions": ["take_towel"], "stock_initial": 4, "stock_cap": 6, "regen_s": 4, "dispense_s": 1.0, "visual": "towel_rack"},
+    {"id": "snack_tin", "footprint": [0.75, 0.75], "interactions": ["take_snack"], "stock_initial": 4, "stock_cap": 6, "regen_s": 4, "dispense_s": 1.0, "visual": "snack_tin"},
+    {"id": "return_shelf", "footprint": [0.75, 0.75], "interactions": ["return_item", "take_curtain", "return_curtain"], "curtain_dispense_s": 1.2, "visual": "return_shelf"},
+    {"id": "heat_pump", "footprint": [0.75, 0.75], "interactions": ["cycle_priority"], "work_s": 0.8, "system": "thermal", "visual": "heat_pump"},
+    {"id": "tap", "footprint": [0.75, 0.75], "interactions": ["fill_can"], "work_s": 1.5, "system": "moisture", "visual": "tap"},
+    {"id": "tool_dock", "footprint": [0.75, 0.75], "interactions": ["take_tool", "dock_tool"], "visual": "tool_dock"},
+    {"id": "group_bell", "footprint": [0, 0], "interactions": ["ring"], "rate_limit_s": 4, "visual": "bell"},
+    {"id": "festival_stand", "footprint": [0.75, 0.75], "interactions": ["deliver_goal"], "goal_pad_radius": 1.0, "system": "festival", "visual": "festival_stand"},
+    {"id": "lift_pad", "footprint": [0, 0], "interactions": ["send_item", "ride"], "send_s": 0.8, "transit_s": 2.0, "system": "lift", "visual": "lift_pad"}
+  ]
+}

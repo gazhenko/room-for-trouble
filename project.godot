@@ -1,0 +1,83 @@
+; Engine configuration file.
+; Room for Trouble — pinned to Godot 4.7.2 stable (standard edition).
+
+config_version=5
+
+[application]
+
+config/name="Room for Trouble"
+config/description="A cozy cooperative monster-hotel game for 1–4 players."
+config/version="1.0.0"
+run/main_scene="res://src/app/main.tscn"
+config/features=PackedStringArray("4.7", "Forward Plus")
+config/icon="res://assets/export/icons/app_icon.png"
+boot_splash/bg_color=Color(0.2, 0.2627, 0.2941, 1)
+boot_splash/show_image=false
+config/windows_native_icon="res://assets/export/icons/app_icon.ico"
+
+[audio]
+
+buses/default_bus_layout="res://assets/export/audio/default_bus_layout.tres"
+
+[autoload]
+
+Content="*res://src/content/content_registry.gd"
+Loc="*res://src/content/loc.gd"
+Settings="*res://src/app/settings.gd"
+SaveService="*res://src/save/save_service.gd"
+InputRouter="*res://src/app/input_router.gd"
+Audio="*res://src/view/audio_director.gd"
+Net="*res://src/net/net.gd"
+Session="*res://src/app/session_flow.gd"
+
+[debug]
+
+gdscript/warnings/unused_parameter=0
+gdscript/warnings/unused_signal=0
+gdscript/warnings/integer_division=0
+gdscript/warnings/narrowing_conversion=0
+gdscript/warnings/return_value_discarded=0
+gdscript/warnings/untyped_declaration=0
+gdscript/warnings/inferred_declaration=0
+gdscript/warnings/unsafe_property_access=0
+gdscript/warnings/unsafe_method_access=0
+gdscript/warnings/unsafe_cast=0
+gdscript/warnings/unsafe_call_argument=0
+
+[display]
+
+window/size/viewport_width=1280
+window/size/viewport_height=720
+window/size/window_width_override=1280
+window/size/window_height_override=720
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
+window/vsync/vsync_mode=1
+
+[gui]
+
+theme/default_font_antialiasing=0
+theme/default_font_hinting=0
+theme/default_font_subpixel_positioning=0
+common/drop_mouse_on_gui_input_disabled=true
+
+[internationalization]
+
+locale/fallback="en"
+
+[physics]
+
+common/physics_ticks_per_second=30
+
+[rendering]
+
+textures/canvas_textures/default_texture_filter=0
+renderer/rendering_method="forward_plus"
+rendering_device/fallback_to_opengl3=true
+anti_aliasing/quality/msaa_3d=0
+anti_aliasing/quality/screen_space_aa=0
+environment/defaults/default_clear_color=Color(0.2, 0.2627, 0.2941, 1)
+lights_and_shadows/directional_shadow/size=2048
+lights_and_shadows/directional_shadow/soft_shadow_filter_quality=0
+textures/decals/filter=0
+textures/light_projectors/filter=0

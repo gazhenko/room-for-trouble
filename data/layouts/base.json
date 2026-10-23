@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "comment": "Shared 28x20 tile envelope (section 12). Tile-centre coordinates in metres; rectangles are inclusive tile sets [x0,z0,x1,z1].",
+  "envelope": [28, 20],
+  "hall": [1, 8, 26, 11],
+  "entrance": {"tiles": [[0, 9], [0, 10]], "outside": [-1.6, 9.5]},
+  "rooms": {
+    "A": {"number": 101, "rect": [1, 1, 7, 6], "door": [4, 7], "bed": [3, 3], "plinth": [5, 4], "thermostat": [5, 6], "tray": [2, 5], "drop": [6, 5], "side": "north"},
+    "B": {"number": 102, "rect": [10, 1, 16, 6], "door": [13, 7], "bed": [12, 3], "plinth": [14, 4], "thermostat": [14, 6], "tray": [11, 5], "drop": [15, 5], "side": "north"},
+    "C": {"number": 103, "rect": [19, 1, 25, 6], "door": [22, 7], "bed": [21, 3], "plinth": [23, 4], "thermostat": [23, 6], "tray": [20, 5], "drop": [24, 5], "side": "north"},
+    "D": {"number": 104, "rect": [1, 13, 7, 18], "door": [4, 12], "bed": [3, 15], "plinth": [5, 16], "thermostat": [5, 13], "tray": [2, 17], "drop": [6, 17], "side": "south"},
+    "E": {"number": 105, "rect": [10, 13, 16, 18], "door": [13, 12], "bed": [12, 15], "plinth": [14, 16], "thermostat": [14, 13], "tray": [11, 17], "drop": [15, 17], "side": "south"},
+    "F": {"number": 106, "rect": [19, 13, 25, 18], "door": [22, 12], "bed": [21, 15], "plinth": [23, 16], "thermostat": [23, 13], "tray": [20, 17], "drop": [24, 17], "side": "south"}
+  },
+  "fixtures": {
+    "reception": [2, 9],
+    "pedestals": [[3, 8], [4, 8], [5, 8], [6, 8], [7, 8], [8, 8]],
+    "linen_shelf": [5, 10],
+    "hamper": [7, 10],
+    "towel_shelf": [9, 10],
+    "snack_tin": [11, 10],
+    "welcome_kiosk": [14, 10],
+    "return_shelf": [16, 10],
+    "heat_pump": [18, 10],
+    "tap": [20, 10],
+    "mop_docks": [[22, 10], [23, 10]],
+    "breezer_dock": [24, 10],
+    "can_docks": [[25, 10], [26, 10]],
+    "group_bell": [13, 9],
+    "festival_stand": [25, 9],
+    "goal_pad": [24, 11],
+    "staff_starts": [[10, 9], [12, 9], [15, 9], [17, 9]]
+  },
+  "gates": {"AB": [8, 8], "BC": [17, 8], "DE": [8, 11], "EF": [17, 11]},
+  "thermal_edges_all": ["AB", "BC", "DE", "EF"],
+  "acoustic_edges_all": ["AD", "BE", "CF"],
+  "drains": [[4, 8], [13, 11], [22, 8]],
+  "trunk_parking": [[2, 11], [6, 11], [10, 11]],
+  "parcel_pads": [[3, 11], [8, 11], [18, 11]],
+  "cozy_corner": [-1.4, 11.2],
+  "outside_bench": [-1.4, 7.9],
+  "queue_offset_z": -0.32
+}

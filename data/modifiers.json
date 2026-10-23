@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "max_active": 2,
+  "modifiers": [
+    {"id": "extra_towels", "requires_systems": [], "conflicts": ["snack_social"], "transforms": ["requests_all_towel"], "cosmetic_only": false, "name_key": "mod.extra_towels.name", "desc_key": "mod.extra_towels.desc", "icon": "item_towel"},
+    {"id": "snack_social", "requires_systems": [], "conflicts": ["extra_towels"], "transforms": ["requests_all_snack"], "cosmetic_only": false, "name_key": "mod.snack_social.name", "desc_key": "mod.snack_social.desc", "icon": "item_snack"},
+    {"id": "closed_vents", "requires_systems": ["thermal"], "conflicts": [], "transforms": ["gates_start_closed"], "cosmetic_only": false, "name_key": "mod.closed_vents.name", "desc_key": "mod.closed_vents.desc", "icon": "sys_gate"},
+    {"id": "quiet_start", "requires_systems": ["sound"], "conflicts": [], "transforms": ["curtains_preinstalled"], "cosmetic_only": false, "name_key": "mod.quiet_start.name", "desc_key": "mod.quiet_start.desc", "icon": "item_curtain"},
+    {"id": "damp_start", "requires_systems": ["moisture"], "conflicts": [], "transforms": ["humidity_60"], "cosmetic_only": false, "name_key": "mod.damp_start.name", "desc_key": "mod.damp_start.desc", "icon": "sys_water"},
+    {"id": "mirror_hall", "requires_systems": [], "conflicts": [], "transforms": ["mirror_x"], "cosmetic_only": false, "name_key": "mod.mirror_hall.name", "desc_key": "mod.mirror_hall.desc", "icon": "sys_mirror"},
+    {"id": "helpful_house", "requires_systems": [], "conflicts": [], "transforms": ["gus_on", "hints_always"], "cosmetic_only": false, "name_key": "mod.helpful_house.name", "desc_key": "mod.helpful_house.desc", "icon": "npc_gus"},
+    {"id": "musical_welcome", "requires_systems": [], "conflicts": [], "transforms": ["welcome_notes"], "cosmetic_only": true, "name_key": "mod.musical_welcome.name", "desc_key": "mod.musical_welcome.desc", "icon": "sys_note"}
+  ]
+}

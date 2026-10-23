@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "sets": [
+    {"id": "default", "name_key": "cos.default.name", "unlock": {"type": "always"}, "cap": "#E88D79", "scarf": "#E8BF66", "trim": "#F7EAD6", "decor": ""},
+    {"id": "first_hello", "name_key": "cos.first_hello.name", "unlock": {"type": "level", "id": "L01"}, "cap": "#F7EAD6", "scarf": "#E88D79", "trim": "#E88D79", "decor": "welcome_pennant", "badge": "badge_first_hello"},
+    {"id": "fresh_fold", "name_key": "cos.fresh_fold.name", "unlock": {"type": "chapter", "chapter": 1}, "cap": "#8EBBC7", "scarf": "#F7EAD6", "trim": "#8EBBC7", "decor": "sheet_sculpture", "badge": "badge_fresh_fold"},
+    {"id": "two_temperatures", "name_key": "cos.two_temperatures.name", "unlock": {"type": "chapter", "chapter": 2}, "cap": "#E88D79", "scarf": "#8EBBC7", "trim": "#E8BF66", "decor": "split_lamp", "badge": "badge_two_temperatures"},
+    {"id": "quiet_chorus", "name_key": "cos.quiet_chorus.name", "unlock": {"type": "chapter", "chapter": 3}, "cap": "#8C7CA8", "scarf": "#E8BF66", "trim": "#F7EAD6", "decor": "fabric_stage", "badge": "badge_quiet_chorus"},
+    {"id": "little_bloom", "name_key": "cos.little_bloom.name", "unlock": {"type": "chapter", "chapter": 4}, "cap": "#8BAE91", "scarf": "#6F9B5F", "trim": "#E8BF66", "decor": "flowerpot_trio", "badge": "badge_little_bloom"},
+    {"id": "other_end", "name_key": "cos.other_end.name", "unlock": {"type": "chapter", "chapter": 5}, "cap": "#805C49", "scarf": "#8EBBC7", "trim": "#E88D79", "decor": "mini_trunk", "badge": "badge_other_end"},
+    {"id": "everyone_fits", "name_key": "cos.everyone_fits.name", "unlock": {"type": "level", "id": "L24"}, "cap": "#E8BF66", "scarf": "#8C7CA8", "trim": "#E88D79", "decor": "moon_stand", "badge": "badge_everyone_fits"},
+    {"id": "helping_hands", "name_key": "cos.helping_hands.name", "unlock": {"type": "ribbons", "count": 6}, "cap": "#F7EAD6", "scarf": "#E88D79", "trim": "#8BAE91", "decor": "thank_you_garland", "badge": "badge_helping_hands"}
+  ]
+}

@@ -1,0 +1,2308 @@
+{
+  "schema_version": 1,
+  "levels": [
+    {
+      "id": "L01",
+      "title": "First Bell",
+      "chapter": 1,
+      "layout": "P1",
+      "duration_hotel_s": 270,
+      "waves": [
+        {
+          "roster": [
+            "slime"
+          ],
+          "minimum_size": 1
+        },
+        {
+          "roster": [
+            "slime"
+          ],
+          "minimum_size": 1
+        },
+        {
+          "roster": [
+            "slime",
+            "slime"
+          ],
+          "minimum_size": 1
+        }
+      ],
+      "service_count": 1,
+      "systems": [
+        "core"
+      ],
+      "initial_rooms": {},
+      "events": [],
+      "ribbons": [
+        {
+          "predicate": "welcome_matches",
+          "targets_1_to_4": [
+            3,
+            4,
+            5,
+            6
+          ],
+          "label": "A Good Fit"
+        },
+        {
+          "predicate": "requests",
+          "targets_1_to_4": [
+            2,
+            3,
+            4,
+            5
+          ],
+          "label": "Right This Way"
+        },
+        {
+          "predicate": "tidy_rooms",
+          "targets_1_to_4": [
+            2,
+            3,
+            3,
+            4
+          ],
+          "label": "A Fresh Start"
+        }
+      ],
+      "required_goal_ids": []
+    },
+    {
+      "id": "L02",
+      "title": "Towels, Please",
+      "chapter": 1,
+      "layout": "P1",
+      "duration_hotel_s": 270,
+      "waves": [
+        {
+          "roster": [
+            "slime",
+            "slime"
+          ],
+          "minimum_size": 1
+        },
+        {
+          "roster": [
+            "slime"
+          ],
+          "minimum_size": 1
+        },
+        {
+          "roster": [
+            "slime",
+            "slime"
+          ],
+          "minimum_size": 1
+        }
+      ],
+      "service_count": 2,
+      "systems": [
+        "core"
+      ],
+      "initial_rooms": {},
+      "events": [
+        {
+          "id": "L02_towel_cape",
+          "at": 75,
+          "type": "announce",
+          "warning_s": 0,
+          "args": {
+            "text_key": "level.L02.mid",
+            "icon": "towel"
+          }
+        }
+      ],
+      "ribbons": [
+        {
+          "predicate": "useful_handoffs",
+          "targets_1_to_4": [
+            3,
+            3,
+            4,
+            5
+          ],
+          "label": "On Its Way"
+        },
+        {
+          "predicate": "requests",
+          "targets_1_to_4": [
+            4,
+            6,
+            7,
+            8
+          ],
+          "label": "Little Extras"
+        },
+        {
+          "predicate": "cozy_departures",
+          "targets_1_to_4": [
+            2,
+            3,
+            4,
+            5
+          ],
+          "label": "Happy Feet"
+        }
+      ],
+      "required_goal_ids": []
+    },
+    {
+      "id": "L03",
+      "title": "Laundry Day",
+      "chapter": 1,
+      "layout": "P1",
+      "duration_hotel_s": 285,
+      "waves": [
+        {
+          "roster": [
+            "slime",
+            "slime"
+          ],
+          "minimum_size": 1
+        },
+        {
+          "roster": [
+            "slime",
+            "slime"
+          ],
+          "minimum_size": 1
+        },
+        {
+          "roster": [
+            "slime",
+            "slime"
+          ],
+          "minimum_size": 1
+        }
+      ],
+      "service_count": 2,
+      "systems": [
+        "core"
+      ],
+      "initial_rooms": {
+        "D": {
+          "bed": "Dirty",
+          "mess": 100
+        },
+        "E": {
+          "bed": "Stripped",
+          "mess": 100
+        }
+      },
+      "events": [],
+      "ribbons": [
+        {
+          "predicate": "laundry_cycles",
+          "targets_1_to_4": [
+            1,
+            2,
+            2,
+            3
+          ],
+          "label": "Round and Round"
+        },
+        {
+          "predicate": "shared_work",
+          "targets_1_to_4": [
+            2,
+            2,
+            3,
+            3
+          ],
+          "label": "Finish It Together"
+        },
+        {
+          "predicate": "tidy_rooms",
+          "targets_1_to_4": [
+            2,
+            3,
+            4,
+            4
+          ],
+          "label": "Fresh Sheets"
+        }
+      ],
+      "required_goal_ids": []
+    },
+    {
+      "id": "L04",
+      "title": "A Very Long Suitcase",
+      "chapter": 1,
+      "layout": "P1",
+      "duration_hotel_s": 300,
+      "waves": [
+        {
+          "roster": [
+            "slime",
+            "slime"
+          ],
+          "minimum_size": 1
+        },
+        {
+          "roster": [
+            "slime",
+            "slime"
+          ],
+          "minimum_size": 1
+        },
+        {
+          "roster": [
+            "slime",
+            "slime"
+          ],
+          "minimum_size": 1
+        }
+      ],
+      "service_count": 1,
+      "systems": [
+        "core",
+        "festival"
+      ],
+      "initial_rooms": {},
+      "events": [
+        {
+          "id": "L04_trunk",
+          "at": 15,
+          "type": "trunk_spawn",
+          "warning_s": 0,
+          "args": {
+            "object_id": "trunk_L04",
+            "position": [
+              2,
+              11
+            ],
+            "goal": "festival_stand"
+          }
+        }
+      ],
+      "ribbons": [
+        {
+          "predicate": "trunk_goal",
+          "targets_1_to_4": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "label": "The Other End"
+        },
+        {
+          "predicate": "useful_handoffs",
+          "targets_1_to_4": [
+            3,
+            3,
+            4,
+            5
+          ],
+          "label": "Pass It Along"
+        },
+        {
+          "predicate": "cozy_departures",
+          "targets_1_to_4": [
+            2,
+            4,
+            4,
+            5
+          ],
+          "label": "First Full Welcome"
+        }
+      ],
+      "required_goal_ids": [
+        "trunk_L04"
+      ]
+    },
+    {
+      "id": "L05",
+      "title": "Some Like It Chilly",
+      "chapter": 2,
+      "layout": "P2",
+      "duration_hotel_s": 330,
+      "waves": [
+        {
+          "roster": [
+            "yeti",
+            "slime"
+          ],
+          "minimum_size": 1
+        },
+        {
+          "roster": [
+            "yeti",
+            "slime"
+          ],
+          "minimum_size": 1
+        },
+        {
+          "roster": [
+            "yeti",
+            "slime"
+          ],
+          "minimum_size": 1
+        }
+      ],
+      "service_count": 1,
+      "systems": [
+        "core",
+        "thermal"
+      ],
+      "initial_rooms": {},
+      "events": [
+        {
+          "id": "L05_frost",
+          "at": 90,
+          "type": "frost_patch",
+          "warning_s": 5,
+          "args": {
+            "room": "F"
+          }
+        }
+      ],
+      "ribbons": [
+        {
+          "predicate": "welcome_matches",
+          "targets_1_to_4": [
+            3,
+            5,
+            6,
+            7
+          ],
+          "label": "Snow Welcome"
+        },
+        {
+          "predicate": "cozy_departures",
+          "targets_1_to_4": [
+            2,
+            4,
+            4,
+            5
+          ],
+          "label": "Just Right"
+        },
+        {
+          "predicate": "tidy_rooms",
+          "targets_1_to_4": [
+            2,
+            3,
+            4,
+            4
+          ],
+          "label": "Warm Hearts, Cool Rooms"
+        }
+      ],
+      "required_goal_ids": []
+    },
+    {
+      "id": "L06",
+      "title": "Hot and Cold Running Guests",
+      "chapter": 2,
+      "layout": "P2",
+      "duration_hotel_s": 330,
+      "waves": [
+        {
+          "roster": [
+            "dragon",
+            "yeti"
+          ],
+          "minimum_size": 2
+        },
+        {
+          "roster": [
+            "yeti",
+            "dragon"
+          ],
+          "minimum_size": 2
+        },
+        {
+          "roster": [
+            "dragon",
+            "yeti",
+            "slime"
+          ],
+          "minimum_size": 2
+        }
+      ],
+      "service_count": 2,
+      "systems": [
+        "core",
+        "thermal"
+      ],
+      "initial_rooms": {},
+      "events": [
+        {
+          "id": "L06_steam",
+          "at": 115,
+          "type": "steam_cloud",
+          "warning_s": 5,
+          "args": {
+            "position": [
+              8,
+              8
+            ]
+          }
+        }
+      ],
+      "ribbons": [
+        {
+          "predicate": "balanced_rooms",
+          "targets_1_to_4": [
+            2,
+            2,
+            3,
+            3
+          ],
+          "label": "Two Kinds of Cozy"
+        },
+        {
+          "predicate": "vent_solution",
+          "targets_1_to_4": [
+            1,
+            2,
+            2,
+            3
+          ],
+          "label": "A Little Separation"
+        },
+        {
+          "predicate": "requests",
+          "targets_1_to_4": [
+            6,
+            8,
+            9,
+            10
+          ],
+          "label": "Hot Service"
+        }
+      ],
+      "required_goal_ids": []
+    },
+    {
+      "id": "L07",
+      "title": "Mind the Vents",
+      "chapter": 2,
+      "layout": "P2",
+      "duration_hotel_s": 330,
+      "waves": [
+        {
+          "roster": [
+            "dragon",
+            "yeti"
+          ],
+          "minimum_size": 1
+        },
+        {
+          "roster": [
+            "slime",
+            "dragon"
+          ],
+          "minimum_size": 1
+        },
+        {
+          "roster": [
+            "yeti",
+            "dragon",
+            "slime"
+          ],
+          "minimum_size": 1
+        }
+      ],
+      "service_count": 2,
+      "systems": [
+        "core",
+        "thermal"
+      ],
+      "initial_rooms": {},
+      "events": [
+        {
+          "id": "L07_cool_A",
+          "at": 85,
+          "type": "thermal_pulse",
+          "warning_s": 5,
+          "args": {
+            "room": "A",
+            "delta": -30
+          }
+        },
+        {
+          "id": "L07_warm_E",
+          "at": 170,
+          "type": "thermal_pulse",
+          "warning_s": 5,
+          "args": {
+            "room": "E",
+            "delta": 30
+          }
+        }
+      ],
+      "ribbons": [
+        {
+          "predicate": "vent_solution",
+          "targets_1_to_4": [
+            1,
+            2,
+            3,
+            3
+          ],
+          "label": "Follow the Arrows"
+        },
+        {
+          "predicate": "shared_work",
+          "targets_1_to_4": [
+            2,
+            3,
+            3,
+            4
+          ],
+          "label": "A Helping Mop"
+        },
+        {
+          "predicate": "cozy_departures",
+          "targets_1_to_4": [
+            3,
+            4,
+            5,
+            6
+          ],
+          "label": "Comfort Travels"
+        }
+      ],
+      "required_goal_ids": []
+    },
+    {
+      "id": "L08",
+      "title": "The Great Defrost",
+      "chapter": 2,
+      "layout": "P2",
+      "duration_hotel_s": 345,
+      "waves": [
+        {
+          "roster": [
+            "yeti",
+            "dragon",
+            "slime"
+          ],
+          "minimum_size": 1
+        },
+        {
+          "roster": [
+            "dragon",
+            "yeti"
+          ],
+          "minimum_size": 1
+        },
+        {
+          "roster": [
+            "yeti",
+            "dragon",
+            "slime"
+          ],
+          "minimum_size": 1
+        }
+      ],
+      "service_count": 2,
+      "systems": [
+        "core",
+        "thermal"
+      ],
+      "initial_rooms": {
+        "A": {
+          "heat": -55
+        },
+        "B": {
+          "heat": 55
+        }
+      },
+      "events": [
+        {
+          "id": "L08_frost_C",
+          "at": 75,
+          "type": "frost_patch",
+          "warning_s": 5,
+          "args": {
+            "room": "C"
+          }
+        },
+        {
+          "id": "L08_steam_DE",
+          "at": 130,
+          "type": "steam_cloud",
+          "warning_s": 5,
+          "args": {
+            "position": [
+              8,
+              11
+            ]
+          }
+        },
+        {
+          "id": "L08_trip_E",
+          "at": 185,
+          "type": "fixture_trip",
+          "warning_s": 5,
+          "args": {
+            "fixture": "radiator_E"
+          }
+        }
+      ],
+      "ribbons": [
+        {
+          "predicate": "balanced_rooms",
+          "targets_1_to_4": [
+            2,
+            3,
+            3,
+            4
+          ],
+          "label": "A Balanced Welcome"
+        },
+        {
+          "predicate": "helpful_guests",
+          "targets_1_to_4": [
+            1,
+            2,
+            2,
+            3
+          ],
+          "label": "Guests Lend a Hand"
+        },
+        {
+          "predicate": "tidy_rooms",
+          "targets_1_to_4": [
+            2,
+            3,
+            4,
+            4
+          ],
+          "label": "Ready for the Next Hello"
+        }
+      ],
+      "required_goal_ids": []
+    },
+    {
+      "id": "L09",
+      "title": "Please Do Disturb",
+      "chapter": 3,
+      "layout": "P3",
+      "duration_hotel_s": 330,
+      "waves": [
+        {
+          "roster": [
+            "ghost",
+            "slime"
+          ],
+          "minimum_size": 1
+        },
+        {
+          "roster": [
+            "ghost",
+            "slime"
+          ],
+          "minimum_size": 1
+        },
+        {
+          "roster": [
+            "ghost",
+            "dragon",
+            "slime"
+          ],
+          "minimum_size": 1
+        }
+      ],
+      "service_count": 1,
+      "systems": [
+        "core",
+        "thermal",
+        "sound"
+      ],
+      "initial_rooms": {},
+      "events": [
+        {
+          "id": "L09_note_D",
+          "at": 95,
+          "type": "concert_pulse",
+          "warning_s": 5,
+          "args": {
+            "room": "D",
+            "amplitude": 60
+          }
+        }
+      ],
+      "ribbons": [
+        {
+          "predicate": "welcome_matches",
+          "targets_1_to_4": [
+            3,
+            5,
+            6,
+            7
+          ],
+          "label": "A Quiet Welcome"
+        },
+        {
+          "predicate": "cozy_departures",
+          "targets_1_to_4": [
+            2,
+            4,
+            4,
+            5
+          ],
+          "label": "Sleep Well"
+        },
+        {
+          "predicate": "useful_handoffs",
+          "targets_1_to_4": [
+            3,
+            3,
+            4,
+            5
+          ],
+          "label": "Softly Delivered"
+        }
+      ],
+      "required_goal_ids": []
+    },
+    {
+      "id": "L10",
+      "title": "Indoor Voices",
+      "chapter": 3,
+      "layout": "P3",
+      "duration_hotel_s": 330,
+      "waves": [
+        {
+          "roster": [
+            "moonwolf",
+            "ghost"
+          ],
+          "minimum_size": 2
+        },
+        {
+          "roster": [
+            "ghost",
+            "moonwolf"
+          ],
+          "minimum_size": 2
+        },
+        {
+          "roster": [
+            "moonwolf",
+            "ghost",
+            "slime"
+          ],
+          "minimum_size": 2
+        }
+      ],
+      "service_count": 2,
+      "systems": [
+        "core",
+        "thermal",
+        "sound"
+      ],
+      "initial_rooms": {},
+      "events": [],
+      "ribbons": [
+        {
+          "predicate": "quiet_howls",
+          "targets_1_to_4": [
+            1,
+            2,
+            2,
+            3
+          ],
+          "label": "Indoor Voice"
+        },
+        {
+          "predicate": "requests",
+          "targets_1_to_4": [
+            6,
+            8,
+            9,
+            10
+          ],
+          "label": "Quiet Service"
+        },
+        {
+          "predicate": "balanced_rooms",
+          "targets_1_to_4": [
+            2,
+            2,
+            3,
+            3
+          ],
+          "label": "A Song and a Nap"
+        }
+      ],
+      "required_goal_ids": []
+    },
+    {
+      "id": "L11",
+      "title": "Curtain Confidence",
+      "chapter": 3,
+      "layout": "P3",
+      "duration_hotel_s": 345,
+      "waves": [
+        {
+          "roster": [
+            "moonwolf",
+            "ghost",
+            "slime"
+          ],
+          "minimum_size": 1
+        },
+        {
+          "roster": [
+            "dragon",
+            "ghost"
+          ],
+          "minimum_size": 1
+        },
+        {
+          "roster": [
+            "yeti",
+            "moonwolf",
+            "ghost"
+          ],
+          "minimum_size": 1
+        }
+      ],
+      "service_count": 2,
+      "systems": [
+        "core",
+        "thermal",
+        "sound"
+      ],
+      "initial_rooms": {},
+      "events": [
+        {
+          "id": "L11_trip_B",
+          "at": 140,
+          "type": "fixture_trip",
+          "warning_s": 5,
+          "args": {
+            "fixture": "radiator_B"
+          }
+        }
+      ],
+      "ribbons": [
+        {
+          "predicate": "quiet_howls",
+          "targets_1_to_4": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "label": "A Gentle Note"
+        },
+        {
+          "predicate": "vent_solution",
+          "targets_1_to_4": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "label": "The Right Little Fix"
+        },
+        {
+          "predicate": "useful_handoffs",
+          "targets_1_to_4": [
+            4,
+            4,
+            5,
+            6
+          ],
+          "label": "Through Helping Hands"
+        }
+      ],
+      "required_goal_ids": []
+    },
+    {
+      "id": "L12",
+      "title": "The Quiet-ish Concert",
+      "chapter": 3,
+      "layout": "P3",
+      "duration_hotel_s": 345,
+      "waves": [
+        {
+          "roster": [
+            "moonwolf",
+            "ghost",
+            "slime"
+          ],
+          "minimum_size": 1
+        },
+        {
+          "roster": [
+            "moonwolf",
+            "ghost",
+            "dragon"
+          ],
+          "minimum_size": 1
+        },
+        {
+          "roster": [
+            "ghost",
+            "yeti",
+            "moonwolf"
+          ],
+          "minimum_size": 1
+        }
+      ],
+      "service_count": 2,
+      "systems": [
+        "core",
+        "thermal",
+        "sound"
+      ],
+      "initial_rooms": {},
+      "events": [
+        {
+          "id": "L12_note_1",
+          "at": 90,
+          "type": "concert_pulse",
+          "warning_s": 5,
+          "args": {
+            "room": "D",
+            "amplitude": 60
+          }
+        },
+        {
+          "id": "L12_note_2",
+          "at": 180,
+          "type": "concert_pulse",
+          "warning_s": 5,
+          "args": {
+            "room": "D",
+            "amplitude": 60
+          }
+        }
+      ],
+      "ribbons": [
+        {
+          "predicate": "quiet_howls",
+          "targets_1_to_4": [
+            1,
+            2,
+            2,
+            3
+          ],
+          "label": "Quiet-ish"
+        },
+        {
+          "predicate": "helpful_guests",
+          "targets_1_to_4": [
+            1,
+            2,
+            2,
+            3
+          ],
+          "label": "A Kind Chorus"
+        },
+        {
+          "predicate": "cozy_departures",
+          "targets_1_to_4": [
+            3,
+            5,
+            6,
+            7
+          ],
+          "label": "Encore, Please"
+        }
+      ],
+      "required_goal_ids": []
+    },
+    {
+      "id": "L13",
+      "title": "A Little Water",
+      "chapter": 4,
+      "layout": "P4",
+      "duration_hotel_s": 330,
+      "waves": [
+        {
+          "roster": [
+            "sprout",
+            "slime"
+          ],
+          "minimum_size": 1
+        },
+        {
+          "roster": [
+            "sprout",
+            "slime"
+          ],
+          "minimum_size": 1
+        },
+        {
+          "roster": [
+            "sprout",
+            "ghost",
+            "slime"
+          ],
+          "minimum_size": 1
+        }
+      ],
+      "service_count": 1,
+      "systems": [
+        "core",
+        "thermal",
+        "sound",
+        "moisture"
+      ],
+      "initial_rooms": {},
+      "events": [
+        {
+          "id": "L13_water_coach",
+          "at": 0,
+          "type": "coach",
+          "warning_s": 0,
+          "args": {
+            "coach_id": "sprout_first_water",
+            "once_per_profile": true
+          }
+        }
+      ],
+      "ribbons": [
+        {
+          "predicate": "water_care",
+          "targets_1_to_4": [
+            2,
+            3,
+            3,
+            4
+          ],
+          "label": "A Little Kindness"
+        },
+        {
+          "predicate": "welcome_matches",
+          "targets_1_to_4": [
+            3,
+            5,
+            6,
+            7
+          ],
+          "label": "Pot Luck"
+        },
+        {
+          "predicate": "tidy_rooms",
+          "targets_1_to_4": [
+            2,
+            3,
+            4,
+            4
+          ],
+          "label": "Room to Grow"
+        }
+      ],
+      "required_goal_ids": []
+    },
+    {
+      "id": "L14",
+      "title": "Steam and Sprouts",
+      "chapter": 4,
+      "layout": "P4",
+      "duration_hotel_s": 345,
+      "waves": [
+        {
+          "roster": [
+            "sprout",
+            "dragon"
+          ],
+          "minimum_size": 1
+        },
+        {
+          "roster": [
+            "yeti",
+            "sprout",
+            "dragon"
+          ],
+          "minimum_size": 1
+        },
+        {
+          "roster": [
+            "sprout",
+            "yeti",
+            "dragon"
+          ],
+          "minimum_size": 1
+        }
+      ],
+      "service_count": 2,
+      "systems": [
+        "core",
+        "thermal",
+        "sound",
+        "moisture"
+      ],
+      "initial_rooms": {},
+      "events": [
+        {
+          "id": "L14_cloud",
+          "at": 105,
+          "type": "steam_cloud",
+          "warning_s": 5,
+          "args": {
+            "position": [
+              17,
+              8
+            ]
+          }
+        },
+        {
+          "id": "L14_damp_E",
+          "at": 175,
+          "type": "humidity_pulse",
+          "warning_s": 5,
+          "args": {
+            "room": "E",
+            "delta": 20
+          }
+        }
+      ],
+      "ribbons": [
+        {
+          "predicate": "water_care",
+          "targets_1_to_4": [
+            2,
+            3,
+            3,
+            4
+          ],
+          "label": "Green Welcome"
+        },
+        {
+          "predicate": "vent_solution",
+          "targets_1_to_4": [
+            1,
+            2,
+            2,
+            3
+          ],
+          "label": "Comfort in the Pipes"
+        },
+        {
+          "predicate": "helpful_guests",
+          "targets_1_to_4": [
+            1,
+            2,
+            2,
+            3
+          ],
+          "label": "A Growing Team"
+        }
+      ],
+      "required_goal_ids": []
+    },
+    {
+      "id": "L15",
+      "title": "Puddle Buddies",
+      "chapter": 4,
+      "layout": "P4",
+      "duration_hotel_s": 330,
+      "waves": [
+        {
+          "roster": [
+            "slime",
+            "sprout",
+            "slime"
+          ],
+          "minimum_size": 1
+        },
+        {
+          "roster": [
+            "sprout",
+            "slime"
+          ],
+          "minimum_size": 1
+        },
+        {
+          "roster": [
+            "slime",
+            "sprout",
+            "slime"
+          ],
+          "minimum_size": 1
+        }
+      ],
+      "service_count": 2,
+      "systems": [
+        "core",
+        "thermal",
+        "sound",
+        "moisture"
+      ],
+      "initial_rooms": {},
+      "events": [
+        {
+          "id": "L15_splash_1",
+          "at": 65,
+          "type": "puddle_patch",
+          "warning_s": 5,
+          "args": {
+            "positions": [
+              [
+                6,
+                9
+              ],
+              [
+                19,
+                8
+              ]
+            ]
+          }
+        },
+        {
+          "id": "L15_splash_2",
+          "at": 150,
+          "type": "puddle_patch",
+          "warning_s": 5,
+          "args": {
+            "positions": [
+              [
+                10,
+                11
+              ],
+              [
+                21,
+                8
+              ]
+            ]
+          }
+        }
+      ],
+      "ribbons": [
+        {
+          "predicate": "shared_work",
+          "targets_1_to_4": [
+            3,
+            3,
+            4,
+            4
+          ],
+          "label": "Puddle Buddies"
+        },
+        {
+          "predicate": "water_care",
+          "targets_1_to_4": [
+            2,
+            3,
+            3,
+            4
+          ],
+          "label": "Gentle Watering"
+        },
+        {
+          "predicate": "requests",
+          "targets_1_to_4": [
+            5,
+            8,
+            9,
+            10
+          ],
+          "label": "Dry Delivery"
+        }
+      ],
+      "required_goal_ids": []
+    },
+    {
+      "id": "L16",
+      "title": "Bloom Service",
+      "chapter": 4,
+      "layout": "P4",
+      "duration_hotel_s": 345,
+      "waves": [
+        {
+          "roster": [
+            "sprout",
+            "slime",
+            "dragon"
+          ],
+          "minimum_size": 1
+        },
+        {
+          "roster": [
+            "yeti",
+            "dragon",
+            "moonwolf"
+          ],
+          "minimum_size": 1
+        },
+        {
+          "roster": [
+            "ghost",
+            "moonwolf",
+            "sprout"
+          ],
+          "minimum_size": 1
+        }
+      ],
+      "service_count": 2,
+      "systems": [
+        "core",
+        "thermal",
+        "sound",
+        "moisture"
+      ],
+      "initial_rooms": {},
+      "events": [
+        {
+          "id": "L16_damp_C",
+          "at": 95,
+          "type": "humidity_pulse",
+          "warning_s": 5,
+          "args": {
+            "room": "C",
+            "delta": 25
+          }
+        },
+        {
+          "id": "L16_trip_D",
+          "at": 180,
+          "type": "fixture_trip",
+          "warning_s": 5,
+          "args": {
+            "fixture": "radiator_D"
+          }
+        }
+      ],
+      "ribbons": [
+        {
+          "predicate": "balanced_rooms",
+          "targets_1_to_4": [
+            2,
+            2,
+            3,
+            3
+          ],
+          "label": "Something for Everyone"
+        },
+        {
+          "predicate": "water_care",
+          "targets_1_to_4": [
+            1,
+            2,
+            2,
+            3
+          ],
+          "label": "In Bloom"
+        },
+        {
+          "predicate": "helpful_guests",
+          "targets_1_to_4": [
+            2,
+            3,
+            3,
+            4
+          ],
+          "label": "A Garden of Helpers"
+        }
+      ],
+      "required_goal_ids": []
+    },
+    {
+      "id": "L17",
+      "title": "The Other Side",
+      "chapter": 5,
+      "layout": "P5",
+      "duration_hotel_s": 345,
+      "waves": [
+        {
+          "roster": [
+            "dragon",
+            "yeti",
+            "slime"
+          ],
+          "minimum_size": 1
+        },
+        {
+          "roster": [
+            "ghost",
+            "moonwolf",
+            "sprout"
+          ],
+          "minimum_size": 1
+        },
+        {
+          "roster": [
+            "sprout",
+            "slime",
+            "dragon"
+          ],
+          "minimum_size": 1
+        }
+      ],
+      "service_count": 2,
+      "systems": [
+        "core",
+        "thermal",
+        "sound",
+        "moisture",
+        "shutter"
+      ],
+      "initial_rooms": {},
+      "events": [
+        {
+          "id": "L17_shutter",
+          "at": 45,
+          "type": "shutter_cycle",
+          "warning_s": 0,
+          "args": {
+            "period": 45,
+            "warning": 5,
+            "closed": 8
+          }
+        },
+        {
+          "id": "L17_route_coach",
+          "at": 40,
+          "type": "coach",
+          "warning_s": 0,
+          "args": {
+            "coach_id": "shutter_bypass",
+            "once_per_profile": true
+          }
+        }
+      ],
+      "ribbons": [
+        {
+          "predicate": "useful_handoffs",
+          "targets_1_to_4": [
+            4,
+            4,
+            5,
+            6
+          ],
+          "label": "Across the Hall"
+        },
+        {
+          "predicate": "requests",
+          "targets_1_to_4": [
+            6,
+            9,
+            10,
+            11
+          ],
+          "label": "Other-Side Service"
+        },
+        {
+          "predicate": "cozy_departures",
+          "targets_1_to_4": [
+            3,
+            5,
+            6,
+            7
+          ],
+          "label": "A Way Through"
+        }
+      ],
+      "required_goal_ids": []
+    },
+    {
+      "id": "L18",
+      "title": "Express-ish Delivery",
+      "chapter": 5,
+      "layout": "P5",
+      "duration_hotel_s": 345,
+      "waves": [
+        {
+          "roster": [
+            "dragon",
+            "yeti",
+            "slime"
+          ],
+          "minimum_size": 1
+        },
+        {
+          "roster": [
+            "ghost",
+            "moonwolf",
+            "sprout"
+          ],
+          "minimum_size": 1
+        },
+        {
+          "roster": [
+            "sprout",
+            "slime",
+            "dragon"
+          ],
+          "minimum_size": 1
+        }
+      ],
+      "service_count": 2,
+      "systems": [
+        "core",
+        "thermal",
+        "sound",
+        "moisture",
+        "shutter",
+        "lift"
+      ],
+      "initial_rooms": {},
+      "events": [
+        {
+          "id": "L18_lift_coach",
+          "at": 0,
+          "type": "coach",
+          "warning_s": 0,
+          "args": {
+            "coach_id": "luggage_lift",
+            "once_per_profile": true
+          }
+        },
+        {
+          "id": "L18_shutter",
+          "at": 45,
+          "type": "shutter_cycle",
+          "warning_s": 0,
+          "args": {
+            "period": 45,
+            "warning": 5,
+            "closed": 8
+          }
+        },
+        {
+          "id": "L18_trip_lift",
+          "at": 145,
+          "type": "fixture_trip",
+          "warning_s": 5,
+          "args": {
+            "fixture": "lift_pair"
+          }
+        }
+      ],
+      "ribbons": [
+        {
+          "predicate": "safe_lift_deliveries",
+          "targets_1_to_4": [
+            2,
+            3,
+            4,
+            4
+          ],
+          "label": "Express-ish"
+        },
+        {
+          "predicate": "useful_handoffs",
+          "targets_1_to_4": [
+            4,
+            4,
+            5,
+            6
+          ],
+          "label": "Special Delivery"
+        },
+        {
+          "predicate": "tidy_rooms",
+          "targets_1_to_4": [
+            2,
+            3,
+            4,
+            4
+          ],
+          "label": "Unpacked"
+        }
+      ],
+      "required_goal_ids": []
+    },
+    {
+      "id": "L19",
+      "title": "A Change of View",
+      "chapter": 5,
+      "layout": "P5",
+      "duration_hotel_s": 360,
+      "waves": [
+        {
+          "roster": [
+            "dragon",
+            "yeti",
+            "slime",
+            "ghost"
+          ],
+          "minimum_size": 1
+        },
+        {
+          "roster": [
+            "ghost",
+            "moonwolf",
+            "sprout"
+          ],
+          "minimum_size": 1
+        },
+        {
+          "roster": [
+            "sprout",
+            "slime",
+            "moonwolf"
+          ],
+          "minimum_size": 1
+        }
+      ],
+      "service_count": 2,
+      "systems": [
+        "core",
+        "thermal",
+        "sound",
+        "moisture",
+        "shutter",
+        "lift"
+      ],
+      "initial_rooms": {},
+      "events": [
+        {
+          "id": "L19_shutter",
+          "at": 45,
+          "type": "shutter_cycle",
+          "warning_s": 0,
+          "args": {
+            "period": 45,
+            "warning": 5,
+            "closed": 8
+          }
+        },
+        {
+          "id": "L19_view_notice",
+          "at": 80,
+          "type": "announce",
+          "warning_s": 0,
+          "args": {
+            "text_key": "level.L19.view",
+            "icon": "move_room"
+          }
+        },
+        {
+          "id": "L19_heat_B",
+          "at": 130,
+          "type": "thermal_pulse",
+          "warning_s": 5,
+          "args": {
+            "room": "B",
+            "delta": 25
+          }
+        }
+      ],
+      "ribbons": [
+        {
+          "predicate": "relocations",
+          "targets_1_to_4": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "label": "A New View"
+        },
+        {
+          "predicate": "safe_lift_deliveries",
+          "targets_1_to_4": [
+            2,
+            3,
+            4,
+            4
+          ],
+          "label": "Helpful Routes"
+        },
+        {
+          "predicate": "balanced_rooms",
+          "targets_1_to_4": [
+            2,
+            3,
+            3,
+            4
+          ],
+          "label": "Room to Adapt"
+        }
+      ],
+      "required_goal_ids": []
+    },
+    {
+      "id": "L20",
+      "title": "The Big Little Delivery",
+      "chapter": 5,
+      "layout": "P6",
+      "duration_hotel_s": 360,
+      "waves": [
+        {
+          "roster": [
+            "dragon",
+            "yeti",
+            "slime"
+          ],
+          "minimum_size": 1
+        },
+        {
+          "roster": [
+            "ghost",
+            "moonwolf",
+            "sprout"
+          ],
+          "minimum_size": 1
+        },
+        {
+          "roster": [
+            "sprout",
+            "slime",
+            "dragon",
+            "moonwolf"
+          ],
+          "minimum_size": 1
+        }
+      ],
+      "service_count": 2,
+      "systems": [
+        "core",
+        "thermal",
+        "sound",
+        "moisture",
+        "festival"
+      ],
+      "initial_rooms": {},
+      "events": [
+        {
+          "id": "L20_trunk_1",
+          "at": 15,
+          "type": "trunk_spawn",
+          "warning_s": 0,
+          "args": {
+            "object_id": "trunk_L20_a",
+            "position": [
+              2,
+              11
+            ],
+            "goal": "festival_stand"
+          }
+        },
+        {
+          "id": "L20_trunk_2",
+          "at": 155,
+          "type": "trunk_spawn",
+          "warning_s": 0,
+          "args": {
+            "object_id": "trunk_L20_b",
+            "position": [
+              6,
+              11
+            ],
+            "goal": "festival_stand"
+          }
+        }
+      ],
+      "ribbons": [
+        {
+          "predicate": "trunk_goal",
+          "targets_1_to_4": [
+            2,
+            2,
+            2,
+            2
+          ],
+          "label": "The Big Little Job"
+        },
+        {
+          "predicate": "shared_work",
+          "targets_1_to_4": [
+            3,
+            3,
+            4,
+            4
+          ],
+          "label": "Take a Turn"
+        },
+        {
+          "predicate": "helpful_guests",
+          "targets_1_to_4": [
+            2,
+            3,
+            3,
+            4
+          ],
+          "label": "Everyone Brings Something"
+        }
+      ],
+      "required_goal_ids": [
+        "trunk_L20_a",
+        "trunk_L20_b"
+      ]
+    },
+    {
+      "id": "L21",
+      "title": "Lantern Check-In",
+      "chapter": 6,
+      "layout": "P6",
+      "duration_hotel_s": 345,
+      "waves": [
+        {
+          "roster": [
+            "dragon",
+            "yeti",
+            "slime"
+          ],
+          "minimum_size": 1
+        },
+        {
+          "roster": [
+            "ghost",
+            "moonwolf",
+            "sprout"
+          ],
+          "minimum_size": 1
+        },
+        {
+          "roster": [
+            "sprout",
+            "slime",
+            "dragon",
+            "moonwolf"
+          ],
+          "minimum_size": 1
+        }
+      ],
+      "service_count": 2,
+      "systems": [
+        "core",
+        "thermal",
+        "sound",
+        "moisture",
+        "festival"
+      ],
+      "initial_rooms": {},
+      "events": [
+        {
+          "id": "L21_parcels",
+          "at": 15,
+          "type": "parcels_spawn",
+          "warning_s": 0,
+          "args": {
+            "object_ids": [
+              "parcel_L21_a",
+              "parcel_L21_b",
+              "parcel_L21_c"
+            ],
+            "positions": [
+              [
+                3,
+                11
+              ],
+              [
+                8,
+                11
+              ],
+              [
+                18,
+                11
+              ]
+            ],
+            "goal": "festival_stand"
+          }
+        },
+        {
+          "id": "L21_cloud",
+          "at": 120,
+          "type": "steam_cloud",
+          "warning_s": 5,
+          "args": {
+            "position": [
+              17,
+              8
+            ]
+          }
+        }
+      ],
+      "ribbons": [
+        {
+          "predicate": "festival_parcels",
+          "targets_1_to_4": [
+            3,
+            3,
+            3,
+            3
+          ],
+          "label": "Light the Welcome"
+        },
+        {
+          "predicate": "useful_handoffs",
+          "targets_1_to_4": [
+            4,
+            5,
+            6,
+            7
+          ],
+          "label": "A Little Light"
+        },
+        {
+          "predicate": "cozy_departures",
+          "targets_1_to_4": [
+            3,
+            5,
+            6,
+            7
+          ],
+          "label": "Guests of Honor"
+        }
+      ],
+      "required_goal_ids": [
+        "parcel_L21_a",
+        "parcel_L21_b",
+        "parcel_L21_c"
+      ]
+    },
+    {
+      "id": "L22",
+      "title": "Neighbors Helping Neighbors",
+      "chapter": 6,
+      "layout": "P6",
+      "duration_hotel_s": 360,
+      "waves": [
+        {
+          "roster": [
+            "dragon",
+            "yeti",
+            "slime",
+            "sprout"
+          ],
+          "minimum_size": 1
+        },
+        {
+          "roster": [
+            "ghost",
+            "moonwolf",
+            "sprout"
+          ],
+          "minimum_size": 1
+        },
+        {
+          "roster": [
+            "sprout",
+            "slime",
+            "dragon",
+            "moonwolf"
+          ],
+          "minimum_size": 1
+        }
+      ],
+      "service_count": 2,
+      "systems": [
+        "core",
+        "thermal",
+        "sound",
+        "moisture",
+        "festival"
+      ],
+      "initial_rooms": {},
+      "events": [
+        {
+          "id": "L22_puddles",
+          "at": 90,
+          "type": "puddle_patch",
+          "warning_s": 5,
+          "args": {
+            "positions": [
+              [
+                6,
+                9
+              ],
+              [
+                21,
+                8
+              ]
+            ]
+          }
+        },
+        {
+          "id": "L22_trip_towels",
+          "at": 170,
+          "type": "fixture_trip",
+          "warning_s": 5,
+          "args": {
+            "fixture": "towels"
+          }
+        }
+      ],
+      "ribbons": [
+        {
+          "predicate": "helpful_guests",
+          "targets_1_to_4": [
+            2,
+            3,
+            4,
+            4
+          ],
+          "label": "Neighbors Helping"
+        },
+        {
+          "predicate": "useful_handoffs",
+          "targets_1_to_4": [
+            4,
+            5,
+            6,
+            7
+          ],
+          "label": "Thank You"
+        },
+        {
+          "predicate": "balanced_rooms",
+          "targets_1_to_4": [
+            2,
+            3,
+            3,
+            4
+          ],
+          "label": "A Comfortable Company"
+        }
+      ],
+      "required_goal_ids": []
+    },
+    {
+      "id": "L23",
+      "title": "A Full House, Kindly",
+      "chapter": 6,
+      "layout": "P6",
+      "duration_hotel_s": 360,
+      "waves": [
+        {
+          "roster": [
+            "dragon",
+            "yeti",
+            "slime",
+            "ghost"
+          ],
+          "minimum_size": 1
+        },
+        {
+          "roster": [
+            "ghost",
+            "moonwolf",
+            "sprout"
+          ],
+          "minimum_size": 1
+        },
+        {
+          "roster": [
+            "sprout",
+            "slime",
+            "dragon",
+            "moonwolf"
+          ],
+          "minimum_size": 1
+        }
+      ],
+      "service_count": 2,
+      "systems": [
+        "core",
+        "thermal",
+        "sound",
+        "moisture",
+        "festival"
+      ],
+      "initial_rooms": {},
+      "events": [
+        {
+          "id": "L23_cloud",
+          "at": 85,
+          "type": "steam_cloud",
+          "warning_s": 5,
+          "args": {
+            "position": [
+              8,
+              11
+            ]
+          }
+        },
+        {
+          "id": "L23_trip_snacks",
+          "at": 150,
+          "type": "fixture_trip",
+          "warning_s": 5,
+          "args": {
+            "fixture": "snacks"
+          }
+        },
+        {
+          "id": "L23_trip_F",
+          "at": 215,
+          "type": "fixture_trip",
+          "warning_s": 5,
+          "args": {
+            "fixture": "radiator_F"
+          }
+        }
+      ],
+      "ribbons": [
+        {
+          "predicate": "requests",
+          "targets_1_to_4": [
+            7,
+            12,
+            14,
+            16
+          ],
+          "label": "Kindly Service"
+        },
+        {
+          "predicate": "cozy_departures",
+          "targets_1_to_4": [
+            4,
+            6,
+            7,
+            8
+          ],
+          "label": "A Full Welcome"
+        },
+        {
+          "predicate": "tidy_rooms",
+          "targets_1_to_4": [
+            2,
+            3,
+            4,
+            4
+          ],
+          "label": "Room for Tomorrow"
+        }
+      ],
+      "required_goal_ids": []
+    },
+    {
+      "id": "L24",
+      "title": "Room for Everyone",
+      "chapter": 6,
+      "layout": "P6",
+      "duration_hotel_s": 360,
+      "waves": [
+        {
+          "roster": [
+            "dragon",
+            "yeti",
+            "slime",
+            "sprout"
+          ],
+          "minimum_size": 1
+        },
+        {
+          "roster": [
+            "ghost",
+            "moonwolf",
+            "sprout",
+            "slime"
+          ],
+          "minimum_size": 1
+        },
+        {
+          "roster": [
+            "sprout",
+            "slime",
+            "dragon",
+            "moonwolf"
+          ],
+          "minimum_size": 1
+        }
+      ],
+      "service_count": 2,
+      "systems": [
+        "core",
+        "thermal",
+        "sound",
+        "moisture",
+        "festival"
+      ],
+      "initial_rooms": {},
+      "events": [
+        {
+          "id": "L24_parcels",
+          "at": 15,
+          "type": "parcels_spawn",
+          "warning_s": 0,
+          "args": {
+            "object_ids": [
+              "parcel_L24_a",
+              "parcel_L24_b",
+              "parcel_L24_c"
+            ],
+            "positions": [
+              [
+                3,
+                11
+              ],
+              [
+                8,
+                11
+              ],
+              [
+                18,
+                11
+              ]
+            ],
+            "goal": "festival_stand"
+          }
+        },
+        {
+          "id": "L24_cloud",
+          "at": 110,
+          "type": "steam_cloud",
+          "warning_s": 5,
+          "args": {
+            "position": [
+              17,
+              8
+            ]
+          }
+        },
+        {
+          "id": "L24_music",
+          "at": 210,
+          "type": "announce",
+          "warning_s": 0,
+          "args": {
+            "text_key": "level.L24.music",
+            "icon": "festival"
+          }
+        },
+        {
+          "id": "L24_lanterns",
+          "at": 260,
+          "type": "announce",
+          "warning_s": 0,
+          "args": {
+            "text_key": "level.L24.lanterns",
+            "icon": "lantern"
+          }
+        }
+      ],
+      "ribbons": [
+        {
+          "predicate": "festival_parcels",
+          "targets_1_to_4": [
+            3,
+            3,
+            3,
+            3
+          ],
+          "label": "Everyone Fits"
+        },
+        {
+          "predicate": "helpful_guests",
+          "targets_1_to_4": [
+            2,
+            3,
+            4,
+            4
+          ],
+          "label": "A Hotel Full of Helpers"
+        },
+        {
+          "predicate": "cozy_departures",
+          "targets_1_to_4": [
+            4,
+            7,
+            8,
+            9
+          ],
+          "label": "Room for One More"
+        }
+      ],
+      "required_goal_ids": [
+        "parcel_L24_a",
+        "parcel_L24_b",
+        "parcel_L24_c"
+      ]
+    }
+  ]
+}

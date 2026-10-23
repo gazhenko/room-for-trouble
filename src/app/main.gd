@@ -53,6 +53,10 @@ func _ready() -> void:
 		var smoke = load("res://src/dev/smoke_test.gd").new()
 		smoke.setup(self)
 		add_child(smoke)
+	elif "--gamepad-test" in args:
+		var pads = load("res://src/dev/gamepad_test.gd").new()
+		pads.setup(self)
+		add_child(pads)
 
 func _layout_ui() -> void:
 	var sc := Settings.effective_ui_scale()

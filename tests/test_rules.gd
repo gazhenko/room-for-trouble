@@ -209,3 +209,19 @@ func test_save_suspended_shift_round_trips_through_profile_json() -> void:
 		b.step(log[t])
 	eq(b.state_hash(), a.state_hash(), "resumed shift continues identically")
 	eq(b.s["guests"].size(), a.s["guests"].size(), "guest table intact")
+
+func test_ui01_new_controller_on_reused_device_id_reclaims_missing_seat() -> void:
+	# Regression (found with kernel-level virtual pads): unplugging a controller
+	# and plugging in a different model reuses the freed device id.
+	var ir = load("res://src/app/input_router.gd").new()
+	ir.seats = []
+	for i in 4:
+		ir.seats.append(ir._empty_seat(i))
+	ir.seats[1]["active"] = true
+	ir.seats[1]["device"] = "pad"
+	ir.seats[1]["joy"] = 1
+	ir.seats[1]["missing"] = true
+	eq(ir.seat_of_device("pad", 1), -1, "a missing seat does not claim its old device id")
+	ir.seats[1]["missing"] = false
+	eq(ir.seat_of_device("pad", 1), 1, "a present seat owns its device")
+	ir.free()

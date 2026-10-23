@@ -79,14 +79,16 @@ func _init() -> void:
 	q.size = Vector2(1, 1)
 	post.mesh = q
 	var pm := ShaderMaterial.new()
-	pm.shader = preload("res://src/view/shaders/outline_post.gdshader")
+	# The outline pass reads the normal buffer, which only Forward+ provides;
+	# the Compatibility renderer never loads (or compiles) that shader.
+	if RenderingServer.get_current_rendering_method() == "forward_plus":
+		pm.shader = load("res://src/view/shaders/outline_post.gdshader")
 	post.material_override = pm
 	post.extra_cull_margin = 16384.0
 	post.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	post.custom_aabb = AABB(Vector3(-1e4, -1e4, -1e4), Vector3(2e4, 2e4, 2e4))
 	camera.add_child(post)
 	post.position = Vector3(0, 0, -2.0)
-	# The outline pass reads the normal buffer, which only Forward+ provides.
 	if RenderingServer.get_current_rendering_method() != "forward_plus":
 		post.visible = false
 

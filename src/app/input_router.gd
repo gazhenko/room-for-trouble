@@ -122,7 +122,9 @@ func seat_of_device(dev: String, joy := -1) -> int:
 	for s in seats:
 		if not s["active"]:
 			continue
-		if dev == "pad" and s["device"] == "pad" and s["joy"] == joy:
+		# A missing seat no longer owns its old device id: the OS may hand that id
+		# to a different controller, which must be able to reclaim a seat with Carry.
+		if dev == "pad" and s["device"] == "pad" and s["joy"] == joy and not s["missing"]:
 			return s["id"]
 		if dev != "pad" and s["device"] == dev:
 			return s["id"]

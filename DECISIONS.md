@@ -142,3 +142,27 @@ gitignored and `.env.example` documents every variable.
 `RFT_ENDPOINT` per launch, an `endpoint.txt` beside the executable (an operator-provided
 default), or Settings → Online. Private TLS CAs work through `RFT_TLS_CA_FILE` with
 verification on. `RFT_ALLOW_INSECURE_TLS=1` exists only for local testing.
+
+## Performance
+
+**D28 — Static station bodies are merged; actors are single skinned meshes.**
+- Every station's static body is baked into one floor mesh at load. The original nodes stay
+  hidden, so they can still be outlined for interaction highlights.
+- Each character's parts are baked into one skinned mesh whose bones follow the animation
+  pivots (`ActorRig.bake`). Parts toggled on their own, such as slippers and the mask, stay
+  separate.
+- Only main body masses cast shadows.
+
+Together these cut the busiest floor from 622 to about 154 draw calls with the identical
+look. Per-station flattening was tried and rejected: it defeated Godot's automatic
+instancing of identical station meshes.
+
+**D29 — A "Low" graphics preset.** Settings → Vision → Graphics → Low turns off the sun's
+shadow pass and the outline pass. That keeps the busiest floor under the brief's
+150-draw-call low-preset budget (131 measured), for integrated GPUs and handhelds.
+
+**D30 — The macOS export is ad-hoc signed with hardened runtime.** The previous export kept
+the engine template's broken signature, so Gatekeeper would report a downloaded copy as
+"damaged". Ad-hoc signing makes the bundle valid, though Gatekeeper still asks for "Open
+Anyway". Distribution signing and notarization need a paid Developer ID, which this machine
+lacks (it has only an Apple Development identity).

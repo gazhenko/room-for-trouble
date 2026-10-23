@@ -39,7 +39,8 @@ func build(p_stage: PixelStage, kind: String) -> void:
 	add_child(gus)
 	actors.append({"rig": gus, "base": gus.position, "phase": 2.0, "walk": true, "gus": true})
 	stage.set_pixel_lines(Settings.pixel_lines())
-	stage.set_outlines(Settings.g("outlines"))
+	stage.set_outlines(Settings.g("outlines") and Settings.g("graphics") != "low")
+	stage.set_quality(str(Settings.g("graphics")))
 
 func _process(dt: float) -> void:
 	_t += dt

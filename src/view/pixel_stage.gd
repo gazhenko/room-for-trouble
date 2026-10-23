@@ -99,6 +99,11 @@ func set_pixel_lines(lines: int) -> void:
 	target_lines = lines
 	_apply_scale()
 
+## Graphics quality: "low" drops the sun's shadow pass (and with it about a
+## sixth of the floor's draw calls) for integrated GPUs and handhelds.
+func set_quality(q: String) -> void:
+	sun.shadow_enabled = q != "low"
+
 func set_outlines(on: bool) -> void:
 	(post.material_override as ShaderMaterial).set_shader_parameter("enabled", 1.0 if on else 0.0)
 	post.visible = on and RenderingServer.get_current_rendering_method() == "forward_plus"

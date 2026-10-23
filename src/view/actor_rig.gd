@@ -40,6 +40,116 @@ func setup(st: String, h: float) -> void:
 	hold = Node3D.new(); hold.name = "Hold"; torso.add_child(hold)
 	hold.position = Vector3(0, h * 0.92 + 0.1, 0.22)
 
+var skinned: MeshInstance3D       # all toon parts baked into one skinned mesh
+var _skel: Skeleton3D
+var _bones: Array = []             # [pivot Node3D, bone index]
+
+func _ready() -> void:
+	bake()
+
+## Bakes every part that uses the shared toon material into one skinned mesh
+## whose bones follow the existing pivot nodes, so an actor costs one draw call
+## (plus one shadow) instead of one per part. Animation still moves the pivots;
+## _sync_bones() copies their transforms to the skeleton each tick. Parts that
+## are toggled on their own (slippers, mask) stay separate nodes.
+func bake() -> void:
+	if _skel != null or body == null:
+		return
+	var toon := Art.toon()
+	var separate: Array = []
+	for k in ["slippers", "mask"]:
+		if extras.has(k):
+			separate.append(extras[k])
+	var parts: Array = []
+	for n in find_children("*", "MeshInstance3D", true, false):
+		var mi := n as MeshInstance3D
+		if mi.material_override != toon or mi.mesh == null or mi.mesh.get_surface_count() != 1:
+			continue
+		var skip := false
+		for sep in separate:
+			if (sep as Node).is_ancestor_of(mi):
+				skip = true
+		if not skip:
+			parts.append(mi)
+	if parts.size() < 2:
+		return
+	_skel = Skeleton3D.new()
+	_skel.name = "Skel"
+	add_child(_skel)
+	var bone_of := {}
+	for mi in parts:
+		_bone_for(mi.get_parent(), bone_of)
+	var verts := PackedVector3Array()
+	var norms := PackedVector3Array()
+	var cols := PackedColorArray()
+	var uvs := PackedVector2Array()
+	var bones := PackedInt32Array()
+	var weights := PackedFloat32Array()
+	for mi in parts:
+		var bi: int = bone_of[mi.get_parent()]
+		var xf: Transform3D = _skel.get_bone_global_rest(bi) * mi.transform
+		var arr := (mi.mesh as Mesh).surface_get_arrays(0)
+		var v: PackedVector3Array = arr[Mesh.ARRAY_VERTEX]
+		var nn: PackedVector3Array = arr[Mesh.ARRAY_NORMAL]
+		var c: PackedColorArray = arr[Mesh.ARRAY_COLOR]
+		var u = arr[Mesh.ARRAY_TEX_UV]
+		for i in v.size():
+			verts.append(xf * v[i])
+			norms.append((xf.basis * nn[i]).normalized() if i < nn.size() else Vector3.UP)
+			cols.append(c[i] if i < c.size() else Color.WHITE)
+			uvs.append((u as PackedVector2Array)[i] if u is PackedVector2Array and i < (u as PackedVector2Array).size() else Vector2.ZERO)
+			bones.append_array([bi, 0, 0, 0])
+			weights.append_array([1.0, 0.0, 0.0, 0.0])
+		mi.get_parent().remove_child(mi)
+		mi.queue_free()
+	var a: Array = []
+	a.resize(Mesh.ARRAY_MAX)
+	a[Mesh.ARRAY_VERTEX] = verts
+	a[Mesh.ARRAY_NORMAL] = norms
+	a[Mesh.ARRAY_COLOR] = cols
+	a[Mesh.ARRAY_TEX_UV] = uvs
+	a[Mesh.ARRAY_BONES] = bones
+	a[Mesh.ARRAY_WEIGHTS] = weights
+	var m := ArrayMesh.new()
+	m.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, a)
+	var skin := Skin.new()
+	for i in _skel.get_bone_count():
+		skin.add_bind(i, _skel.get_bone_global_rest(i).affine_inverse())
+	skinned = MeshInstance3D.new()
+	skinned.name = "SkinnedBody"
+	skinned.mesh = m
+	skinned.skin = skin
+	skinned.material_override = toon
+	_skel.add_child(skinned)
+	skinned.skeleton = NodePath("..")
+	_sync_bones()
+
+func _bone_for(n: Node, bone_of: Dictionary) -> int:
+	if bone_of.has(n):
+		return bone_of[n]
+	var parent_idx := -1
+	var rest := Transform3D.IDENTITY
+	if n != self:
+		parent_idx = _bone_for(n.get_parent(), bone_of)
+		rest = (n as Node3D).transform
+	var idx := _skel.get_bone_count()
+	_skel.add_bone("b%d_%s" % [idx, n.name])
+	if parent_idx >= 0:
+		_skel.set_bone_parent(idx, parent_idx)
+	_skel.set_bone_rest(idx, rest)
+	bone_of[n] = idx
+	if n != self:
+		_bones.append([n, idx])
+	return idx
+
+func _sync_bones() -> void:
+	for e in _bones:
+		var n: Node3D = e[0]
+		var i: int = e[1]
+		_skel.set_bone_pose_position(i, n.position)
+		_skel.set_bone_pose_rotation(i, n.quaternion)
+		_skel.set_bone_pose_scale(i, n.scale)
+
 func part(parent: Node3D, mk: MeshKit, pos: Vector3, name_s := "") -> MeshInstance3D:
 	var mi := Art.mesh_instance(mk.commit(), Art.toon())
 	mi.position = pos
@@ -168,6 +278,8 @@ func tick(dt: float) -> void:
 	leg_l.rotation.x = lerpf(leg_l.rotation.x, leg_a, minf(1.0, dt * 16.0))
 	leg_r.rotation.x = lerpf(leg_r.rotation.x, -leg_a, minf(1.0, dt * 16.0))
 	_animate_extras(dt, moving)
+	if _skel != null:
+		_sync_bones()
 
 func _animate_extras(dt: float, moving: bool) -> void:
 	for k in extras:

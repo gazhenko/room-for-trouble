@@ -320,6 +320,9 @@ UI = {
 }
 
 SETTINGS = {
+    "ui.settings.graphics": "Graphics",
+    "ui.settings.gfx_standard": "Standard",
+    "ui.settings.gfx_low": "Low (no shadows or outlines)",
     "ui.settings.shared_kb_note": "Two players can share one keyboard (WASD and the arrow keys). Some keyboards can't register many keys at once, so a press may be missed. If that happens, try a controller.",
     "ui.settings.title": "Settings",
     "ui.settings.tab_gameplay": "Play",

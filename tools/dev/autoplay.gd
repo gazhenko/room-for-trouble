@@ -26,6 +26,7 @@ func _ready() -> void:
 		elif a.begins_with("--speed="): speed = float(a.substr(8))
 		elif a.begins_with("--shots="): shots = int(a.substr(8))
 		elif a == "--perf": perf = true
+		elif a.begins_with("--graphics="): Settings.data["graphics"] = a.substr(11)
 		elif a.begins_with("--size="):
 			var p := a.substr(7).split("x")
 			DisplayServer.window_set_size(Vector2i(int(p[0]), int(p[1])))
@@ -66,6 +67,7 @@ func _process(dt: float) -> void:
 		samples.append({"frame_ms": dt * 1000.0 / maxf(0.01, Engine.time_scale), "hotel_s": int(shift.sim.s["hotel_q"]) / SimC.HOTEL_Q_PER_S,
 			"process_ms": Performance.get_monitor(Performance.TIME_PROCESS) * 1000.0,
 			"draw_calls": Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME),
+			"floor_draw_calls": _floor_draw_calls(),
 			"objects": Performance.get_monitor(Performance.RENDER_TOTAL_OBJECTS_IN_FRAME),
 			"primitives": Performance.get_monitor(Performance.RENDER_TOTAL_PRIMITIVES_IN_FRAME),
 			"mem_mb": Performance.get_monitor(Performance.MEMORY_STATIC) / 1048576.0,
@@ -91,9 +93,61 @@ func _process(dt: float) -> void:
 				_report_perf()
 			get_tree().quit()
 
+## Draw calls of the 3D floor viewport (colour + shadow passes), i.e. the
+## §17.4 "busy floor" budget, separate from UI and offscreen photo viewports.
+func _floor_draw_calls() -> int:
+	var vp := shift.stage.viewport.get_viewport_rid()
+	return RenderingServer.viewport_get_render_info(vp, RenderingServer.VIEWPORT_RENDER_INFO_TYPE_VISIBLE, RenderingServer.VIEWPORT_RENDER_INFO_DRAW_CALLS_IN_FRAME) \
+		+ RenderingServer.viewport_get_render_info(vp, RenderingServer.VIEWPORT_RENDER_INFO_TYPE_SHADOW, RenderingServer.VIEWPORT_RENDER_INFO_DRAW_CALLS_IN_FRAME)
+
+## Visible MeshInstance3D count per top-level group under the stage world,
+## and how many cast shadows (each caster adds a shadow-pass draw).
+func _census() -> void:
+	var groups := {}
+	for top in shift.stage.world.get_children():
+		_census_walk(top, str(top.name), groups, 0)
+	var keys := groups.keys()
+	keys.sort_custom(func(a, b): return groups[a][0] > groups[b][0])
+	var tm := 0
+	var tc := 0
+	for k in keys:
+		tm += groups[k][0]
+		tc += groups[k][1]
+		print("CENSUS %-28s meshes %4d casters %4d" % [k, groups[k][0], groups[k][1]])
+	print("CENSUS TOTAL meshes %d casters %d" % [tm, tc])
+
+func _census_walk(n: Node, label: String, groups: Dictionary, depth: int) -> void:
+	if n is Node3D and not (n as Node3D).visible:
+		return
+	var lab := label
+	if depth == 1:
+		var nm := String(n.name)
+		lab = nm.get_slice("_", 0) if not nm.begins_with("@") else "anon:" + (String(n.get_child(0).name).get_slice("_", 0) if n.get_child_count() > 0 else "?")
+		if n is StationNode:
+			lab = "st:" + (n as StationNode).kind
+	if n is MeshInstance3D:
+		var e: Array = groups.get(lab, [0, 0])
+		e[0] += 1
+		if (n as MeshInstance3D).cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF:
+			e[1] += 1
+		groups[lab] = e
+	for c in n.get_children():
+		_census_walk(c, lab, groups, depth + 1)
+
 func _report_perf() -> void:
+	if "--census" in OS.get_cmdline_user_args():
+		_census()
+		# Split draw calls between the 3D stage viewport and the 2D UI.
+		var vp_rid := shift.stage.viewport.get_viewport_rid()
+		print("CENSUS stage-viewport draw calls %d objects %d" % [RenderingServer.viewport_get_render_info(vp_rid, RenderingServer.VIEWPORT_RENDER_INFO_TYPE_VISIBLE, RenderingServer.VIEWPORT_RENDER_INFO_DRAW_CALLS_IN_FRAME),
+			RenderingServer.viewport_get_render_info(vp_rid, RenderingServer.VIEWPORT_RENDER_INFO_TYPE_VISIBLE, RenderingServer.VIEWPORT_RENDER_INFO_OBJECTS_IN_FRAME)])
+		print("CENSUS stage-viewport shadow draw calls %d" % RenderingServer.viewport_get_render_info(vp_rid, RenderingServer.VIEWPORT_RENDER_INFO_TYPE_SHADOW, RenderingServer.VIEWPORT_RENDER_INFO_DRAW_CALLS_IN_FRAME))
+		var root_rid := get_viewport().get_viewport_rid()
+		print("CENSUS root-viewport canvas (UI) draw calls %d; stage canvas %d" % [
+			RenderingServer.viewport_get_render_info(root_rid, RenderingServer.VIEWPORT_RENDER_INFO_TYPE_CANVAS, RenderingServer.VIEWPORT_RENDER_INFO_DRAW_CALLS_IN_FRAME),
+			RenderingServer.viewport_get_render_info(vp_rid, RenderingServer.VIEWPORT_RENDER_INFO_TYPE_CANVAS, RenderingServer.VIEWPORT_RENDER_INFO_DRAW_CALLS_IN_FRAME)])
 	var fr: Array = []
-	var keys := ["process_ms", "draw_calls", "objects", "primitives", "mem_mb", "vram_mb"]
+	var keys := ["process_ms", "draw_calls", "floor_draw_calls", "objects", "primitives", "mem_mb", "vram_mb"]
 	var mx := {}
 	for smp in samples:
 		fr.append(smp["frame_ms"])

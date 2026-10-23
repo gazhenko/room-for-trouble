@@ -73,7 +73,8 @@ func _build_view() -> void:
 	hud.show_clock = cfg.get("mode", "campaign") in ["campaign", "quick"] or online
 	add_child(hud)
 	stage.set_pixel_lines(Settings.pixel_lines())
-	stage.set_outlines(Settings.g("outlines"))
+	stage.set_outlines(Settings.g("outlines") and Settings.g("graphics") != "low")
+	stage.set_quality(str(Settings.g("graphics")))
 	if sim:
 		_fam_cache = SimInteract.introduced_families(sim)
 		view.capture_tick(sim.s)

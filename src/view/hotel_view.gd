@@ -48,7 +48,68 @@ func build(p_stage: PixelStage, layout: LayoutDef, sys: Dictionary, p_cfg: Dicti
 	add_child(fx_root)
 	_build_stations()
 	_build_room_dressing()
+	_merge_static_bodies()
 	reduced_motion = bool(Settings.g("reduced_motion"))
+
+## Every station's static "body" (one cached mesh per kind, never moved or
+## toggled after build) is baked into a single floor mesh: one draw call and
+## one shadow caster instead of ~60 of each. The original bodies stay in the
+## tree, hidden, so interaction highlights can still outline them.
+const _BODY_TOGGLED := ["goal_pad", "lift_pad"]
+var _merged_bodies: Dictionary = {}   # MeshInstance3D -> true
+
+func _merge_static_bodies() -> void:
+	var verts := PackedVector3Array()
+	var norms := PackedVector3Array()
+	var cols := PackedColorArray()
+	var uvs := PackedVector2Array()
+	var toon := Art.toon()
+	var inv := global_transform.affine_inverse() if is_inside_tree() else Transform3D.IDENTITY
+	for key in stations:
+		var st = stations[key]
+		if not st is StationNode or (st as StationNode).kind in _BODY_TOGGLED:
+			continue
+		var body: MeshInstance3D = st.parts.get("body")
+		if body == null or body.mesh == null or body.material_override != toon or body.mesh.get_surface_count() != 1:
+			continue
+		var xf: Transform3D = (inv * body.global_transform) if body.is_inside_tree() else (st.transform * body.transform)
+		var arr := body.mesh.surface_get_arrays(0)
+		var v: PackedVector3Array = arr[Mesh.ARRAY_VERTEX]
+		var n: PackedVector3Array = arr[Mesh.ARRAY_NORMAL]
+		var c: PackedColorArray = arr[Mesh.ARRAY_COLOR]
+		var u = arr[Mesh.ARRAY_TEX_UV]
+		if arr[Mesh.ARRAY_INDEX] != null or c.size() != v.size() or n.size() != v.size():
+			continue
+		var basis := xf.basis
+		for i in v.size():
+			verts.append(xf * v[i])
+			norms.append((basis * n[i]).normalized())
+		cols.append_array(c)
+		if u is PackedVector2Array and (u as PackedVector2Array).size() == v.size():
+			uvs.append_array(u)
+		else:
+			var pad := PackedVector2Array()
+			pad.resize(v.size())
+			uvs.append_array(pad)
+		body.visible = false
+		_merged_bodies[body] = true
+		# The merged body carries the station's shadow; small moving parts don't need their own.
+		for part in (st as Node).find_children("*", "MeshInstance3D", true, false):
+			if part != body:
+				(part as MeshInstance3D).cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	if verts.is_empty():
+		return
+	var a: Array = []
+	a.resize(Mesh.ARRAY_MAX)
+	a[Mesh.ARRAY_VERTEX] = verts
+	a[Mesh.ARRAY_NORMAL] = norms
+	a[Mesh.ARRAY_COLOR] = cols
+	a[Mesh.ARRAY_TEX_UV] = uvs
+	var m := ArrayMesh.new()
+	m.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, a)
+	var mi := Art.mesh_instance(m, toon)
+	mi.name = "MergedStationBodies"
+	add_child(mi)
 
 func wall_material() -> ShaderMaterial:
 	for c in hotel_root.get_children():
@@ -775,6 +836,8 @@ func set_highlight(seat: int, key: String, ok: bool) -> void:
 	for mi in cur.get("nodes", []):
 		if is_instance_valid(mi):
 			(mi as MeshInstance3D).material_overlay = null
+			if _merged_bodies.has(mi) and not _highlighted_elsewhere(mi, seat):
+				(mi as MeshInstance3D).visible = false
 	var nodes: Array = []
 	var target := node_for_key(key)
 	if target != null:
@@ -783,8 +846,16 @@ func set_highlight(seat: int, key: String, ok: bool) -> void:
 			if mi.name == "SeatRing":
 				continue
 			mi.material_overlay = Art.hull(col, 0.035)
+			if _merged_bodies.has(mi):
+				mi.visible = true   # draw the hidden body only while it is outlined
 			nodes.append(mi)
 	_hl[seat] = {"key": key, "ok": ok, "nodes": nodes}
+
+func _highlighted_elsewhere(mi: MeshInstance3D, except_seat: int) -> bool:
+	for s in _hl:
+		if s != except_seat and mi in _hl[s].get("nodes", []):
+			return true
+	return false
 
 func node_for_key(key: String) -> Node3D:
 	if key == "":

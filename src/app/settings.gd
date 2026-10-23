@@ -8,7 +8,7 @@ signal changed(key: String)
 const DEFAULTS := {
 	"master": 0.9, "music": 0.7, "effects": 0.85, "voices": 0.8, "ui": 0.8,
 	"mono": false, "gentle_sound": false, "mute_chatter": false,
-	"fullscreen": false, "vsync": true, "pixel_size": "classic", "outlines": true,
+	"fullscreen": false, "vsync": true, "pixel_size": "classic", "outlines": true, "graphics": "standard",
 	"ui_scale": 1.0, "high_contrast": false, "palette": "default", "reduced_motion": false,
 	"reduced_transparency": false, "flashes": false, "camera_shake": false, "vibration": 0.6,
 	"large_requests": false, "persistent_silhouettes": true, "readable_font": false,

@@ -150,6 +150,8 @@ func _vision() -> void:
 	add_cycle(content, Loc.t("ui.settings.pixel_size"), ["chunky", "classic", "fine", "off"],
 		[Loc.t("ui.settings.px_chunky"), Loc.t("ui.settings.px_classic"), Loc.t("ui.settings.px_fine"), Loc.t("ui.settings.px_off")], Settings.g("pixel_size"), _setter("pixel_size"))
 	add_toggle(content, Loc.t("ui.settings.outlines"), Settings.g("outlines"), _setter("outlines"))
+	add_cycle(content, Loc.t("ui.settings.graphics"), ["standard", "low"], [Loc.t("ui.settings.gfx_standard"), Loc.t("ui.settings.gfx_low")],
+		Settings.g("graphics"), _setter("graphics"))
 	add_toggle(content, Loc.t("ui.settings.high_contrast"), Settings.g("high_contrast"), _setter("high_contrast"))
 	add_cycle(content, Loc.t("ui.settings.palette"), ["default", "deuteranopia", "protanopia", "tritanopia"],
 		[Loc.t("ui.settings.pal_default"), Loc.t("ui.settings.pal_deut"), Loc.t("ui.settings.pal_prot"), Loc.t("ui.settings.pal_trit")], Settings.g("palette"), _setter("palette"))

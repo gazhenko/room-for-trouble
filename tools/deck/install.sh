@@ -6,6 +6,10 @@
 # "Room for Trouble". Saves and logs stay in
 # ~/.local/share/godot/app_userdata/Room for Trouble and survive updates.
 set -euo pipefail
+if [ "$(uname -s)" != "Linux" ]; then
+  echo "This installs the Linux build: run it on the Steam Deck (Desktop Mode → Konsole)." >&2
+  exit 1
+fi
 SRC="${RFT_SRC:-@SRC@}"
 DEST="$HOME/Games/RoomForTrouble"
 NAME="Room for Trouble"

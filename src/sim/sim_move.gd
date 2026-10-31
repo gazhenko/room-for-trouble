@@ -168,7 +168,9 @@ static func point_free(sim: HotelSim, x: int, z: int, r: int) -> bool:
 			return false
 	return true
 
-## Nudges a blocked avatar around door corners so 1 m doorways feel generous.
+## Nudges a blocked avatar around door corners and station corners so 1 m
+## doorways feel generous and brushing a 0.75 m fixture slides you past it
+## (probes reach 0.72 m: a fixture half-width plus the capsule radius).
 static func _corner_assist(sim: HotelSim, st: Dictionary, inp: Vector2i, blocked: Vector2i) -> void:
 	var primary_x := absi(inp.x) > absi(inp.y)
 	if primary_x and blocked.x == 0:
@@ -177,13 +179,13 @@ static func _corner_assist(sim: HotelSim, st: Dictionary, inp: Vector2i, blocked
 		return
 	var probe := 140_000
 	var dir_main := SimC.sign_(inp.x if primary_x else inp.y)
-	for off in [120_000, -120_000, 240_000, -240_000, 360_000, -360_000]:
+	for off in [120_000, -120_000, 240_000, -240_000, 360_000, -360_000, 480_000, -480_000, 600_000, -600_000, 720_000, -720_000]:
 		var px: int = st["x"] + (0 if primary_x else off)
 		var pz: int = st["z"] + (off if primary_x else 0)
 		var qx: int = px + (dir_main * probe if primary_x else 0)
 		var qz: int = pz + (0 if primary_x else dir_main * probe)
 		if point_free(sim, px, pz, SimC.RADIUS) and point_free(sim, qx, qz, SimC.RADIUS):
-			var stepv := 45_000 * SimC.sign_(off)
+			var stepv := 60_000 * SimC.sign_(off)
 			if primary_x:
 				st["z"] = sweep_axis(sim, st["x"], st["z"], stepv, false, SimC.RADIUS)
 			else:

@@ -31,6 +31,13 @@ func _initialize() -> void:
 func _st() -> Dictionary:
 	return sim.s["staff"][seat]
 
+## Middle row of the hall (the free walking lane) and a clear spot on it.
+func _lane_z() -> float:
+	return float(sim.L.hall.position.y) + (sim.L.hall.size.y - 1) * 0.5
+
+func _lane_x() -> float:
+	return float(sim.L.hall.position.x) + (sim.L.hall.size.x - 1) * 0.5
+
 func _step(ax: int, az: int, pressed: int, held := 0) -> void:
 	sim.step([{"seat": seat, "ax": ax, "az": az, "held": held, "pressed": pressed, "pick": -1}])
 
@@ -42,7 +49,7 @@ func _teleport(x_m: float, z_m: float) -> void:
 
 func _accel_stop() -> void:
 	print("\n== accelerate from rest (full stick +x) ==")
-	_teleport(13.0, 9.5)
+	_teleport(_lane_x() - 2.0, _lane_z())
 	var x0: int = _st()["x"]
 	var full := -1
 	var first := -1
@@ -68,7 +75,7 @@ func _accel_stop() -> void:
 
 func _turn() -> void:
 	print("\n== turn-around (+x full speed, then -x) ==")
-	_teleport(13.0, 9.5)
+	_teleport(_lane_x() - 2.0, _lane_z())
 	for t in 8:
 		_step(127, 0, 0)
 	var xs: int = _st()["x"]
@@ -84,7 +91,7 @@ func _turn() -> void:
 
 func _quick_step() -> void:
 	print("\n== Quick Step while running +x ==")
-	_teleport(13.0, 9.5)
+	_teleport(_lane_x() - 2.0, _lane_z())
 	for t in 8:
 		_step(127, 0, 0)
 	var xs: int = _st()["x"]
@@ -160,19 +167,24 @@ func _pickup_lock() -> void:
 		SimC.T_ASSIGN, SimC.T_ASSIGN / 30.0, SimC.T_FULFILL, SimC.T_FULFILL / 30.0, SimC.T_HAMPER, SimC.T_HAMPER / 30.0, SimC.T_DISPENSE_GIFT, SimC.T_DISPENSE_GIFT / 30.0])
 	_snags()
 
-## Runs the length of the hall along the service-station row and through a
-## room door at a small offset, counting ticks where the avatar is stopped
-## by collision while the stick is held.
+## Runs the length of the hall lane (and a few offsets toward the station rows)
+## and through a room door at a small offset, counting ticks where the avatar is
+## stopped by collision while the stick is held. All positions come from the layout.
 func _snags() -> void:
 	print("\n== collision snags ==")
-	for z in [9.2, 9.4, 9.6]:
-		_teleport(3.0, z)
+	var hz := _lane_z()
+	var x0 := float(sim.L.hall.position.x) + 1.5
+	var x1 := float(sim.L.hall.end.x - 1) - 1.5
+	var run_m := x1 - x0
+	for z in [hz - 0.8, hz - 0.6, hz - 0.4, hz, hz + 0.4, hz + 0.6]:
+		_teleport(x0, z)
 		var stalls := 0
 		var stall_runs := 0
 		var was_stalled := false
 		var where: Array = []
 		var ticks := 0
-		for t in 400:
+		var budget := int(run_m / 3.6 * 30) * 2 + 30
+		for t in budget:
 			var before: int = _st()["x"]
 			_step(127, 0, 0)
 			ticks += 1
@@ -183,24 +195,25 @@ func _snags() -> void:
 					stall_runs += 1
 					where.append("x=%.2f" % (_st()["x"] / 1e6))
 			was_stalled = stalled
-			if _st()["x"] > 25_500_000:
+			if _st()["x"] > int(x1 * 1e6):
 				break
-		print("  hall run at z=%.1f: %d snags at %s, %d stalled ticks (%.0f ms); %d ticks for 22.5 m (free run would be %d)" % [z, stall_runs, where, stalls, stalls * 1000.0 / 30, ticks, int(22.5 / 3.6 * 30)])
-	# Door entry: room B door at (13,7); approach from the hall with x offsets.
+		print("  hall run at z=%.1f (lane %+.1f m): %d snags at %s, %d stalled ticks (%.0f ms); %d ticks for %.1f m (free run would be %d)" % [z, z - hz, stall_runs, where, stalls, stalls * 1000.0 / 30, ticks, run_m, int(run_m / 3.6 * 30)])
+	# Door entry: room B's door, approached straight from the hall lane with x offsets.
 	var d: Vector2i = sim.L.rooms["B"]["door"]
+	var dirz := -1 if d.y < sim.L.hall.position.y else 1
 	for off in [0.0, 0.15, 0.3, 0.45]:
-		_teleport(d.x + off, 9.0)
+		_teleport(d.x + off, hz)
 		var stalls := 0
 		var ticks := 0
-		for t in 60:
+		for t in 90:
 			var before: int = _st()["z"]
-			_step(0, -127, 0)
+			_step(0, 127 * dirz, 0)
 			ticks += 1
 			if _st()["z"] == before:
 				stalls += 1
-			if _st()["z"] < (d.y - 1) * SimC.UM:
+			if (dirz < 0 and _st()["z"] < (d.y - 1) * SimC.UM) or (dirz > 0 and _st()["z"] > (d.y + 1) * SimC.UM):
 				break
-		print("  door entry, stick straight up, %.0f cm off the door centre: %d stalled ticks, %d ticks to get through (%.0f ms), ended at x=%.2f" % [off * 100, stalls, ticks, ticks * 1000.0 / 30, _st()["x"] / 1e6])
+		print("  door entry, stick straight at the door, %.0f cm off centre: %d stalled ticks, %d ticks to get through (%.0f ms), ended at x=%.2f" % [off * 100, stalls, ticks, ticks * 1000.0 / 30, _st()["x"] / 1e6])
 
 func _path_m(bot: ReferenceBot, a: Vector2i, b: Vector2i) -> float:
 	var pts := bot.path(a, b)

@@ -27,7 +27,7 @@
     "breezer_dock": [24, 10],
     "can_docks": [[25, 10], [26, 10]],
     "group_bell": [13, 9],
-    "festival_stand": [25, 9],
+    "festival_stand": [26, 11],
     "goal_pad": [24, 11],
     "staff_starts": [[10, 9], [12, 9], [15, 9], [17, 9]]
   },

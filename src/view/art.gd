@@ -126,7 +126,8 @@ static func planks(seed_v := 1) -> ImageTexture:
 	_cache[k] = t
 	return t
 
-## Patterned rug: diamonds; multiply texture tinted by material.
+## Patterned rug: a quiet 1 m diamond lattice (a busy 0.5 m pattern at full
+## contrast read as noise around 7-pixel-tall characters); multiply texture.
 static func rug(seed_v := 1) -> ImageTexture:
 	var k := "rug_%d" % seed_v
 	if _cache.has(k):
@@ -134,16 +135,16 @@ static func rug(seed_v := 1) -> ImageTexture:
 	var im := _img(32, 32, Color(1, 1, 1))
 	for y in 32:
 		for x in 32:
-			var cx := (x % 8) - 3.5
-			var cy := (y % 8) - 3.5
+			var cx := (x % 16) - 7.5
+			var cy := (y % 16) - 7.5
 			var d := absf(cx) + absf(cy)
 			var v := 1.0
 			if d < 1.6:
-				v = 0.8
-			elif d > 3.2 and d < 4.2:
 				v = 0.9
+			elif d > 6.8 and d < 8.2:
+				v = 0.94
 			if x == 0 or y == 0:
-				v = 0.86
+				v = 0.9
 			im.set_pixel(x, y, Color(v, v, v))
 	var t := _tex(im)
 	_cache[k] = t

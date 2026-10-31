@@ -7,8 +7,14 @@ extends SubViewportContainer
 
 signal fitted
 
-const PITCH_DEG := 53.0
-const FOV_DEG := 30.0
+const PITCH_DEG := 50.0
+const FOV_DEG := 36.0
+## Key light direction (the way the light travels). Chosen so tops (N·L 0.65)
+## and the west faces (0.68) sit safely inside the full band, camera-facing
+## fronts (0.34) sit inside the mid band, and east faces fall dark: every face
+## of a box reads as a different tone and no face sits on a dither threshold.
+## Shadows fall sideways (east, slightly north) where the camera can see them.
+const SUN_DIR := Vector3(0.68, -0.65, -0.34)
 const SAFE_X := 0.965
 const SAFE_TOP := 0.86
 const SAFE_BOTTOM := -0.92
@@ -20,8 +26,8 @@ var sun: DirectionalLight3D
 var env: WorldEnvironment
 var post: MeshInstance3D
 var target_lines := 360
-var bounds_min := Vector3(-1.6, 0.0, -1.4)
-var bounds_max := Vector3(28.6, 0.6, 20.6)
+var bounds_min := Vector3(-0.8, 0.0, -0.8)
+var bounds_max := Vector3(27.8, 0.6, 19.9)
 var dynamic_offset := Vector3.ZERO
 var pitch_deg := PITCH_DEG
 var fov_deg := FOV_DEG

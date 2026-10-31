@@ -59,7 +59,7 @@ static func wall_height(x: int, z: int) -> float:
 func _ground() -> void:
 	var mk := MeshKit.new()
 	mk.jitter = 0.0
-	var grass := Color("#9DBF8A")
+	var grass := Color("#8CB27A")
 	mk.flat(Vector3(13.5, -0.06, 9.5), Vector2(52, 40), grass)
 	_add(mk, Art.toon_tex("grass", Art.grass(4), 1.0, 0.25, Color(1, 1, 1)), "Ground", false)
 	# Garden path to the front door.

@@ -41,18 +41,38 @@ func _add(mk: MeshKit, mat: Material, name: String, shadows := true) -> MeshInst
 	root.add_child(mi)
 	return mi
 
-static func wall_height(x: int, z: int) -> float:
+## Cut-away wall heights: tall at the back, low toward the camera, derived from
+## the layout's hall rows so the compact envelope reads the same way.
+static func wall_height_for(L: LayoutDef, x: int, z: int) -> float:
+	var hz0 := L.hall.position.y
+	var hz1 := L.hall.end.y - 1
 	if z == 0:
 		return 2.3
-	if z == LayoutDef.H - 1:
+	if z == L.south_wall_z():
 		return 0.28
-	if z <= 6:
+	if z < hz0 - 1:
 		return 1.45
-	if z == 7:
+	if z == hz0 - 1:
 		return 0.95
-	if z <= 11:
-		return 1.15 if (x == 0 or x == LayoutDef.W - 1) else 0.9
+	if z <= hz1:
+		return 1.15 if (x == 0 or x == L.east_wall_x()) else 0.9
 	return 0.62
+
+func _wh(x: int, z: int) -> float:
+	return wall_height_for(L, x, z)
+
+## Midpoints of the wall columns between neighbouring north rooms.
+func _north_gaps() -> Array:
+	var rects: Array = []
+	for letter in L.rooms:
+		var g: Dictionary = L.rooms[letter]
+		if g["side"] == "north":
+			rects.append(g["rect"])
+	rects.sort_custom(func(a, b): return (a as Rect2i).position.x < (b as Rect2i).position.x)
+	var out: Array = []
+	for i in range(1, rects.size()):
+		out.append(((rects[i - 1] as Rect2i).end.x - 1 + (rects[i] as Rect2i).position.x) * 0.5)
+	return out
 
 # ------------------------------------------------------------------ ground
 
@@ -65,8 +85,9 @@ func _ground() -> void:
 	# Garden path to the front door.
 	var mk2 := MeshKit.new()
 	mk2.jitter = 0.02
+	var ez := L.entrance_z()
 	for i in 9:
-		mk2.flat(Vector3(-1.2 - i * 0.9, -0.04, 9.5 + sin(i * 0.9) * 0.3), Vector2(0.8, 1.6), Color("#D8C3A0"))
+		mk2.flat(Vector3(-1.2 - i * 0.9, -0.04, ez + sin(i * 0.9) * 0.3), Vector2(0.8, 1.6), Color("#D8C3A0"))
 	_add(mk2, Art.toon(), "Path", false)
 
 # ------------------------------------------------------------------ floors
@@ -103,9 +124,10 @@ func _floors() -> void:
 	# Welcome rug in the lobby by the entrance.
 	var mat := MeshKit.new()
 	mat.jitter = 0.0
-	mat.flat(Vector3(1.6, 0.012, 9.5), Vector2(1.6, 2.2), _c("rug", Art.CORAL))
-	mat.flat(Vector3(1.6, 0.016, 9.5), Vector2(1.2, 1.8), Art.CREAM)
-	mat.flat(Vector3(1.6, 0.02, 9.5), Vector2(1.0, 1.6), _c("rug", Art.CORAL).lightened(0.2))
+	var ez := L.entrance_z()
+	mat.flat(Vector3(1.6, 0.012, ez), Vector2(1.6, 2.2), _c("rug", Art.CORAL))
+	mat.flat(Vector3(1.6, 0.016, ez), Vector2(1.2, 1.8), Art.CREAM)
+	mat.flat(Vector3(1.6, 0.02, ez), Vector2(1.0, 1.6), _c("rug", Art.CORAL).lightened(0.2))
 	_add(mat, Art.toon(), "LobbyRug", false)
 
 # ------------------------------------------------------------------ walls
@@ -126,13 +148,13 @@ func _walls() -> void:
 			for e in L.entrance:
 				if e == Vector2i(x, z):
 					is_entrance = true
-			if is_entrance:
+			if is_entrance or not L.wall_tile_exposed(x, z):
 				continue
-			var h := wall_height(x, z)
+			var h := _wh(x, z)
 			var col := wall_col
 			if z == 0:
 				col = wall_col
-			elif z >= 12:
+			elif z >= L.hall_south_wall_z():
 				col = wall_col.darkened(0.04)
 			mk.box(Vector3(x, h * 0.5, z), Vector3(1.0, h, 1.0), col)
 			caps.box(Vector3(x, h + 0.04, z), Vector3(1.04, 0.08, 1.04), trim, trim.lightened(0.12))
@@ -160,7 +182,7 @@ func _doors() -> void:
 	for letter in L.rooms:
 		var g: Dictionary = L.rooms[letter]
 		var d: Vector2i = g["door"]
-		var h := wall_height(d.x, d.y)
+		var h := _wh(d.x, d.y)
 		var top := h + 0.35
 		if not g["active"]:
 			continue
@@ -203,7 +225,7 @@ func _back_wall_dressing() -> void:
 		mk.box(Vector3(pxm, 1.5, 0.54), Vector3(0.62, 0.48, 0.05), Art.GOLD)
 		mk.box(Vector3(pxm, 1.5, 0.565), Vector3(0.5, 0.36, 0.03), Art.ROOM_COLORS[letter].lerp(Art.SKY, 0.4))
 	# Hotel sign over the hall on the back wall area between rooms.
-	for x in [8.5, 17.5]:
+	for x in _north_gaps():
 		mk.box(Vector3(x, 1.8, 0.56), Vector3(0.5, 0.5, 0.05), Art.BRASS)
 		mk.sphere(Vector3(x, 1.8, 0.62), 0.14, Art.GOLD.lightened(0.3), 3, 6)
 	_add(mk, Art.toon(), "BackWall")
@@ -217,8 +239,8 @@ func _pipes() -> void:
 		var ga: Dictionary = L.rooms[ab[0]]
 		var gb: Dictionary = L.rooms[ab[1]]
 		var north: bool = ga["side"] == "north"
-		var z := 7.0 if north else 12.0
-		var y := wall_height(0, int(z)) + 0.12
+		var z := float(L.hall_north_wall_z() if north else L.hall_south_wall_z())
+		var y := _wh(0, int(z)) + 0.12
 		var xa: float = float(ga["rect"].position.x + ga["rect"].size.x - 1)
 		var xb: float = float(gb["rect"].position.x)
 		if xa > xb:
@@ -243,7 +265,7 @@ func _sound_trims() -> void:
 		var b: Dictionary = L.rooms[e.substr(1, 1)]
 		var xb: int = b["door"].x
 		var xm := (x + xb) * 0.5
-		for z in range(8, 12):
+		for z in range(L.hall.position.y, L.hall.end.y):
 			mk.flat(Vector3(xm + 0.55, 0.01, z), Vector2(0.12, 0.9), Art.SOUND)
 			# Little note shapes along the trim.
 			mk.disc(Vector3(xm + 0.55, 0.012, z + 0.2), 0.11, Art.SOUND.darkened(0.15), 6)
@@ -254,15 +276,18 @@ func _exterior() -> void:
 	# Porch and front door (west entrance).
 	var ent: Vector2i = L.entrance[0]
 	var ex := float(ent.x)
-	mk.box(Vector3(ex - 0.9, 0.05, 9.5), Vector3(1.6, 0.1, 2.6), Art.WALNUT.lightened(0.15))
+	var ez := L.entrance_z()
+	var xe := float(L.east_wall_x())
+	var ze := float(L.south_wall_z())
+	mk.box(Vector3(ex - 0.9, 0.05, ez), Vector3(1.6, 0.1, 2.6), Art.WALNUT.lightened(0.15))
 	for sz in [-1.25, 1.25]:
-		mk.box(Vector3(ex, 0.8, 9.5 + sz), Vector3(0.3, 1.6, 0.3), Art.WALNUT)
-	mk.box(Vector3(ex, 1.7, 9.5), Vector3(0.4, 0.2, 2.9), Art.CORAL, Art.CORAL.lightened(0.15))
+		mk.box(Vector3(ex, 0.8, ez + sz), Vector3(0.3, 1.6, 0.3), Art.WALNUT)
+	mk.box(Vector3(ex, 1.7, ez), Vector3(0.4, 0.2, 2.9), Art.CORAL, Art.CORAL.lightened(0.15))
 	# Hanging sign "Hearth & Hiccup" (crooked final letter in the story).
-	mk.box(Vector3(ex - 0.55, 2.05, 9.5), Vector3(0.06, 0.5, 1.8), Art.GOLD)
-	mk.box(Vector3(ex - 0.58, 2.05, 9.5), Vector3(0.04, 0.38, 1.6), Art.INK)
+	mk.box(Vector3(ex - 0.55, 2.05, ez), Vector3(0.06, 0.5, 1.8), Art.GOLD)
+	mk.box(Vector3(ex - 0.58, 2.05, ez), Vector3(0.04, 0.38, 1.6), Art.INK)
 	# Lamp posts.
-	for lz in [7.6, 11.4]:
+	for lz in [ez - 1.9, ez + 1.9]:
 		mk.cyl(Vector3(ex - 1.6, 0, lz), 0.05, 1.4, Art.INK, 6)
 		mk.sphere(Vector3(ex - 1.6, 1.5, lz), 0.14, Art.GOLD.lightened(0.35), 3, 6)
 	# Outside bench and cozy corner bench.
@@ -277,31 +302,35 @@ func _exterior() -> void:
 	mk.cyl(Vector3(cc.x - 0.7, 0.4, cc.y + 0.9), 0.06, 0.08, Art.WHITE, 6)
 	# Hedges and trees around the hotel.
 	var hedge := Color("#6E9E64")
-	for i in 14:
+	for i in int(xe / 2.0):
 		var tx := 1.0 + i * 2.0
 		mk.sphere(Vector3(tx, 0.35, -1.1), 0.55, hedge.lightened(0.05 * (i % 3)), 3, 7, Vector3(1.2, 0.8, 1))
-		mk.sphere(Vector3(tx + 0.5, 0.3, 20.3), 0.5, hedge.darkened(0.05 * (i % 2)), 3, 7, Vector3(1.2, 0.7, 1))
-	for tz in [1.5, 4.5, 15.0, 18.0]:
+		mk.sphere(Vector3(tx + 0.5, 0.3, ze + 1.3), 0.5, hedge.darkened(0.05 * (i % 2)), 3, 7, Vector3(1.2, 0.7, 1))
+	for tz in [1.5, 4.5, ze - 4.0, ze - 1.0]:
 		mk.cyl(Vector3(-1.4, 0, tz), 0.12, 0.8, Art.WALNUT, 6)
 		mk.sphere(Vector3(-1.4, 1.25, tz), 0.65, Color("#7BAA6B"), 3, 7)
-		mk.cyl(Vector3(28.4, 0, tz), 0.12, 0.8, Art.WALNUT, 6)
-		mk.sphere(Vector3(28.4, 1.25, tz), 0.65, Color("#7BAA6B").darkened(0.06), 3, 7)
+		mk.cyl(Vector3(xe + 1.4, 0, tz), 0.12, 0.8, Art.WALNUT, 6)
+		mk.sphere(Vector3(xe + 1.4, 1.25, tz), 0.65, Color("#7BAA6B").darkened(0.06), 3, 7)
 	# Flowers along the front.
-	for i in 18:
+	for i in int(xe / 1.5):
 		var fx := 0.5 + i * 1.5
 		var fc: Color = [Art.CORAL, Art.GOLD, Art.ROSE, Art.SKY][i % 4]
-		mk.cyl(Vector3(fx, 0, 19.85), 0.02, 0.22, Art.LEAF, 4)
-		mk.sphere(Vector3(fx, 0.26, 19.85), 0.07, fc, 2, 5)
+		mk.cyl(Vector3(fx, 0, ze + 0.85), 0.02, 0.22, Art.LEAF, 4)
+		mk.sphere(Vector3(fx, 0.26, ze + 0.85), 0.07, fc, 2, 5)
 	_add(mk, Art.toon(), "Exterior")
 
 func _template_decor() -> void:
 	var mk := MeshKit.new()
 	var deco: Array = L.decor
+	var xe := float(L.east_wall_x())
+	var ze := float(L.south_wall_z())
+	var hz0 := float(L.hall.position.y)
+	var hz1 := float(L.hall.end.y - 1)
 	if "boxes" in deco:
-		for p in [Vector3(25.6, 0, 8.2), Vector3(26.0, 0, 8.5), Vector3(1.2, 0, 11.6)]:
+		for p in [Vector3(xe - 1.4, 0, hz0 + 0.2), Vector3(xe - 1.0, 0, hz0 + 0.5), Vector3(1.2, 0, hz1 + 0.6)]:
 			mk.box(p + Vector3(0, 0.18, 0), Vector3(0.38, 0.36, 0.38), Color("#C9A27E"), Color("#D8B48E"))
 	if "potted_fern" in deco or "planters" in deco:
-		for p in [Vector3(1.1, 0, 8.2), Vector3(26.0, 0, 11.6), Vector3(12.0, 0, 11.65)]:
+		for p in [Vector3(1.1, 0, hz0 + 0.2), Vector3(xe - 1.0, 0, hz1 + 0.6), Vector3(xe * 0.44, 0, hz1 + 0.65)]:
 			mk.cyl(p, 0.2, 0.32, Art.CORAL.darkened(0.15), 7, Art.WALNUT)
 			for k in 5:
 				var a := TAU * k / 5.0
@@ -310,16 +339,16 @@ func _template_decor() -> void:
 				mk.pop()
 	if "lanterns" in deco or "garlands" in deco:
 		var cols := [Art.CORAL, Art.GOLD, Art.SKY, Art.PLUM, Art.SAGE]
-		for i in 12:
+		for i in int((xe - 1.0) / 2.15):
 			var x := 1.6 + i * 2.15
-			mk.sphere(Vector3(x, 1.55, 7.55), 0.14, cols[i % 5], 3, 6, Vector3(1, 1.25, 1))
-			mk.cyl(Vector3(x, 1.68, 7.55), 0.04, 0.12, Art.INK, 4)
-		for i in 26:
-			mk.cone(Vector3(1.0 + i * 1.0, 1.38, 7.5), 0.09, -0.18, cols[i % 5], 3)
+			mk.sphere(Vector3(x, 1.55, hz0 - 0.45), 0.14, cols[i % 5], 3, 6, Vector3(1, 1.25, 1))
+			mk.cyl(Vector3(x, 1.68, hz0 - 0.45), 0.04, 0.12, Art.INK, 4)
+		for i in int(xe) - 1:
+			mk.cone(Vector3(1.0 + i * 1.0, 1.38, hz0 - 0.5), 0.09, -0.18, cols[i % 5], 3)
 	if "paper_moon" in deco:
-		mk.sphere(Vector3(25.0, 2.2, 0.8), 0.6, Color("#FFF3C8"), 4, 10, Vector3(1, 1, 0.3))
+		mk.sphere(Vector3(xe - 2.0, 2.2, 0.8), 0.6, Color("#FFF3C8"), 4, 10, Vector3(1, 1, 0.3))
 	if "glass_roof" in deco:
-		for i in 6:
+		for i in int(xe / 4.6) + 1:
 			mk.box(Vector3(2 + i * 4.6, 2.32, 0.5), Vector3(0.08, 0.06, 1.0), Art.BRASS)
 	if "travel_stickers" in deco and L.divider.x >= 0:
 		var d := L.divider
@@ -332,12 +361,12 @@ func _template_decor() -> void:
 			if not g["active"]:
 				continue
 			var r: Rect2i = g["rect"]
-			var side_z := 0.62 if g["side"] == "north" else 18.38
+			var side_z := 0.62 if g["side"] == "north" else ze - 0.62
 			var rx := r.position.x + r.size.x - 1.6
 			for k in 5:
 				mk.box(Vector3(rx + k * 0.12, 0.35, side_z), Vector3(0.08, 0.5, 0.12), Art.CREAM.darkened(0.12))
 	if "moon_lamps" in deco:
-		for x in [3.0, 12.0, 21.0]:
+		for x in [xe * 0.11, xe * 0.44, xe * 0.78]:
 			mk.sphere(Vector3(x + 2.0, 1.95, 0.6), 0.16, Color("#FFF3C8"), 3, 6)
 	if not mk.is_empty():
 		_add(mk, Art.toon(), "Decor")
@@ -360,12 +389,14 @@ func _inactive_rooms() -> void:
 		# Boxes, a ladder and dust sheets inside.
 		var cx := r.position.x + 2.0
 		var cz := r.position.y + 2.0
+		var sx := minf(cx + 2.5, r.end.x - 1.9)   # dust sheet stays inside a 5-tile room
+		var lx := minf(cx + 4.0, r.end.x - 1.3)   # ladder too
 		mk.box(Vector3(cx, 0.25, cz), Vector3(0.6, 0.5, 0.6), Color("#C9A27E"), Color("#D8B48E"))
 		mk.box(Vector3(cx + 0.7, 0.18, cz + 0.3), Vector3(0.45, 0.36, 0.45), Color("#C9A27E"))
-		mk.box(Vector3(cx + 2.5, 0.4, cz + 0.8), Vector3(1.6, 0.8, 0.8), Art.WHITE.darkened(0.08))
+		mk.box(Vector3(sx, 0.4, cz + 0.8), Vector3(1.6, 0.8, 0.8), Art.WHITE.darkened(0.08))
 		for k in 4:
-			mk.box(Vector3(cx + 4.0, 0.2 + k * 0.32, cz + 0.6), Vector3(0.5, 0.05, 0.08), Art.WALNUT)
-		mk.box(Vector3(cx + 3.78, 0.6, cz + 0.6), Vector3(0.05, 1.2, 0.05), Art.WALNUT)
-		mk.box(Vector3(cx + 4.22, 0.6, cz + 0.6), Vector3(0.05, 1.2, 0.05), Art.WALNUT)
+			mk.box(Vector3(lx, 0.2 + k * 0.32, cz + 0.6), Vector3(0.5, 0.05, 0.08), Art.WALNUT)
+		mk.box(Vector3(lx - 0.22, 0.6, cz + 0.6), Vector3(0.05, 1.2, 0.05), Art.WALNUT)
+		mk.box(Vector3(lx + 0.22, 0.6, cz + 0.6), Vector3(0.05, 1.2, 0.05), Art.WALNUT)
 	if not mk.is_empty():
 		_add(mk, Art.toon(), "Renovation")

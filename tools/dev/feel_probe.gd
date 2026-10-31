@@ -225,7 +225,7 @@ func _travel_matrix() -> void:
 		["gift: kiosk -> plinth", F["welcome_kiosk"], "plinth", SimC.T_DISPENSE_GIFT + SimC.T_FULFILL],
 		["linen: shelf -> bed (make)", F["linen_shelf"], "bed", SimC.T_TAKE + SimC.T_MAKE],
 		["dirty linen: bed -> hamper", F["hamper"], "bed", SimC.T_STRIP + SimC.T_HAMPER],
-		["thermostat: hall centre -> room thermostat", Vector2i(13, 9), "thermostat", SimC.T_THERMO],
+		["thermostat: hall centre -> room thermostat", Vector2i(sim.L.hall.position.x + sim.L.hall.size.x / 2, sim.L.hall.position.y + sim.L.hall.size.y / 2), "thermostat", SimC.T_THERMO],
 	]
 	var tot_travel := 0.0
 	var tot_work := 0.0
@@ -249,4 +249,4 @@ func _travel_matrix() -> void:
 		print(line)
 	print("  across these jobs: mean one-way walk %.1f s vs %.1f s of hands-on action (%.0f%% walking, one way only)" % [tot_travel / jobs.size(), tot_work / jobs.size(), 100.0 * tot_travel / (tot_travel + tot_work)])
 	var hall_w := float(sim.L.hall.size.x)
-	print("  hall is %.0f m wide: crossing it takes %.1f s at %.1f m/s; the floor is %d x %d m" % [hall_w, hall_w / speed, speed, LayoutDef.W, LayoutDef.H])
+	print("  hall is %.0f m wide: crossing it takes %.1f s at %.1f m/s; the built floor is %d x %d tiles" % [hall_w, hall_w / speed, speed, sim.L.used.size.x, sim.L.used.size.y])

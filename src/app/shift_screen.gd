@@ -66,6 +66,9 @@ func _build_view() -> void:
 		systems = sim.systems
 	view = HotelView.new()
 	view.build(stage, L, systems, cfg)
+	# Frame the floor that was actually built (the compact prototype is 19x15).
+	var u := L.used
+	stage.set_bounds(Vector3(u.position.x - 0.8, 0.0, u.position.y - 0.8), Vector3(u.end.x - 1 + 0.8, 0.6, u.end.y - 1 + 0.9))
 	view.local_seats = router_to_sim.values()
 	hud = Hud.new()
 	hud.view = view

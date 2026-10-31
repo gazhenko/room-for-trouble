@@ -38,6 +38,7 @@ var queue_offset_z := -0.32
 var hall: Rect2i
 
 var tiles := PackedByteArray()      # 1 = wall
+var used: Rect2i                    # walkable tiles plus their one-tile wall ring
 var boxes: Array = []               # [x0,z0,x1,z1,tag] µm solid fixture footprints
 var nav_block := PackedByteArray()  # guest nav (static)
 var astar_cache: Dictionary = {}     # start*cells+goal -> cell path (pure function of nav_block)
@@ -157,6 +158,50 @@ func _build_tiles() -> void:
 			tiles[z * W + x] = 1 if wall else 0
 	if divider.x >= 0:
 		tiles[divider.y * W + divider.x] = 1
+	var lo := Vector2i(W, H)
+	var hi := Vector2i(-1, -1)
+	for z in H:
+		for x in W:
+			if tiles[z * W + x] == 0:
+				lo = Vector2i(mini(lo.x, x), mini(lo.y, z))
+				hi = Vector2i(maxi(hi.x, x), maxi(hi.y, z))
+	used = Rect2i(lo - Vector2i.ONE, hi - lo + Vector2i(3, 3))
+
+## Rows of the hall's north and south walls (the door rows).
+func hall_north_wall_z() -> int:
+	return hall.position.y - 1
+
+func hall_south_wall_z() -> int:
+	return hall.end.y
+
+## Column of the east outer wall and row of the south outer wall.
+func east_wall_x() -> int:
+	return used.end.x - 1
+
+func south_wall_z() -> int:
+	return used.end.y - 1
+
+## Centre z of the entrance opening (the porch, path and lobby rug line up on it).
+func entrance_z() -> float:
+	if entrance.is_empty():
+		return float(hall.position.y) + (hall.size.y - 1) * 0.5
+	var s := 0.0
+	for e in entrance:
+		s += float((e as Vector2i).y)
+	return s / entrance.size()
+
+## True when a wall tile touches a walkable tile (filler inside a thick wall mass
+## never needs geometry).
+func wall_tile_exposed(x: int, z: int) -> bool:
+	for dz in range(-1, 2):
+		for dx in range(-1, 2):
+			var nx := x + dx
+			var nz := z + dz
+			if nx < 0 or nz < 0 or nx >= W or nz >= H:
+				continue
+			if tiles[nz * W + nx] == 0:
+				return true
+	return false
 
 func is_wall_tile(x: int, z: int) -> bool:
 	if x < 0 or z < 0 or x >= W or z >= H:

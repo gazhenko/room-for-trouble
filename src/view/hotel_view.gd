@@ -158,7 +158,7 @@ func _build_stations() -> void:
 		_place("shutter", ModelStations.build("shutter", {}), _v(L.shutter))
 	for e in L.thermal_edges:
 		var gp: Vector2i = L.gates[e]
-		var north := gp.y <= 9
+		var north := gp.y <= L.hall.position.y
 		var pos := Vector3(gp.x, 0.0, gp.y + (-0.46 if north else 0.46))
 		_place("gate:" + e, ModelStations.build("vent_gate", {"facing": 1 if north else -1}), pos)
 
@@ -817,8 +817,8 @@ func _sync_flow(dt: float) -> void:
 		var ga: Dictionary = L.rooms[ab[0]]
 		var gb: Dictionary = L.rooms[ab[1]]
 		var north: bool = ga["side"] == "north"
-		var z := 7.0 if north else 12.0
-		var y := HotelBuilder.wall_height(0, int(z)) + 0.3
+		var z := float(L.hall_north_wall_z() if north else L.hall_south_wall_z())
+		var y := HotelBuilder.wall_height_for(L, 0, int(z)) + 0.3
 		var xa := float(ga["rect"].position.x + ga["rect"].size.x - 1)
 		var xb := float(gb["rect"].position.x)
 		var from := xb if diff > 0 else xa

@@ -114,7 +114,7 @@ static func thermo_pos(sim: HotelSim, letter: String) -> Vector2i:
 
 static func gate_pos(sim: HotelSim, edge: String) -> Vector2i:
 	var p := um(sim.L.gates[edge])
-	var north := p.y <= 9 * SimC.UM
+	var north := p.y <= sim.L.hall.position.y * SimC.UM
 	return Vector2i(p.x, p.y + (-250_000 if north else 250_000))
 
 static func dock_pos(sim: HotelSim, dtype: String, i: int) -> Vector2i:

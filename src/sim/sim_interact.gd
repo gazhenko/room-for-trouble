@@ -422,11 +422,14 @@ static func press_carry(sim: HotelSim, st: Dictionary) -> void:
 		var iid: int = st["held"]
 		place_world(sim, iid, spot.x, spot.y)
 		st["held"] = 0
-		st["act"] = {"kind": "place", "t": SimC.T_TAKE, "lock": true}
+		_lock(st, "place", SimC.T_TAKE)
 		sim.emit("place", {"seat": st["seat"], "id": iid})
 
+## Busy window after an action. Carry/Work presses are refused while it runs;
+## pick-ups, put-downs and handoffs keep the stick live (Overcooked-style),
+## longer station beats (assign, fulfil, hamper) still plant the feet.
 static func _lock(st: Dictionary, kind: String, t: int) -> void:
-	st["act"] = {"kind": kind, "t": t, "lock": true}
+	st["act"] = {"kind": kind, "t": t, "lock": true, "move_lock": kind not in ["take", "place", "handoff"]}
 
 static func _channel(st: Dictionary, kind: String, key: String, t: int) -> void:
 	st["act"] = {"kind": kind, "key": key, "t": t, "total": t, "lock": false, "channel": true}

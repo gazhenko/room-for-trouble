@@ -34,7 +34,7 @@ static func input_vec(st: Dictionary) -> Vector2i:
 
 static func _step_staff(sim: HotelSim, st: Dictionary) -> void:
 	var inp := input_vec(st)
-	var locked: bool = not st["act"].is_empty() and st["act"].get("lock", false)
+	var locked: bool = not st["act"].is_empty() and st["act"].get("lock", false) and st["act"].get("move_lock", true)
 	if locked:
 		inp = Vector2i.ZERO
 	# Quick step

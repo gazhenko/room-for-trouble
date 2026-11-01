@@ -21,6 +21,22 @@ could not be measured are listed as **unmeasured**, never as met.
     frames. Real players don't have that cost.
 - **Raw logs:** `build/perf/f_*.log` and `build/perf_summary3.txt`.
 
+## v2 floors (2026-11-01, 2.0.0-alpha, same machine and method)
+
+The v2 rebuild renders a denser 19x13 six-room floor with characters at twice the scale,
+per-item outlines and the per-chapter light. One measurement so far, the densest case:
+
+| Scenario | Renderer / graphics | Frame avg | p95 | Max | Sim per tick | Floor DC (max) | Total DC (max) | Primitives | Static mem | VRAM |
+|---|---|---|---|---|---|---|---|---|---|---|
+| L24, 4 players, 1280x800, 120 s | Forward+ / Standard | 10.5 ms | 11.1 ms | 175 ms (one spike at 114 s; others <= 60 ms) | 0.85 ms | 175 | 404 | 86k | 115 MB | 79 MB |
+
+- Floor draw calls on Standard (175) sit above the brief's 150 low-preset budget; the Low
+  preset drops the shadow pass (about a sixth of the floor calls) and is expected near the
+  v1 figure, **unmeasured** on v2 so far. The Deck is unmeasured.
+- The spikes coincide with guest arrivals that build rigs and with the synchronous screenshot;
+  average and p95 are unchanged from v1 (10.8 ms max then).
+- Raw log: `build/shots/fable/m2/perf/L24_4p_perf.log`.
+
 ## Results (2026-10-23, final build)
 
 "Floor DC" counts draw calls in the 3D floor viewport (colour plus shadow passes), which is

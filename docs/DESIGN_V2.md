@@ -163,8 +163,14 @@ one hazard and one visible thing in the lane (pipes, curtains, drains, lift cars
 - **M1 (done in this branch)**: chapter 1 and T01 on the 13×13 floor; order rail, per-order score
   with tips, continuous arrivals, linen scarcity, pass counter, instant take/put, real dash, juice,
   seat tags at the feet; evidence under `build/shots/fable/m1/`.
-- **M2**: the 19×13 six-room base; chapters 2–6 and T02/T03 converted (manifest pacing, stays,
-  linen per level); the six lane hazards; recipe middle steps (warm/cool/water); two counters;
-  per-chapter light and dressing; story sets and the hub re-staged on the v2 floors; results
-  postcard on the new set; reference-run matrix and docs regenerated; online/replay compatibility
-  (content hash bumps; replays from v1 are not expected to load).
+- **M2 (done in this branch)**: the 19×13 six-room base and the 19×14 split lobby; chapters 2–6
+  and T02/T03 converted (manifest pacing, stays, linen per level); the lane hazards (steam slows,
+  frost and puddles slide, howls startle, faster shutters); the warm/chill middle step at the heat
+  pump; two pass counters on six-room floors; per-chapter light with glowing festival lanterns;
+  story sets, the hub and the Playground on the v2 floors (scenes mapped from classic coordinates
+  at load); capsule-aware reachability in the validators; prompts with priority and spacing; the
+  reference-run matrix regenerated; v1 replays refused by sim version.
+- **M3 (next)**: owner playtests on the Deck and tuning (tips weight, request windows, chapter
+  density), the lift car and crowd dressing, re-authoring story beats natively on the v2 floors
+  where the map puts an actor awkwardly, cooling via open cold vents and the yeti helper, sprout
+  watering as a card step, two-player trunk carries that read on the card.

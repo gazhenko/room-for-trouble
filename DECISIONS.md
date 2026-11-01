@@ -214,3 +214,44 @@ maps `P1v2` scenes to `P1` (`STORY_SET`); milestone 2 re-stages them on the v2 f
 **D40 — Tests pin rules, not coordinates.** Core and item tests that used 28×20 positions now
 derive stands from the layout; content tests use each level's reserve and skip absent fixtures;
 score tests expect the v2 split and tips.
+
+**D41 — Chapters 2–6 play on the six-room v2 floor; the split lobby gets a 4-row hall.**
+`base_v2_six.json` (19×13) carries P2v2, P3v2, P4v2 and P6v2; `base_v2_split.json` (19×14)
+carries P5v2, because a 3-row hall cannot hold a divider and still leave a bypass: the divider
+sits in the upper lane row, the shutter in the north row, and the lower lane row is always open.
+Every campaign level, tutorial, story scene, the hub and the Playground run on v2 floors; the
+classic templates stay in the data only as the authoring frame for story coordinates (D45) and
+for the mirror test.
+
+**D42 — Reachability is checked with the staff capsule, not tiles.** `LayoutDef.capsule_reachable`
+floods a 0.25 m grid against wall tiles and fixture boxes inflated by the capsule radius, with
+the shutter open and closed. `validate_content.gd` and `test_content` run it for every door and
+station of every template. The tile flood had passed a P5v2 whose only bypass was sealed between
+two stations.
+
+**D43 — Lane hazards are visible and cheap to read.** Steam slows you to 40% (you can still push
+through), a frozen doorstep and a puddle slide you for 14 ticks, a howl startles staff within
+2.5 m of the room's door (0.5 s stun, the held item set down at the feet, never lost), the
+shutter cycles every 30 s with a 4 s warning. Caps, warnings and fixes are unchanged.
+
+**D44 — The middle step: warm towels, chilled snacks.** On thermal floors a dragon's towel needs
+"warm" and a yeti's snack "cool"; one second of Work at the heat pump sets an item's temperature
+(`temper:<item>` work key, per item). Requests carry the needed temperature from arrival, the
+order card, guest bubble and held-item chip show a sun/snowflake badge, delivery of an untempered
+item is refused with a reason, and tempered requests get 8 s more window. The pump sits in the
+middle of the counter row so the detour stays short.
+
+**D45 — Story scenes stay authored on the classic floor and are mapped at load.**
+`LayoutDef.classic_to_local` maps a classic (28×20) point onto a v2 floor band by band; the story
+player maps actors, props, focus points and the look target of absolute camera presets, keeps the
+authored camera offset for close-ups and shrinks it with the floor for the two wide shots.
+`validate_content.gd` warns when a mapped actor would stand in a wall.
+
+**D46 — Per-chapter light lives on the template.** A `light` block (sun colour, energy, elevation,
+ground/background) is applied by `PixelStage.set_light`; the azimuth stays on the band-safe
+direction, only the elevation moves. Chapter 1 late morning, 2 noon, 3 dusk, 4 greenhouse light,
+5 evening, 6 night with glowing lanterns.
+
+**D47 — Arrival density follows the rooms.** Besides the reserve, the arrival gap is at least
+(stay + 8 s) / room cap and rosters that cannot be housed before the reserve are truncated from
+the end (solo on a four-room floor houses 5 of L03's 6 guests). Appendix A is a ceiling.

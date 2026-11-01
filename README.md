@@ -17,6 +17,17 @@ around it. Nobody loses, and there is always a next move.
 
 ![Three players mid-shift in the Conservatory](docs/images/gameplay.png)
 
+## Version 2 (Overcooked scale)
+
+Version 2 rebuilds the moment-to-moment game at Overcooked density: small floors you can read
+at a glance on a 7" screen (13×13 tiles for chapter 1, 19×13 for six rooms), staff about 70 px
+tall at 1280×800, instant pick-up and put-down, a real dash, one **order card** per guest with
+the steps in order and a timer, tips for speed, pass counters to hand things across, warm towels
+and chilled snacks at the heat pump, lane hazards you can see (steam that slows, frost and puddles
+that slide, howls that startle), a per-chapter light from late morning to a lantern-lit festival
+night, and continuous arrivals with the first guest at four seconds. A shift still never fails.
+The design is in `docs/DESIGN_V2.md`; decisions D31–D47 in `DECISIONS.md`.
+
 ## What's in the game
 
 - **Couch co-op for 1–4 players** on one screen: keyboard (two players can share one

@@ -16,6 +16,25 @@ than it is.
 | **Public online endpoint** | **Internet play verified (2026-10-23):** the full two-client e2e suite passed against a public `wss://…trycloudflare.com` endpoint. That covers create, join by code, play, the forged-seat guard, reconnect with token and a shared result, over a real TLS certificate and internet path (`tests/net/run_tunnel.sh`, a temporary Cloudflare quick tunnel, shut down afterwards). Also verified: the Docker + Caddy TLS stack, restart recovery, abuse handling, and a 100 ± 20 ms, 2%-loss link (`tests/net/run_netem.sh`). | No permanent public host is deployed; that's the owner's choice of host and domain (`OPERATIONS.md`). There has been no long-running soak or multi-room load test. |
 | **Family playtests** | **None conducted** | See `docs/PLAYTEST_REPORT.md` for the procedure. Balance and "is it fun" are unvalidated with people. Reference runs come from a scripted bot. |
 
+## v2 (Overcooked-scale rebuild, 2.0.0-alpha)
+
+- **All 24 shifts, the three tutorials, the hub, the Playground and every story scene run on
+  the v2 floors** (13×13 four-room chapter 1, 19×13 six-room chapters 2–6, 19×14 split lobby for
+  chapter 5). Balance comes from the scripted reference bot (`docs/REFERENCE_RUNS.md`), not from
+  family playtests; expect tuning after the owner plays on the Deck (tips weight, request
+  windows, chapter density).
+- **Story scenes are mapped, not re-authored.** Actors and cameras are authored on the classic
+  28×20 floor and mapped onto the v2 floors at load (`LayoutDef.classic_to_local`). Close-ups keep
+  their authored framing; a few group shots may place an actor against a station. The content
+  validator warns when a mapped actor would stand in a wall.
+- **Classic templates P1–P6 remain in the data** only as the authoring frame for scenes and for
+  the mirror test; nothing plays on them.
+- **v1 replays and per-level bests are not comparable** with v2 (different floors, pacing and
+  score); `SIM_VERSION` is 2.0.0 and v1 replays are refused with a message.
+- **Walking share.** Even with instant take/put, roughly 70% of a job is still walking on the
+  v2 floors (hands-on steps are 0.2–1.7 s); the warm/chill middle step is the lever that adds
+  hands-on time without adding waiting.
+
 ## Known imperfections
 
 - **Draw calls.** The busiest floor (L24, four players) peaks at 154 draw calls on Standard

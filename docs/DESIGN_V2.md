@@ -149,7 +149,9 @@ one hazard and one visible thing in the lane (pipes, curtains, drains, lift cars
   40 s, per level.
 - **§10.4 score**: 20/20/20/40 → 30/20/30/20 plus tips; tips count toward the percent (a
   fast team can cover about one missed order in four).
-- **Appendix A rosters**: L03 and L04 grow from 6 to 8 two-player guests.
+- **Appendix A rosters**: L03 and L04 grow from 6 to 8 two-player guests, and a roster is
+  **truncated from the end** when the party's room cap cannot house it before the reserve (solo on
+  a four-room floor houses 5 of L03's 6 guests), so Appendix A is a ceiling, not a literal list.
 - **§11.1 HUD**: incoming cards → the order rail; seat tags move from the head to the feet.
 - **§12.2**: the festival stand leaves the hall lane (classic floor: (26,11)); new fixture kind
   `counters`.

@@ -32,6 +32,14 @@ func _initialize() -> void:
 				err("missing localization level.%s.%s" % [L["id"], k])
 		if not C.story.has(L["id"] + ".pre") or not C.story.has(L["id"] + ".post"):
 			err("%s: missing story beats" % L["id"])
+		# v2 floors may lack rooms and fixtures: overrides and events must target what exists.
+		if C.templates.has(L["layout"]):
+			var lay: LayoutDef = C.layout(L["layout"])
+			for room in L.get("initial_rooms", {}):
+				if not lay.rooms.has(room) or not lay.rooms[room]["active"]:
+					err("%s: initial_rooms targets room %s, which layout %s does not have" % [L["id"], room, L["layout"]])
+			for e in L.get("events", []):
+				_check_target_args(L["id"], str(e.get("id", e["type"])), e.get("args", {}), lay, L["layout"])
 	# Story staging: cameras, props, actors, captions.
 	var props := ModelProps.kinds() if ResourceLoader.exists("res://src/view/models/model_props.gd") else PackedStringArray()
 	var cams := ["wide_hotel", "lobby_group", "desk_close", "guest_close", "room_door", "fixture_close", "high_close", "festival_wide", "postcard_still"]  # = StoryPlayer.CAMERAS + postcard_still
@@ -61,6 +69,16 @@ func _initialize() -> void:
 		var t: Dictionary = C.tutorials[tid]
 		if not C.templates.has(t["layout"]):
 			err("tutorial %s: unknown layout" % tid)
+		else:
+			var tlay: LayoutDef = C.layout(t["layout"])
+			for room in t.get("assignable", []):
+				if not tlay.rooms.has(room) or not tlay.rooms[room]["active"]:
+					err("tutorial %s: assignable room %s is not on layout %s" % [tid, room, t["layout"]])
+			for op0 in t.get("init", []):
+				_check_target_args(tid, "init", op0, tlay, t["layout"])
+			for st0 in t["steps"]:
+				for op in st0.get("ops", []):
+					_check_target_args(tid, str(st0["id"]), op, tlay, t["layout"])
 		for st in t["steps"]:
 			if not loc.has(st["caption"]):
 				err("tutorial %s: caption %s missing" % [tid, st["caption"]])
@@ -107,6 +125,27 @@ func _initialize() -> void:
 	print("content validation: %d errors, %d warnings (hash %s)" % [errors.size(), warnings.size(), C.content_hash])
 	C.free()
 	quit(1 if errors.size() > 0 else 0)
+
+## Rooms, radiator fixtures, lift pairs and hall positions named by an event or
+## tutorial op must exist on the floor it runs on.
+func _check_target_args(owner: String, what: String, a: Dictionary, lay: LayoutDef, layout_id: String) -> void:
+	if a.has("room"):
+		var room := str(a["room"])
+		if not lay.rooms.has(room) or not lay.rooms[room]["active"]:
+			err("%s: %s targets room %s, which layout %s does not have" % [owner, what, room, layout_id])
+	var fx := str(a.get("fixture", ""))
+	if fx.begins_with("radiator_") and not lay.rooms.has(fx.substr(9)):
+		err("%s: %s trips %s, which layout %s does not have" % [owner, what, fx, layout_id])
+	if fx == "lift_pair" and lay.lift_pads.size() != 2:
+		err("%s: %s trips the lift pair but layout %s has no lift" % [owner, what, layout_id])
+	var pts: Array = []
+	if a.has("position"):
+		pts.append(a["position"])
+	for p in a.get("positions", []):
+		pts.append(p)
+	for p in pts:
+		if lay.is_wall_tile(int(p[0]), int(p[1])):
+			err("%s: %s position %s is a wall on layout %s" % [owner, what, str(p), layout_id])
 
 func _scripts(dir: String) -> Array:
 	var out: Array = []

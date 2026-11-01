@@ -36,6 +36,11 @@ def main(path):
     errors, warnings = [], []
     m = json.loads(pathlib.Path(path).read_text())
     base = json.loads((ROOT / "data/layouts/base.json").read_text())
+    bases = {"default": base}
+    for name in ("v2_small", "v2_six"):
+        bp = ROOT / f"data/layouts/base_{name}.json"
+        if bp.exists():
+            bases[name] = json.loads(bp.read_text())
     templates = {t["id"]: t for t in json.loads((ROOT / "data/layouts/templates.json").read_text())["templates"]}
     def err(p, msg): errors.append(f"{path}:{p}: {msg}")
     if m.get("schema_version") != 1:
@@ -69,6 +74,7 @@ def main(path):
         if len(L["initial_rooms"]) > 6: err(p + ".initial_rooms", "at most 6 overrides")
         tpl = templates.get(L["layout"], {})
         active = tpl.get("active_rooms", [])
+        hall = bases.get(tpl.get("base", "default"), base)["hall"]   # [x0, z0, x1, z1]
         for room in L["initial_rooms"]:
             if room not in active: err(p + f".initial_rooms.{room}", "room not active in layout")
         fams = set()
@@ -101,7 +107,7 @@ def main(path):
             if t == "fixture_trip" and a["fixture"] not in FIXTURES: err(ep + ".args.fixture", "not an allowed runtime fixture")
             if t == "fixture_trip" and a["fixture"].startswith("radiator") and "thermal" not in L["systems"]:
                 err(ep, "radiator trip without thermal system")
-            if t == "shutter_cycle" and (L["layout"] != "P5" or "shutter" not in L["systems"]): err(ep, "shutter only on P5")
+            if t == "shutter_cycle" and (L["layout"][:2] != "P5" or "shutter" not in L["systems"]): err(ep, "shutter only on P5")
             if t == "fixture_trip" and a["fixture"] == "lift_pair" and "lift" not in L["systems"]: err(ep, "lift trip needs lift")
             if t == "trunk_spawn":
                 if L["layout"][:2] not in ("P1", "P6"): err(ep, "trunks only on P1/P6")
@@ -111,10 +117,10 @@ def main(path):
                 spawned |= set(a["object_ids"])
             if t in ("steam_cloud",):
                 x, z = a["position"]
-                if not (1 <= x <= 26 and 8 <= z <= 11): err(ep + ".args.position", "must be a hall junction")
+                if not (hall[0] <= x <= hall[2] and hall[1] <= z <= hall[3]): err(ep + ".args.position", "must be in the hall")
             if t == "puddle_patch":
                 for pos in a["positions"]:
-                    if not (1 <= pos[0] <= 26 and 8 <= pos[1] <= 11): err(ep + ".args.positions", "must be in the hall")
+                    if not (hall[0] <= pos[0] <= hall[2] and hall[1] <= pos[1] <= hall[3]): err(ep + ".args.positions", "must be in the hall")
         for gid in L["required_goal_ids"]:
             if gid not in spawned: err(p + ".required_goal_ids", f"{gid} is not spawned by this level")
         if len(L["ribbons"]) != 3: err(p + ".ribbons", "exactly 3 ribbons")

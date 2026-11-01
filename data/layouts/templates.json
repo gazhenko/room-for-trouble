@@ -99,6 +99,44 @@
       "initial_humidity": {}
     },
     {
+      "id": "P2v2",
+      "key": "radiator_row_v2",
+      "name_key": "layout.P2.name",
+      "active_rooms": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F"
+      ],
+      "thermal_edges": [
+        "AB",
+        "BC",
+        "DE",
+        "EF"
+      ],
+      "acoustic_edges": [],
+      "systems_available": [
+        "core",
+        "thermal"
+      ],
+      "palette": {
+        "wall": "#F2E2C4",
+        "accent": "#8EBBC7",
+        "floor": "#B98F6E",
+        "trim": "#E88D79",
+        "rug": "#8EBBC7"
+      },
+      "decor": [
+        "brass_pipes",
+        "sun_snow_bunting",
+        "radiators"
+      ],
+      "initial_humidity": {},
+      "base": "v2_six"
+    },
+    {
       "id": "P3",
       "key": "quiet_wing",
       "name_key": "layout.P3.name",
@@ -140,6 +178,50 @@
         "moon_lamps"
       ],
       "initial_humidity": {}
+    },
+    {
+      "id": "P3v2",
+      "key": "quiet_wing_v2",
+      "name_key": "layout.P3.name",
+      "active_rooms": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F"
+      ],
+      "thermal_edges": [
+        "AB",
+        "BC",
+        "DE",
+        "EF"
+      ],
+      "acoustic_edges": [
+        "AD",
+        "BE",
+        "CF"
+      ],
+      "systems_available": [
+        "core",
+        "thermal",
+        "sound"
+      ],
+      "palette": {
+        "wall": "#E3DAEC",
+        "accent": "#8C7CA8",
+        "floor": "#9C7A68",
+        "trim": "#F7EAD6",
+        "rug": "#8C7CA8"
+      },
+      "decor": [
+        "brass_pipes",
+        "note_trim",
+        "cream_curtains",
+        "moon_lamps"
+      ],
+      "initial_humidity": {},
+      "base": "v2_six"
     },
     {
       "id": "P4",
@@ -188,6 +270,55 @@
         "A": 40,
         "D": 40
       }
+    },
+    {
+      "id": "P4v2",
+      "key": "conservatory_v2",
+      "name_key": "layout.P4.name",
+      "active_rooms": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F"
+      ],
+      "thermal_edges": [
+        "AB",
+        "BC",
+        "DE",
+        "EF"
+      ],
+      "acoustic_edges": [
+        "AD",
+        "BE",
+        "CF"
+      ],
+      "systems_available": [
+        "core",
+        "thermal",
+        "sound",
+        "moisture"
+      ],
+      "palette": {
+        "wall": "#E4EDDC",
+        "accent": "#8BAE91",
+        "floor": "#A88B62",
+        "trim": "#E8BF66",
+        "rug": "#8BAE91"
+      },
+      "decor": [
+        "brass_pipes",
+        "note_trim",
+        "planters",
+        "drains",
+        "glass_roof"
+      ],
+      "initial_humidity": {
+        "A": 40,
+        "D": 40
+      },
+      "base": "v2_six"
     },
     {
       "id": "P5",
@@ -268,6 +399,79 @@
       "initial_humidity": {}
     },
     {
+      "id": "P5v2",
+      "key": "split_lobby_v2",
+      "name_key": "layout.P5.name",
+      "active_rooms": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F"
+      ],
+      "thermal_edges": [
+        "AB",
+        "BC",
+        "DE",
+        "EF"
+      ],
+      "acoustic_edges": [
+        "AD",
+        "BE",
+        "CF"
+      ],
+      "systems_available": [
+        "core",
+        "thermal",
+        "sound",
+        "moisture",
+        "shutter",
+        "lift"
+      ],
+      "palette": {
+        "wall": "#DDEBEE",
+        "accent": "#8EBBC7",
+        "floor": "#805C49",
+        "trim": "#E8BF66",
+        "rug": "#8EBBC7"
+      },
+      "decor": [
+        "brass_pipes",
+        "note_trim",
+        "travel_stickers",
+        "divider"
+      ],
+      "initial_humidity": {},
+      "base": "v2_six",
+      "divider": [
+        9,
+        6
+      ],
+      "shutter": [
+        9,
+        5
+      ],
+      "lift_pads": [
+        [
+          1,
+          6
+        ],
+        [
+          17,
+          6
+        ]
+      ],
+      "room_overrides": {
+        "B": {
+          "door": [
+            8,
+            4
+          ]
+        }
+      }
+    },
+    {
       "id": "P6",
       "key": "grand_hall",
       "name_key": "layout.P6.name",
@@ -313,6 +517,64 @@
         "planters"
       ],
       "initial_humidity": {}
+    },
+    {
+      "id": "P6v2",
+      "key": "grand_hall_v2",
+      "name_key": "layout.P6.name",
+      "active_rooms": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F"
+      ],
+      "thermal_edges": [
+        "AB",
+        "BC",
+        "DE",
+        "EF"
+      ],
+      "acoustic_edges": [
+        "AD",
+        "BE",
+        "CF"
+      ],
+      "systems_available": [
+        "core",
+        "thermal",
+        "sound",
+        "moisture",
+        "festival"
+      ],
+      "palette": {
+        "wall": "#F7EAD6",
+        "accent": "#E8BF66",
+        "floor": "#9C6E52",
+        "trim": "#E88D79",
+        "rug": "#8C7CA8"
+      },
+      "decor": [
+        "brass_pipes",
+        "note_trim",
+        "lanterns",
+        "paper_moon",
+        "garlands",
+        "planters"
+      ],
+      "initial_humidity": {},
+      "base": "v2_six",
+      "fixture_overrides": {
+        "festival_stand": [
+          17,
+          6
+        ],
+        "goal_pad": [
+          16,
+          6
+        ]
+      }
     }
   ]
 }

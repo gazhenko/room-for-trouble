@@ -9,6 +9,7 @@ const GAMEPLAY_FILES := [
 	"res://data/items/stations.json",
 	"res://data/layouts/base.json",
 	"res://data/layouts/base_v2_small.json",
+	"res://data/layouts/base_v2_six.json",
 	"res://data/layouts/templates.json",
 	"res://data/campaign_manifest.json",
 	"res://data/tutorials/tutorials.json",
@@ -48,7 +49,8 @@ func load_all() -> void:
 	for d in st.get("stations", []):
 		stations[d["id"]] = d
 	base_layout = _read("res://data/layouts/base.json")
-	base_layouts = {"default": base_layout, "v2_small": _read("res://data/layouts/base_v2_small.json")}
+	base_layouts = {"default": base_layout, "v2_small": _read("res://data/layouts/base_v2_small.json"),
+		"v2_six": _read("res://data/layouts/base_v2_six.json")}
 	var tp := _read("res://data/layouts/templates.json")
 	for d in tp.get("templates", []):
 		templates[d["id"]] = d

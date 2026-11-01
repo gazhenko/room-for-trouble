@@ -24,7 +24,7 @@ loc = {}
 for part in (S.UI, S.SETTINGS, S.CAST, S.GUESTS, S.ITEMS, S.BARKS, S.MODS, S.COSMETICS, S.CHAPTERS, S.TUTORIALS, S.CREDITS_EXTRA):
     loc.update(part)
 
-STORY_SET = {"P1v2": "P1"}
+STORY_SET = {"P1v2": "P1", "P2v2": "P2", "P3v2": "P3", "P4v2": "P4", "P5v2": "P5", "P6v2": "P6"}
 FOUR_ROOM_TEMPLATES = ("P1", "P1v2")
 
 # ---------------------------------------------------------------- levels

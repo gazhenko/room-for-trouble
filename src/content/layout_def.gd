@@ -23,6 +23,7 @@ var acoustic_edges: Array = []
 var systems_available: Array = []
 var palette: Dictionary = {}
 var light: Dictionary = {}          # per-chapter sun colour / energy / elevation / background
+var v2 := false                     # built on a v2 base (template has a "base" key)
 var decor: Array = []
 var initial_humidity: Dictionary = {}
 var divider: Vector2i = Vector2i(-1, -1)
@@ -56,6 +57,7 @@ static func build(base: Dictionary, tpl: Dictionary, mirror: bool) -> LayoutDef:
 	L.systems_available = tpl.get("systems_available", []).duplicate()
 	L.palette = tpl.get("palette", {}).duplicate()
 	L.light = tpl.get("light", {}).duplicate()
+	L.v2 = tpl.has("base")
 	L.decor = tpl.get("decor", []).duplicate()
 	L.initial_humidity = tpl.get("initial_humidity", {}).duplicate()
 	var hr: Array = base["hall"]
@@ -168,6 +170,46 @@ func _build_tiles() -> void:
 				lo = Vector2i(mini(lo.x, x), mini(lo.y, z))
 				hi = Vector2i(maxi(hi.x, x), maxi(hi.y, z))
 	used = Rect2i(lo - Vector2i.ONE, hi - lo + Vector2i(3, 3))
+
+## Maps a point authored on the classic 28x20 floor (story scenes, cameras)
+## onto this floor: x scales with the hall width, z band by band (north rooms,
+## door row, hall rows, door row, south rooms); outside the building the offset
+## is kept. Identity on classic floors. y is untouched.
+func classic_to_local(p: Vector3) -> Vector3:
+	if not v2:
+		return p
+	var hx0 := float(hall.position.x)
+	var hx1 := float(hall.end.x - 1)
+	var hz0 := float(hall.position.y)
+	var hz1 := float(hall.end.y - 1)
+	var ze := float(south_wall_z())
+	var x := p.x
+	if x < 1.0:
+		pass
+	elif x <= 26.0:
+		x = hx0 + (x - 1.0) * (hx1 - hx0) / 25.0
+	else:
+		x = hx1 + (x - 26.0)
+	var z := p.z
+	if z < 0.5:
+		pass
+	elif z <= 6.5:
+		z = 1.0 + (z - 1.0) * ((hz0 - 2.0) - 1.0) / 5.0
+	elif z < 7.5:
+		z = (hz0 - 1.0) + (z - 7.0)
+	elif z <= 11.5:
+		z = hz0 + (z - 8.0) * (hz1 - hz0) / 3.0
+	elif z < 12.5:
+		z = (hz1 + 1.0) + (z - 12.0)
+	elif z <= 18.5:
+		z = (hz1 + 2.0) + (z - 13.0) * ((ze - 1.0) - (hz1 + 2.0)) / 5.0
+	else:
+		z = ze + (z - 19.0)
+	return Vector3(x, p.y, z)
+
+func classic_to_local_xz(x: float, z: float) -> Vector2:
+	var q := classic_to_local(Vector3(x, 0.0, z))
+	return Vector2(q.x, q.z)
 
 ## Rows of the hall's north and south walls (the door rows).
 func hall_north_wall_z() -> int:

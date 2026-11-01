@@ -3,7 +3,7 @@
  "scenes": [
   {
    "id": "O00",
-   "layout": "P1",
+   "layout": "P1v2",
    "music": "title_loop",
    "title_key": "story.O00.title",
    "panels": [

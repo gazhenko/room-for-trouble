@@ -24,7 +24,7 @@ loc = {}
 for part in (S.UI, S.SETTINGS, S.CAST, S.GUESTS, S.ITEMS, S.BARKS, S.MODS, S.COSMETICS, S.CHAPTERS, S.TUTORIALS, S.CREDITS_EXTRA):
     loc.update(part)
 
-STORY_SET = {"P1v2": "P1", "P2v2": "P2", "P3v2": "P3", "P4v2": "P4", "P5v2": "P5", "P6v2": "P6"}
+STORY_SET = {"P1": "P1v2", "P2": "P2v2", "P3": "P3v2", "P4": "P4v2", "P5": "P5v2", "P6": "P6v2"}
 FOUR_ROOM_TEMPLATES = ("P1", "P1v2")
 
 # ---------------------------------------------------------------- levels
@@ -53,6 +53,8 @@ loc["level.L24.lanterns"] = "The lanterns glow steadily."
 
 def panel_out(p, scene_id, idx):
     d = {k: v for k, v in p.items() if k != "caption_text"}
+    if "layout" in d:
+        d["layout"] = STORY_SET.get(d["layout"], d["layout"])
     key = f"story.{p['id']}" if p.get("id") else f"story.{scene_id}.{idx}"
     if p.get("caption_text"):
         loc[key] = p["caption_text"]
@@ -73,7 +75,7 @@ def panel_out(p, scene_id, idx):
     return d
 
 def scene_out(sc):
-    out = {"id": sc["id"], "layout": sc.get("layout", "P1"), "music": sc.get("music", "title_loop"),
+    out = {"id": sc["id"], "layout": STORY_SET.get(sc.get("layout", "P1"), sc.get("layout", "P1")), "music": sc.get("music", "title_loop"),
            "title_key": f"story.{sc['id']}.title", "panels": []}
     loc[f"story.{sc['id']}.title"] = sc.get("title", sc["id"])
     for i, p in enumerate(sc["panels"]):
@@ -95,9 +97,9 @@ for L in manifest["levels"]:
     lid = L["id"]
     pre, mid, post = ST.LEVELS[lid]
     cam, focus, cap, speaker, actors = pre[:5]
-    # Story scenes are staged on the classic sets until milestone 2 re-stages them
-    # on the v2 floors (actor and focus coordinates are authored on those sets).
-    layout = STORY_SET.get(L["layout"], L["layout"])
+    # Scenes are authored in classic coordinates; StoryPlayer maps them onto the
+    # level's v2 floor at load (LayoutDef.classic_to_local).
+    layout = L["layout"]
     pp = ST.P(f"{lid}.pre", cam, cap, speaker, 6, actors, ST.PRE_PROPS.get(lid, []), focus=focus, layout=layout)
     level_scenes.append({"id": f"{lid}.pre", "layout": layout, "music": "planning",
                          "title_key": f"story.{lid}.pre.title", "panels": [panel_out(pp, lid, 0)]})
@@ -118,7 +120,7 @@ for L in manifest["levels"]:
         gactors.append(ST.A(names[f] if j < 1 else f"guest:{f}", round(x, 2), -0.85, "happy" if j % 2 == 0 else "wave",
                             slippers=(f == "slime"), mask=(f == "ghost"), y=0.42))
     props = [{"kind": prop, "pos": [2.8, 0.0, -1.2]}] if prop else []
-    fx = {"P1": [6.0, 9.6], "P2": [13.0, 9.6], "P3": [13.0, 9.6], "P4": [13.0, 9.6], "P5": [18.0, 9.8], "P6": [13.0, 9.6]}[layout]
+    fx = {"P1": [6.0, 9.6], "P2": [13.0, 9.6], "P3": [13.0, 9.6], "P4": [13.0, 9.6], "P5": [18.0, 9.8], "P6": [13.0, 9.6]}[layout[:2]]
     pq = ST.P(f"{lid}.post", "postcard_still", pcap, pspeaker, 6,
               [staff_actor, ST.A("nana", -2.25, 0.35, "wave", 20), ST.A("gus", 2.3, 0.75, "happy", -20)] + gactors,
               props, focus=fx, layout=layout, actors_rel=True, sting="sting_postcard")

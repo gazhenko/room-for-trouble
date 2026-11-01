@@ -37,6 +37,7 @@ var skip_prompt := false
 var seen_before := false
 var _postcard := false
 var _layout := ""
+var _L: LayoutDef = null
 var _caption := ""
 var _speaker := ""
 var _credits := false
@@ -172,9 +173,11 @@ func _stage(p: Dictionary) -> void:
 		set_root = Node3D.new()
 		stage.world.add_child(set_root)
 		var L := Content.layout(layout)
-		var sys := {"core": true, "thermal": layout != "P1", "sound": layout in ["P3", "P4", "P5", "P6"],
-			"moisture": layout in ["P4", "P5", "P6"], "festival": layout in ["P1", "P6"],
-			"shutter": layout == "P5", "lift": layout == "P5"}
+		_L = L
+		var fam := layout.substr(0, 2)   # P1..P6, classic or v2
+		var sys := {"core": true, "thermal": fam != "P1", "sound": fam in ["P3", "P4", "P5", "P6"],
+			"moisture": fam in ["P4", "P5", "P6"], "festival": fam in ["P1", "P6"],
+			"shutter": fam == "P5", "lift": fam == "P5"}
 		# The real hotel set: shell, stations and made-up rooms, without mess.
 		var view := HotelView.new()
 		view.build(stage, L, sys, {})
@@ -194,7 +197,9 @@ func _stage(p: Dictionary) -> void:
 				var sub = a.duplicate()
 				sub["id"] = "staff%d" % i
 				var base: Array = a.get("pos", [5, 9.6])
-				sub["pos"] = [float(base[0]) + i * 0.9 - (party.size() - 1) * 0.45, float(base[1])]
+				var bm := _map_xz(float(base[0]), float(base[1]))
+				sub["pos"] = [bm.x + i * 0.9 - (party.size() - 1) * 0.45, bm.y]
+				sub["mapped"] = true
 				_place_actor(sub, party[i])
 				wanted["staff%d" % i] = true
 			continue
@@ -211,7 +216,7 @@ func _stage(p: Dictionary) -> void:
 		var kind: String = pr["kind"]
 		var node := ModelItems.build(kind.substr(5)) if kind.begins_with("item:") else ModelProps.build(kind)
 		var pp: Array = pr.get("pos", [0, 0, 0])
-		node.position = Vector3(pp[0], pp[1], pp[2])
+		node.position = _map3(Vector3(pp[0], pp[1], pp[2]))
 		node.rotation_degrees.y = float(pr.get("rot", 0))
 		if pr.has("scale"):
 			node.scale = Vector3.ONE * float(pr["scale"])
@@ -234,18 +239,29 @@ func _stage(p: Dictionary) -> void:
 	var focus := Vector3.ZERO
 	if p.has("focus"):
 		var f: Array = p["focus"]
-		focus = Vector3(f[0], 0, f[1])
+		focus = _map3(Vector3(f[0], 0, f[1]))
 	var pos := Vector3(preset["pos"][0], preset["pos"][1], preset["pos"][2])
 	var look := Vector3(preset["look"][0], preset["look"][1], preset["look"][2])
+	var cam_name: String = p.get("camera", "wide_hotel")
 	if preset.get("relative", false):
 		pos += focus
 		look += focus
+	else:
+		# Absolute presets: the subject moves onto the v2 floor, the authored
+		# camera offset stays (so close-ups keep their distance); the two wide
+		# shots shrink their offset with the floor so the hotel still fills them.
+		var off := pos - look
+		look = _map3(look)
+		var k := 1.0
+		if cam_name in ["wide_hotel", "festival_wide"] and _L != null and _L.v2:
+			k = clampf(float(_L.hall.size.x) / 26.0, 0.45, 1.0)
+		pos = look + off * k
 	if p.has("cam_pos"):
 		var cp: Array = p["cam_pos"]
-		pos = Vector3(cp[0], cp[1], cp[2])
+		pos = _map3(Vector3(cp[0], cp[1], cp[2]))
 	if p.has("cam_look"):
 		var cl: Array = p["cam_look"]
-		look = Vector3(cl[0], cl[1], cl[2])
+		look = _map3(Vector3(cl[0], cl[1], cl[2]))
 	if photo:
 		pos = PHOTO_ORIGIN + Vector3(0, 1.7, 9.6)
 		look = PHOTO_ORIGIN + Vector3(0, 0.8, -0.2)
@@ -280,7 +296,8 @@ func _place_actor(a: Dictionary, staff_char: String) -> void:
 		set_root.add_child(rig)
 		actors[aid] = rig
 	var pos: Array = a.get("pos", [5, 9.5])
-	rig.position = Vector3(float(pos[0]), float(a.get("y", 0.0)), float(pos[1]))
+	var pm := Vector2(float(pos[0]), float(pos[1])) if a.get("mapped", false) else _map_xz(float(pos[0]), float(pos[1]))
+	rig.position = Vector3(pm.x, float(a.get("y", 0.0)), pm.y)
 	if rig.has_meta("photo_placed"):
 		rig.remove_meta("photo_placed")
 	rig.face_dir = deg_to_rad(float(a.get("face", 0)))
@@ -291,6 +308,13 @@ func _place_actor(a: Dictionary, staff_char: String) -> void:
 	if rig.extras.has("mask"):
 		(rig.extras["mask"] as Node3D).visible = a.get("mask", false)
 	rig.reduced_motion = bool(Settings.g("reduced_motion"))
+
+## Scenes are authored on the classic floor; a v2 set maps them (LayoutDef).
+func _map3(p: Vector3) -> Vector3:
+	return _L.classic_to_local(p) if _L != null else p
+
+func _map_xz(x: float, z: float) -> Vector2:
+	return _L.classic_to_local_xz(x, z) if _L != null else Vector2(x, z)
 
 static func _family_of(aid: String) -> String:
 	match aid:

@@ -126,7 +126,7 @@ func show_hub() -> void:
 	_clear_ui()
 	screen = hub
 	main.ui_root.add_child(hub)
-	hub.setup_hub(main.stage, main.captions, _base_cfg({"mode": "hub", "layout": "P1"}))
+	hub.setup_hub(main.stage, main.captions, _base_cfg({"mode": "hub", "layout": "P1v2"}))
 	Audio.play_music("title_loop")
 
 func open_shift_select() -> void:
@@ -200,7 +200,7 @@ func start_tutorial(tid: String) -> void:
 	_run_shift(cfg)
 
 func start_playground() -> void:
-	var cfg := _base_cfg({"mode": "playground", "layout": "P6", "difficulty": "cozy", "gus": false})
+	var cfg := _base_cfg({"mode": "playground", "layout": "P6v2", "difficulty": "cozy", "gus": false})
 	cfg["pace_milli"] = 1000
 	_run_shift(cfg)
 

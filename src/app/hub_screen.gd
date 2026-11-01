@@ -8,8 +8,8 @@ const HOTSPOTS := [
 	{"id": "start", "fixture": "reception", "icon": "ui_play", "label": "ui.hub.start"},
 	{"id": "wardrobe", "fixture": "welcome_kiosk", "icon": "badge_first_hello", "label": "ui.hub.wardrobe"},
 	{"id": "settings", "fixture": "group_bell", "icon": "ui_settings", "label": "ui.hub.settings"},
-	{"id": "guide", "fixture": "return_shelf", "icon": "ui_scrapbook", "label": "ui.hub.guide"},
-	{"id": "board", "fixture": "heat_pump", "icon": "sys_postcard", "label": "ui.hub.board"},
+	{"id": "guide", "fixture": "counters", "index": 0, "icon": "ui_scrapbook", "label": "ui.hub.guide"},
+	{"id": "board", "fixture": "festival_stand", "icon": "sys_postcard", "label": "ui.hub.board"},
 	{"id": "practice", "room_door": "A", "icon": "sys_coach", "label": "ui.hub.practice"},
 ]
 
@@ -33,9 +33,11 @@ func setup_hub(p_stage: PixelStage, p_captions: Captions, p_cfg: Dictionary) -> 
 	_decorate_hub()
 
 func _decorate_hub() -> void:
-	# Unlocked cosmetic-set decorations dress the lobby.
-	var spots := [Vector3(1.2, 0, 11.6), Vector3(26.0, 0, 8.3), Vector3(20.5, 0, 11.6), Vector3(6.0, 0, 11.6),
-		Vector3(9.8, 0, 8.25), Vector3(16.8, 0, 8.25), Vector3(23.5, 0, 8.25), Vector3(26.0, 0, 11.6)]
+	# Unlocked cosmetic-set decorations dress the lobby, on the lane's marked
+	# pads (parcel pads, trunk parking, drains) so they fit any floor.
+	var spots: Array = []
+	for p in sim.L.parcel_pads + sim.L.trunk_parking + sim.L.drains:
+		spots.append(Vector3(float(p.x), 0.0, float(p.y) + 0.3))
 	var i := 0
 	for cs in Content.cosmetics:
 		if cs.get("decor", "") == "" or not cs["id"] in SaveService.profile["unlocked_cosmetic_sets"]:
@@ -49,7 +51,8 @@ func _decorate_hub() -> void:
 
 func hotspot_pos(h: Dictionary) -> Vector2i:
 	if h.has("fixture"):
-		var p: Vector2i = sim.L.fixtures[h["fixture"]]
+		var f = sim.L.fixtures.get(h["fixture"], Vector2i(-1, -1))
+		var p: Vector2i = (f[int(h.get("index", 0))] if f is Array else f)
 		return Vector2i(p.x * SimC.UM, p.y * SimC.UM)
 	var d: Vector2i = sim.L.rooms[h["room_door"]]["door"]
 	return Vector2i(d.x * SimC.UM, d.y * SimC.UM)

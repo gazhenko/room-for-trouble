@@ -29,11 +29,11 @@ func setup(p: PlaygroundScreen) -> void:
 	add_button(row, Loc.t("ui.pg.noisy"), "sys_noise", func(): _do(func(): SimPlayground.set_env(pg.sim, "noise", 60)), false, 350)
 	add_button(row, Loc.t("ui.pg.quirk"), "sys_steam", func(): _do(func(): SimPlayground.demo_quirk(pg.sim)), false, 350)
 	add_button(row, Loc.t("ui.pg.helper"), "sys_heart", func(): _do(func(): SimPlayground.demo_helper(pg.sim)), false, 350)
-	var lay := ["P1", "P2", "P3", "P4", "P5", "P6"]
+	var lay := ["P1v2", "P2v2", "P3v2", "P4v2", "P5v2", "P6v2"]
 	var labels: Array = []
 	for l in lay:
-		labels.append(Loc.t("layout.%s.name" % l))
-	add_cycle(v, Loc.t("ui.pg.floor"), lay, labels, pg.cfg.get("layout", "P6"), func(val): pg.switch_layout(val))
+		labels.append(Loc.t("layout.%s.name" % l.substr(0, 2)))
+	add_cycle(v, Loc.t("ui.pg.floor"), lay, labels, pg.cfg.get("layout", "P6v2"), func(val): pg.switch_layout(val))
 	add_button(v, Loc.t("ui.pause.settings"), "ui_settings", func(): Session.open_settings(self))
 	add_button(v, Loc.t("ui.pg.resume"), "ui_play", _close)
 	add_button(v, Loc.t("ui.pause.leave"), "ui_arrow_left", func(): Session.leave_shift())

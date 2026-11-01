@@ -57,6 +57,12 @@ func _initialize() -> void:
 				var aid: String = a["id"]
 				if not (aid in actors or aid.begins_with("guest:")):
 					err("story %s: unknown actor %s" % [p.get("id", sid), aid])
+				var slay: String = p.get("layout", sc.get("layout", "P1"))
+				if C.templates.has(slay) and a.has("pos") and p.get("set", "") != "photo":
+					var SL: LayoutDef = C.layout(slay)
+					var m := SL.classic_to_local_xz(float(a["pos"][0]), float(a["pos"][1]))
+					if m.x > 0.5 and SL.is_wall_tile(LayoutDef.tile_of(int(m.x * SimC.UM)), LayoutDef.tile_of(int(m.y * SimC.UM))):
+						warnings.append("story %s: actor %s maps into a wall at (%.1f, %.1f) on %s" % [p.get("id", sid), aid, m.x, m.y, slay])
 			for pr in p.get("props", []):
 				var pk: String = pr["kind"]
 				if pk.begins_with("item:"):

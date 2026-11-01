@@ -3,7 +3,7 @@
  "scenes": [
   {
    "id": "B01",
-   "layout": "P1",
+   "layout": "P1v2",
    "music": "title_loop",
    "title_key": "story.B01.title",
    "panels": [
@@ -153,14 +153,14 @@
       8.0,
       8.0
      ],
-     "layout": "P2",
+     "layout": "P2v2",
      "caption": "story.B01.4"
     }
    ]
   },
   {
    "id": "B02",
-   "layout": "P2",
+   "layout": "P2v2",
    "music": "title_loop",
    "title_key": "story.B02.title",
    "panels": [
@@ -289,14 +289,14 @@
       }
      ],
      "props": [],
-     "layout": "P3",
+     "layout": "P3v2",
      "caption": "story.B02.4"
     }
    ]
   },
   {
    "id": "B03",
-   "layout": "P3",
+   "layout": "P3v2",
    "music": "title_loop",
    "title_key": "story.B03.title",
    "panels": [
@@ -386,7 +386,7 @@
      "speaker": "moss",
      "actors": [],
      "props": [],
-     "layout": "P4",
+     "layout": "P4v2",
      "caption": "story.B03.3"
     },
     {
@@ -433,14 +433,14 @@
        ]
       }
      ],
-     "layout": "P4",
+     "layout": "P4v2",
      "caption": "story.B03.4"
     }
    ]
   },
   {
    "id": "B04",
-   "layout": "P4",
+   "layout": "P4v2",
    "music": "title_loop",
    "title_key": "story.B04.title",
    "panels": [
@@ -543,7 +543,7 @@
        "scale": 2.2
       }
      ],
-     "layout": "P1",
+     "layout": "P1v2",
      "caption": "story.B04.2"
     },
     {
@@ -563,7 +563,7 @@
       }
      ],
      "props": [],
-     "layout": "P5",
+     "layout": "P5v2",
      "caption": "story.B04.3"
     },
     {
@@ -602,14 +602,14 @@
        "scale": 0.8
       }
      ],
-     "layout": "P6",
+     "layout": "P6v2",
      "caption": "story.B04.4"
     }
    ]
   },
   {
    "id": "B05",
-   "layout": "P6",
+   "layout": "P6v2",
    "music": "title_loop",
    "title_key": "story.B05.title",
    "panels": [

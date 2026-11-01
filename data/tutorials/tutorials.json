@@ -245,7 +245,7 @@
     },
     {
       "id": "T02",
-      "layout": "P2",
+      "layout": "P2v2",
       "systems": [
         "core",
         "thermal"
@@ -354,8 +354,8 @@
             {
               "op": "cloud",
               "position": [
-                8,
-                8
+                6,
+                6
               ]
             }
           ],

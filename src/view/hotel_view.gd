@@ -160,8 +160,9 @@ func _build_stations() -> void:
 	_place("bell", ModelStations.build("group_bell", {}), _v(F["group_bell"]))
 	if F.has("festival_stand"):
 		_place("stand", ModelStations.build("festival_stand", {}), _v(F["festival_stand"]))
-	_place("goal_pad", ModelStations.build("goal_pad", {}), _v(F["goal_pad"], 0.01))
-	_no_shadows(stations["goal_pad"])
+	if F.has("goal_pad"):
+		_place("goal_pad", ModelStations.build("goal_pad", {}), _v(F["goal_pad"], 0.01))
+		_no_shadows(stations["goal_pad"])
 	for i in L.lift_pads.size():
 		_place("lift:%d" % i, ModelStations.build("lift_pad", {"index": i}), _v(L.lift_pads[i], 0.01))
 	if L.shutter.x >= 0:

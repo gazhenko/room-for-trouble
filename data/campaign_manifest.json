@@ -360,8 +360,8 @@
       "id": "L05",
       "title": "Some Like It Chilly",
       "chapter": 2,
-      "layout": "P2",
-      "duration_hotel_s": 330,
+      "layout": "P2v2",
+      "duration_hotel_s": 220,
       "waves": [
         {
           "roster": [
@@ -394,7 +394,7 @@
       "events": [
         {
           "id": "L05_frost",
-          "at": 90,
+          "at": 60,
           "type": "frost_patch",
           "warning_s": 5,
           "args": {
@@ -434,14 +434,24 @@
           "label": "Warm Hearts, Cool Rooms"
         }
       ],
-      "required_goal_ids": []
+      "required_goal_ids": [],
+      "pacing": {
+        "first_s": 4,
+        "gap_s": 16,
+        "announce_s": 3,
+        "reserve_s": 105
+      },
+      "stay_s": 45,
+      "patience_s": 45,
+      "request_s": 20,
+      "linen_start": 4
     },
     {
       "id": "L06",
       "title": "Hot and Cold Running Guests",
       "chapter": 2,
-      "layout": "P2",
-      "duration_hotel_s": 330,
+      "layout": "P2v2",
+      "duration_hotel_s": 230,
       "waves": [
         {
           "roster": [
@@ -475,13 +485,13 @@
       "events": [
         {
           "id": "L06_steam",
-          "at": 115,
+          "at": 80,
           "type": "steam_cloud",
           "warning_s": 5,
           "args": {
             "position": [
-              8,
-              8
+              6,
+              6
             ]
           }
         }
@@ -518,14 +528,24 @@
           "label": "Hot Service"
         }
       ],
-      "required_goal_ids": []
+      "required_goal_ids": [],
+      "pacing": {
+        "first_s": 4,
+        "gap_s": 16,
+        "announce_s": 3,
+        "reserve_s": 105
+      },
+      "stay_s": 45,
+      "patience_s": 45,
+      "request_s": 20,
+      "linen_start": 3
     },
     {
       "id": "L07",
       "title": "Mind the Vents",
       "chapter": 2,
-      "layout": "P2",
-      "duration_hotel_s": 330,
+      "layout": "P2v2",
+      "duration_hotel_s": 230,
       "waves": [
         {
           "roster": [
@@ -559,7 +579,7 @@
       "events": [
         {
           "id": "L07_cool_A",
-          "at": 85,
+          "at": 59,
           "type": "thermal_pulse",
           "warning_s": 5,
           "args": {
@@ -569,7 +589,7 @@
         },
         {
           "id": "L07_warm_E",
-          "at": 170,
+          "at": 118,
           "type": "thermal_pulse",
           "warning_s": 5,
           "args": {
@@ -610,14 +630,24 @@
           "label": "Comfort Travels"
         }
       ],
-      "required_goal_ids": []
+      "required_goal_ids": [],
+      "pacing": {
+        "first_s": 4,
+        "gap_s": 16,
+        "announce_s": 3,
+        "reserve_s": 105
+      },
+      "stay_s": 45,
+      "patience_s": 45,
+      "request_s": 20,
+      "linen_start": 3
     },
     {
       "id": "L08",
       "title": "The Great Defrost",
       "chapter": 2,
-      "layout": "P2",
-      "duration_hotel_s": 345,
+      "layout": "P2v2",
+      "duration_hotel_s": 240,
       "waves": [
         {
           "roster": [
@@ -659,7 +689,7 @@
       "events": [
         {
           "id": "L08_frost_C",
-          "at": 75,
+          "at": 52,
           "type": "frost_patch",
           "warning_s": 5,
           "args": {
@@ -668,19 +698,19 @@
         },
         {
           "id": "L08_steam_DE",
-          "at": 130,
+          "at": 90,
           "type": "steam_cloud",
           "warning_s": 5,
           "args": {
             "position": [
-              8,
-              11
+              6,
+              6
             ]
           }
         },
         {
           "id": "L08_trip_E",
-          "at": 185,
+          "at": 129,
           "type": "fixture_trip",
           "warning_s": 5,
           "args": {
@@ -720,7 +750,17 @@
           "label": "Ready for the Next Hello"
         }
       ],
-      "required_goal_ids": []
+      "required_goal_ids": [],
+      "pacing": {
+        "first_s": 4,
+        "gap_s": 15,
+        "announce_s": 3,
+        "reserve_s": 105
+      },
+      "stay_s": 45,
+      "patience_s": 45,
+      "request_s": 20,
+      "linen_start": 3
     },
     {
       "id": "L09",

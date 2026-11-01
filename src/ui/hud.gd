@@ -435,6 +435,24 @@ func _draw_prompts() -> void:
 		var tr := Rect2(feet0 + Vector2(10, 2), Vector2(24, 16))
 		draw_style_box(UiKit._box(col0, UiKit.INK, 1, 3, 0), tr)
 		UiKit.draw_text_outlined(self, tr.get_center() + Vector2(0, 5), "P%d" % (int(st0["seat"]) + 1), 12, UiKit.INK, Color(0, 0, 0, 0))
+	# With four players the prompts pile up around one spot, so: a target that two
+	# players highlight is prompted only for the nearer one, and every prompt box
+	# is pushed up until it overlaps no box drawn before it.
+	var nearest_for_key := {}
+	for st1 in s.get("staff", []):
+		if not local_seats.has(int(st1["seat"])):
+			continue
+		var rig1: ActorRig = view.staff_rigs.get(int(st1["seat"]), null)
+		if rig1 == null:
+			continue
+		for key1 in [st1["hl_c"], st1["hl_w"]]:
+			if key1 == "":
+				continue
+			var anchor1 := view.anchor_for_key(key1)
+			var d1 := rig1.position.distance_to(anchor1) if anchor1 != Vector3.ZERO else 0.0
+			if not nearest_for_key.has(key1) or d1 < float(nearest_for_key[key1][1]):
+				nearest_for_key[key1] = [int(st1["seat"]), d1]
+	var placed: Array = []
 	for st in s.get("staff", []):
 		var seat: int = st["seat"]
 		var rig: ActorRig = view.staff_rigs.get(seat, null)
@@ -447,9 +465,9 @@ func _draw_prompts() -> void:
 		var router_seat: int = seat_device.get(seat, seat)
 		var y := head.y - 30.0
 		var lines: Array = []
-		if st["hl_c"] != "":
+		if st["hl_c"] != "" and int(nearest_for_key.get(st["hl_c"], [seat])[0]) == seat:
 			lines.append(["carry", st["hl_c"], st["hl_c_ok"], st["hl_c_why"]])
-		if st["hl_w"] != "" and st["hl_w"] != st["hl_c"]:
+		if st["hl_w"] != "" and st["hl_w"] != st["hl_c"] and int(nearest_for_key.get(st["hl_w"], [seat])[0]) == seat:
 			lines.append(["work", st["hl_w"], st["hl_w_ok"], st["hl_w_why"]])
 		if st["grip"] != 0:
 			lines = [["carry", "release", true, ""]]
@@ -462,6 +480,17 @@ func _draw_prompts() -> void:
 			var gw := UiKit.glyph_width(g, 24)
 			var total := gw + 6 + tw + 12
 			var r := Rect2(Vector2(head.x - total * 0.5, y - 13), Vector2(total, 26))
+			for _bump in 4:
+				var hit := false
+				for pr in placed:
+					if (pr as Rect2).grow(3).intersects(r):
+						hit = true
+						break
+				if not hit:
+					break
+				y -= 30.0
+				r.position.y = y - 13
+			placed.append(r)
 			draw_style_box(UiKit._box(UiKit.PAPER if ok else Color("#ECE5DA"), col.darkened(0.35) if ok else Color("#A79E91"), 2, 6, 0), r)
 			UiKit.draw_glyph(self, Vector2(r.position.x + gw * 0.5 + 3, y), g, 22)
 			draw_string(_font, Vector2(r.position.x + gw + 9, y + 6), verb, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, UiKit.INK if ok else Color("#7A7268"))

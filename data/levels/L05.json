@@ -4,7 +4,7 @@
  "id": "L05",
  "title": "Some Like It Chilly",
  "chapter": 2,
- "layout": "P2",
+ "layout": "P2v2",
  "story": {
   "pre": "L05.pre",
   "post": "L05.post",
@@ -32,20 +32,20 @@
     {
      "family": "yeti",
      "wave": 0,
-     "arrive_s": 30,
-     "announce_s": 22
+     "arrive_s": 4,
+     "announce_s": 1
     },
     {
      "family": "yeti",
      "wave": 1,
-     "arrive_s": 105,
-     "announce_s": 97
+     "arrive_s": 31,
+     "announce_s": 28
     },
     {
      "family": "yeti",
      "wave": 2,
-     "arrive_s": 180,
-     "announce_s": 172
+     "arrive_s": 58,
+     "announce_s": 55
     }
    ],
    "guest_count": 3
@@ -69,38 +69,38 @@
     {
      "family": "yeti",
      "wave": 0,
-     "arrive_s": 25,
-     "announce_s": 17
+     "arrive_s": 4,
+     "announce_s": 1
     },
     {
      "family": "slime",
      "wave": 0,
-     "arrive_s": 30,
-     "announce_s": 22
+     "arrive_s": 20,
+     "announce_s": 17
     },
     {
      "family": "yeti",
      "wave": 1,
-     "arrive_s": 100,
-     "announce_s": 92
+     "arrive_s": 36,
+     "announce_s": 33
     },
     {
      "family": "slime",
      "wave": 1,
-     "arrive_s": 105,
-     "announce_s": 97
+     "arrive_s": 52,
+     "announce_s": 49
     },
     {
      "family": "yeti",
      "wave": 2,
-     "arrive_s": 175,
-     "announce_s": 167
+     "arrive_s": 68,
+     "announce_s": 65
     },
     {
      "family": "slime",
      "wave": 2,
-     "arrive_s": 180,
-     "announce_s": 172
+     "arrive_s": 84,
+     "announce_s": 81
     }
    ],
    "guest_count": 6
@@ -127,56 +127,56 @@
     {
      "family": "yeti",
      "wave": 0,
-     "arrive_s": 20,
-     "announce_s": 12
+     "arrive_s": 4,
+     "announce_s": 1
     },
     {
      "family": "slime",
      "wave": 0,
-     "arrive_s": 25,
-     "announce_s": 17
+     "arrive_s": 17,
+     "announce_s": 14
     },
     {
      "family": "yeti",
      "wave": 0,
      "arrive_s": 30,
-     "announce_s": 22
+     "announce_s": 27
     },
     {
      "family": "yeti",
      "wave": 1,
-     "arrive_s": 95,
-     "announce_s": 87
+     "arrive_s": 43,
+     "announce_s": 40
     },
     {
      "family": "slime",
      "wave": 1,
-     "arrive_s": 100,
+     "arrive_s": 56,
+     "announce_s": 53
+    },
+    {
+     "family": "yeti",
+     "wave": 1,
+     "arrive_s": 69,
+     "announce_s": 66
+    },
+    {
+     "family": "yeti",
+     "wave": 2,
+     "arrive_s": 82,
+     "announce_s": 79
+    },
+    {
+     "family": "slime",
+     "wave": 2,
+     "arrive_s": 95,
      "announce_s": 92
     },
     {
      "family": "yeti",
-     "wave": 1,
-     "arrive_s": 105,
-     "announce_s": 97
-    },
-    {
-     "family": "yeti",
      "wave": 2,
-     "arrive_s": 170,
-     "announce_s": 162
-    },
-    {
-     "family": "slime",
-     "wave": 2,
-     "arrive_s": 175,
-     "announce_s": 167
-    },
-    {
-     "family": "yeti",
-     "wave": 2,
-     "arrive_s": 180,
-     "announce_s": 172
+     "arrive_s": 108,
+     "announce_s": 105
     }
    ],
    "guest_count": 9
@@ -203,56 +203,56 @@
     {
      "family": "yeti",
      "wave": 0,
-     "arrive_s": 20,
-     "announce_s": 12
+     "arrive_s": 4,
+     "announce_s": 1
     },
     {
      "family": "slime",
      "wave": 0,
-     "arrive_s": 25,
-     "announce_s": 17
+     "arrive_s": 17,
+     "announce_s": 14
     },
     {
      "family": "yeti",
      "wave": 0,
      "arrive_s": 30,
-     "announce_s": 22
+     "announce_s": 27
     },
     {
      "family": "yeti",
      "wave": 1,
-     "arrive_s": 95,
-     "announce_s": 87
+     "arrive_s": 43,
+     "announce_s": 40
     },
     {
      "family": "slime",
      "wave": 1,
-     "arrive_s": 100,
+     "arrive_s": 56,
+     "announce_s": 53
+    },
+    {
+     "family": "yeti",
+     "wave": 1,
+     "arrive_s": 69,
+     "announce_s": 66
+    },
+    {
+     "family": "yeti",
+     "wave": 2,
+     "arrive_s": 82,
+     "announce_s": 79
+    },
+    {
+     "family": "slime",
+     "wave": 2,
+     "arrive_s": 95,
      "announce_s": 92
     },
     {
      "family": "yeti",
-     "wave": 1,
-     "arrive_s": 105,
-     "announce_s": 97
-    },
-    {
-     "family": "yeti",
      "wave": 2,
-     "arrive_s": 170,
-     "announce_s": 162
-    },
-    {
-     "family": "slime",
-     "wave": 2,
-     "arrive_s": 175,
-     "announce_s": 167
-    },
-    {
-     "family": "yeti",
-     "wave": 2,
-     "arrive_s": 180,
-     "announce_s": 172
+     "arrive_s": 108,
+     "announce_s": 105
     }
    ],
    "guest_count": 9

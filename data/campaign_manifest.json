@@ -1139,8 +1139,8 @@
       "id": "L13",
       "title": "A Little Water",
       "chapter": 4,
-      "layout": "P4",
-      "duration_hotel_s": 330,
+      "layout": "P4v2",
+      "duration_hotel_s": 240,
       "waves": [
         {
           "roster": [
@@ -1176,7 +1176,7 @@
       "events": [
         {
           "id": "L13_water_coach",
-          "at": 0,
+          "at": 8,
           "type": "coach",
           "warning_s": 0,
           "args": {
@@ -1217,14 +1217,24 @@
           "label": "Room to Grow"
         }
       ],
-      "required_goal_ids": []
+      "required_goal_ids": [],
+      "pacing": {
+        "first_s": 4,
+        "gap_s": 16,
+        "announce_s": 3,
+        "reserve_s": 110
+      },
+      "stay_s": 50,
+      "patience_s": 45,
+      "request_s": 20,
+      "linen_start": 3
     },
     {
       "id": "L14",
       "title": "Steam and Sprouts",
       "chapter": 4,
-      "layout": "P4",
-      "duration_hotel_s": 345,
+      "layout": "P4v2",
+      "duration_hotel_s": 250,
       "waves": [
         {
           "roster": [
@@ -1261,19 +1271,19 @@
       "events": [
         {
           "id": "L14_cloud",
-          "at": 105,
+          "at": 76,
           "type": "steam_cloud",
           "warning_s": 5,
           "args": {
             "position": [
-              17,
-              8
+              12,
+              6
             ]
           }
         },
         {
           "id": "L14_damp_E",
-          "at": 175,
+          "at": 127,
           "type": "humidity_pulse",
           "warning_s": 5,
           "args": {
@@ -1314,14 +1324,24 @@
           "label": "A Growing Team"
         }
       ],
-      "required_goal_ids": []
+      "required_goal_ids": [],
+      "pacing": {
+        "first_s": 4,
+        "gap_s": 15,
+        "announce_s": 3,
+        "reserve_s": 110
+      },
+      "stay_s": 50,
+      "patience_s": 45,
+      "request_s": 20,
+      "linen_start": 3
     },
     {
       "id": "L15",
       "title": "Puddle Buddies",
       "chapter": 4,
-      "layout": "P4",
-      "duration_hotel_s": 330,
+      "layout": "P4v2",
+      "duration_hotel_s": 250,
       "waves": [
         {
           "roster": [
@@ -1358,36 +1378,36 @@
       "events": [
         {
           "id": "L15_splash_1",
-          "at": 65,
+          "at": 49,
           "type": "puddle_patch",
           "warning_s": 5,
           "args": {
             "positions": [
               [
-                6,
-                9
+                5,
+                6
               ],
               [
-                19,
-                8
+                13,
+                6
               ]
             ]
           }
         },
         {
           "id": "L15_splash_2",
-          "at": 150,
+          "at": 114,
           "type": "puddle_patch",
           "warning_s": 5,
           "args": {
             "positions": [
               [
-                10,
-                11
+                8,
+                6
               ],
               [
-                21,
-                8
+                15,
+                6
               ]
             ]
           }
@@ -1425,14 +1445,24 @@
           "label": "Dry Delivery"
         }
       ],
-      "required_goal_ids": []
+      "required_goal_ids": [],
+      "pacing": {
+        "first_s": 4,
+        "gap_s": 15,
+        "announce_s": 3,
+        "reserve_s": 110
+      },
+      "stay_s": 50,
+      "patience_s": 45,
+      "request_s": 20,
+      "linen_start": 3
     },
     {
       "id": "L16",
       "title": "Bloom Service",
       "chapter": 4,
-      "layout": "P4",
-      "duration_hotel_s": 345,
+      "layout": "P4v2",
+      "duration_hotel_s": 260,
       "waves": [
         {
           "roster": [
@@ -1470,7 +1500,7 @@
       "events": [
         {
           "id": "L16_damp_C",
-          "at": 95,
+          "at": 72,
           "type": "humidity_pulse",
           "warning_s": 5,
           "args": {
@@ -1480,7 +1510,7 @@
         },
         {
           "id": "L16_trip_D",
-          "at": 180,
+          "at": 136,
           "type": "fixture_trip",
           "warning_s": 5,
           "args": {
@@ -1520,7 +1550,17 @@
           "label": "A Garden of Helpers"
         }
       ],
-      "required_goal_ids": []
+      "required_goal_ids": [],
+      "pacing": {
+        "first_s": 4,
+        "gap_s": 14,
+        "announce_s": 3,
+        "reserve_s": 110
+      },
+      "stay_s": 50,
+      "patience_s": 45,
+      "request_s": 20,
+      "linen_start": 3
     },
     {
       "id": "L17",

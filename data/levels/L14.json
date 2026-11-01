@@ -4,7 +4,7 @@
  "id": "L14",
  "title": "Steam and Sprouts",
  "chapter": 4,
- "layout": "P4",
+ "layout": "P4v2",
  "story": {
   "pre": "L14.pre",
   "post": "L14.post",
@@ -34,32 +34,32 @@
     {
      "family": "sprout",
      "wave": 0,
-     "arrive_s": 30,
-     "announce_s": 22
+     "arrive_s": 4,
+     "announce_s": 1
     },
     {
      "family": "yeti",
      "wave": 1,
-     "arrive_s": 107,
-     "announce_s": 99
+     "arrive_s": 33,
+     "announce_s": 30
     },
     {
      "family": "sprout",
      "wave": 1,
-     "arrive_s": 112,
-     "announce_s": 104
+     "arrive_s": 62,
+     "announce_s": 59
     },
     {
      "family": "sprout",
      "wave": 2,
-     "arrive_s": 190,
-     "announce_s": 182
+     "arrive_s": 91,
+     "announce_s": 88
     },
     {
      "family": "yeti",
      "wave": 2,
-     "arrive_s": 195,
-     "announce_s": 187
+     "arrive_s": 120,
+     "announce_s": 117
     }
    ],
    "guest_count": 5
@@ -85,50 +85,50 @@
     {
      "family": "sprout",
      "wave": 0,
-     "arrive_s": 25,
-     "announce_s": 17
+     "arrive_s": 4,
+     "announce_s": 1
     },
     {
      "family": "dragon",
      "wave": 0,
-     "arrive_s": 30,
-     "announce_s": 22
+     "arrive_s": 19,
+     "announce_s": 16
     },
     {
      "family": "yeti",
      "wave": 1,
-     "arrive_s": 102,
-     "announce_s": 94
+     "arrive_s": 34,
+     "announce_s": 31
     },
     {
      "family": "sprout",
      "wave": 1,
-     "arrive_s": 107,
-     "announce_s": 99
+     "arrive_s": 49,
+     "announce_s": 46
     },
     {
      "family": "dragon",
      "wave": 1,
-     "arrive_s": 112,
-     "announce_s": 104
+     "arrive_s": 64,
+     "announce_s": 61
     },
     {
      "family": "sprout",
      "wave": 2,
-     "arrive_s": 185,
-     "announce_s": 177
+     "arrive_s": 79,
+     "announce_s": 76
     },
     {
      "family": "yeti",
      "wave": 2,
-     "arrive_s": 190,
-     "announce_s": 182
+     "arrive_s": 94,
+     "announce_s": 91
     },
     {
      "family": "dragon",
      "wave": 2,
-     "arrive_s": 195,
-     "announce_s": 187
+     "arrive_s": 109,
+     "announce_s": 106
     }
    ],
    "guest_count": 8
@@ -157,68 +157,68 @@
     {
      "family": "sprout",
      "wave": 0,
-     "arrive_s": 20,
-     "announce_s": 12
+     "arrive_s": 4,
+     "announce_s": 1
     },
     {
      "family": "dragon",
      "wave": 0,
-     "arrive_s": 25,
-     "announce_s": 17
+     "arrive_s": 17,
+     "announce_s": 14
     },
     {
      "family": "sprout",
      "wave": 0,
      "arrive_s": 30,
-     "announce_s": 22
+     "announce_s": 27
     },
     {
      "family": "yeti",
      "wave": 1,
-     "arrive_s": 97,
-     "announce_s": 89
+     "arrive_s": 43,
+     "announce_s": 40
     },
     {
      "family": "sprout",
      "wave": 1,
-     "arrive_s": 102,
-     "announce_s": 94
+     "arrive_s": 56,
+     "announce_s": 53
     },
     {
      "family": "dragon",
      "wave": 1,
-     "arrive_s": 107,
-     "announce_s": 99
+     "arrive_s": 69,
+     "announce_s": 66
     },
     {
      "family": "yeti",
      "wave": 1,
-     "arrive_s": 112,
-     "announce_s": 104
+     "arrive_s": 82,
+     "announce_s": 79
     },
     {
      "family": "sprout",
      "wave": 2,
-     "arrive_s": 180,
-     "announce_s": 172
+     "arrive_s": 95,
+     "announce_s": 92
     },
     {
      "family": "yeti",
      "wave": 2,
-     "arrive_s": 185,
-     "announce_s": 177
+     "arrive_s": 108,
+     "announce_s": 105
     },
     {
      "family": "dragon",
      "wave": 2,
-     "arrive_s": 190,
-     "announce_s": 182
+     "arrive_s": 121,
+     "announce_s": 118
     },
     {
      "family": "sprout",
      "wave": 2,
-     "arrive_s": 195,
-     "announce_s": 187
+     "arrive_s": 134,
+     "announce_s": 131
     }
    ],
    "guest_count": 11
@@ -249,80 +249,80 @@
     {
      "family": "sprout",
      "wave": 0,
-     "arrive_s": 20,
+     "arrive_s": 4,
+     "announce_s": 1
+    },
+    {
+     "family": "dragon",
+     "wave": 0,
+     "arrive_s": 15,
      "announce_s": 12
     },
     {
-     "family": "dragon",
-     "wave": 0,
-     "arrive_s": 25,
-     "announce_s": 17
-    },
-    {
      "family": "sprout",
      "wave": 0,
-     "arrive_s": 30,
-     "announce_s": 22
+     "arrive_s": 26,
+     "announce_s": 23
     },
     {
      "family": "yeti",
      "wave": 1,
-     "arrive_s": 92,
-     "announce_s": 84
+     "arrive_s": 37,
+     "announce_s": 34
     },
     {
      "family": "sprout",
      "wave": 1,
-     "arrive_s": 97,
+     "arrive_s": 48,
+     "announce_s": 45
+    },
+    {
+     "family": "dragon",
+     "wave": 1,
+     "arrive_s": 59,
+     "announce_s": 56
+    },
+    {
+     "family": "yeti",
+     "wave": 1,
+     "arrive_s": 70,
+     "announce_s": 67
+    },
+    {
+     "family": "sprout",
+     "wave": 1,
+     "arrive_s": 81,
+     "announce_s": 78
+    },
+    {
+     "family": "sprout",
+     "wave": 2,
+     "arrive_s": 92,
      "announce_s": 89
     },
     {
-     "family": "dragon",
-     "wave": 1,
-     "arrive_s": 102,
-     "announce_s": 94
-    },
-    {
-     "family": "yeti",
-     "wave": 1,
-     "arrive_s": 107,
-     "announce_s": 99
-    },
-    {
-     "family": "sprout",
-     "wave": 1,
-     "arrive_s": 112,
-     "announce_s": 104
-    },
-    {
-     "family": "sprout",
-     "wave": 2,
-     "arrive_s": 175,
-     "announce_s": 167
-    },
-    {
      "family": "yeti",
      "wave": 2,
-     "arrive_s": 180,
-     "announce_s": 172
+     "arrive_s": 103,
+     "announce_s": 100
     },
     {
      "family": "dragon",
      "wave": 2,
-     "arrive_s": 185,
-     "announce_s": 177
+     "arrive_s": 114,
+     "announce_s": 111
     },
     {
      "family": "sprout",
      "wave": 2,
-     "arrive_s": 190,
-     "announce_s": 182
+     "arrive_s": 125,
+     "announce_s": 122
     },
     {
      "family": "yeti",
      "wave": 2,
-     "arrive_s": 195,
-     "announce_s": 187
+     "arrive_s": 136,
+     "announce_s": 133
     }
    ],
    "guest_count": 13

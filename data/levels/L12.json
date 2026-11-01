@@ -4,7 +4,7 @@
  "id": "L12",
  "title": "The Quiet-ish Concert",
  "chapter": 3,
- "layout": "P3",
+ "layout": "P3v2",
  "story": {
   "pre": "L12.pre",
   "post": "L12.post",
@@ -35,38 +35,38 @@
     {
      "family": "moonwolf",
      "wave": 0,
-     "arrive_s": 25,
-     "announce_s": 17
+     "arrive_s": 4,
+     "announce_s": 1
     },
     {
      "family": "ghost",
      "wave": 0,
-     "arrive_s": 30,
-     "announce_s": 22
+     "arrive_s": 31,
+     "announce_s": 28
     },
     {
      "family": "moonwolf",
      "wave": 1,
-     "arrive_s": 107,
-     "announce_s": 99
+     "arrive_s": 58,
+     "announce_s": 55
     },
     {
      "family": "ghost",
      "wave": 1,
-     "arrive_s": 112,
-     "announce_s": 104
+     "arrive_s": 85,
+     "announce_s": 82
     },
     {
      "family": "ghost",
      "wave": 2,
-     "arrive_s": 190,
-     "announce_s": 182
+     "arrive_s": 112,
+     "announce_s": 109
     },
     {
      "family": "yeti",
      "wave": 2,
-     "arrive_s": 195,
-     "announce_s": 187
+     "arrive_s": 139,
+     "announce_s": 136
     }
    ],
    "guest_count": 6
@@ -93,56 +93,56 @@
     {
      "family": "moonwolf",
      "wave": 0,
-     "arrive_s": 20,
-     "announce_s": 12
+     "arrive_s": 4,
+     "announce_s": 1
     },
     {
      "family": "ghost",
      "wave": 0,
-     "arrive_s": 25,
-     "announce_s": 17
+     "arrive_s": 18,
+     "announce_s": 15
     },
     {
      "family": "slime",
      "wave": 0,
-     "arrive_s": 30,
-     "announce_s": 22
+     "arrive_s": 32,
+     "announce_s": 29
     },
     {
      "family": "moonwolf",
      "wave": 1,
-     "arrive_s": 102,
-     "announce_s": 94
+     "arrive_s": 46,
+     "announce_s": 43
     },
     {
      "family": "ghost",
      "wave": 1,
-     "arrive_s": 107,
-     "announce_s": 99
+     "arrive_s": 60,
+     "announce_s": 57
     },
     {
      "family": "dragon",
      "wave": 1,
-     "arrive_s": 112,
-     "announce_s": 104
+     "arrive_s": 74,
+     "announce_s": 71
     },
     {
      "family": "ghost",
      "wave": 2,
-     "arrive_s": 185,
-     "announce_s": 177
+     "arrive_s": 88,
+     "announce_s": 85
     },
     {
      "family": "yeti",
      "wave": 2,
-     "arrive_s": 190,
-     "announce_s": 182
+     "arrive_s": 102,
+     "announce_s": 99
     },
     {
      "family": "moonwolf",
      "wave": 2,
-     "arrive_s": 195,
-     "announce_s": 187
+     "arrive_s": 116,
+     "announce_s": 113
     }
    ],
    "guest_count": 9
@@ -172,74 +172,74 @@
     {
      "family": "moonwolf",
      "wave": 0,
-     "arrive_s": 15,
-     "announce_s": 7
+     "arrive_s": 4,
+     "announce_s": 1
     },
     {
      "family": "ghost",
      "wave": 0,
-     "arrive_s": 20,
-     "announce_s": 12
+     "arrive_s": 16,
+     "announce_s": 13
     },
     {
      "family": "slime",
      "wave": 0,
-     "arrive_s": 25,
-     "announce_s": 17
+     "arrive_s": 28,
+     "announce_s": 25
     },
     {
      "family": "moonwolf",
      "wave": 0,
-     "arrive_s": 30,
-     "announce_s": 22
+     "arrive_s": 40,
+     "announce_s": 37
     },
     {
      "family": "moonwolf",
      "wave": 1,
-     "arrive_s": 97,
-     "announce_s": 89
+     "arrive_s": 52,
+     "announce_s": 49
     },
     {
      "family": "ghost",
      "wave": 1,
-     "arrive_s": 102,
-     "announce_s": 94
+     "arrive_s": 64,
+     "announce_s": 61
     },
     {
      "family": "dragon",
      "wave": 1,
-     "arrive_s": 107,
-     "announce_s": 99
+     "arrive_s": 76,
+     "announce_s": 73
     },
     {
      "family": "moonwolf",
      "wave": 1,
-     "arrive_s": 112,
-     "announce_s": 104
+     "arrive_s": 88,
+     "announce_s": 85
     },
     {
      "family": "ghost",
      "wave": 2,
-     "arrive_s": 180,
-     "announce_s": 172
+     "arrive_s": 100,
+     "announce_s": 97
     },
     {
      "family": "yeti",
      "wave": 2,
-     "arrive_s": 185,
-     "announce_s": 177
+     "arrive_s": 112,
+     "announce_s": 109
     },
     {
      "family": "moonwolf",
      "wave": 2,
-     "arrive_s": 190,
-     "announce_s": 182
+     "arrive_s": 124,
+     "announce_s": 121
     },
     {
      "family": "ghost",
      "wave": 2,
-     "arrive_s": 195,
-     "announce_s": 187
+     "arrive_s": 136,
+     "announce_s": 133
     }
    ],
    "guest_count": 12
@@ -272,92 +272,92 @@
     {
      "family": "moonwolf",
      "wave": 0,
-     "arrive_s": 10,
-     "announce_s": 2
+     "arrive_s": 4,
+     "announce_s": 1
     },
     {
      "family": "ghost",
      "wave": 0,
-     "arrive_s": 15,
-     "announce_s": 7
+     "arrive_s": 14,
+     "announce_s": 11
     },
     {
      "family": "slime",
      "wave": 0,
-     "arrive_s": 20,
-     "announce_s": 12
+     "arrive_s": 24,
+     "announce_s": 21
     },
     {
      "family": "moonwolf",
      "wave": 0,
-     "arrive_s": 25,
-     "announce_s": 17
+     "arrive_s": 34,
+     "announce_s": 31
     },
     {
      "family": "ghost",
      "wave": 0,
-     "arrive_s": 30,
-     "announce_s": 22
+     "arrive_s": 44,
+     "announce_s": 41
     },
     {
      "family": "moonwolf",
      "wave": 1,
-     "arrive_s": 92,
-     "announce_s": 84
+     "arrive_s": 54,
+     "announce_s": 51
     },
     {
      "family": "ghost",
      "wave": 1,
-     "arrive_s": 97,
-     "announce_s": 89
+     "arrive_s": 64,
+     "announce_s": 61
     },
     {
      "family": "dragon",
      "wave": 1,
-     "arrive_s": 102,
-     "announce_s": 94
+     "arrive_s": 74,
+     "announce_s": 71
     },
     {
      "family": "moonwolf",
      "wave": 1,
-     "arrive_s": 107,
-     "announce_s": 99
+     "arrive_s": 84,
+     "announce_s": 81
     },
     {
      "family": "ghost",
      "wave": 1,
-     "arrive_s": 112,
-     "announce_s": 104
+     "arrive_s": 94,
+     "announce_s": 91
     },
     {
      "family": "ghost",
      "wave": 2,
-     "arrive_s": 175,
-     "announce_s": 167
+     "arrive_s": 104,
+     "announce_s": 101
     },
     {
      "family": "yeti",
      "wave": 2,
-     "arrive_s": 180,
-     "announce_s": 172
+     "arrive_s": 114,
+     "announce_s": 111
     },
     {
      "family": "moonwolf",
      "wave": 2,
-     "arrive_s": 185,
-     "announce_s": 177
+     "arrive_s": 124,
+     "announce_s": 121
     },
     {
      "family": "ghost",
      "wave": 2,
-     "arrive_s": 190,
-     "announce_s": 182
+     "arrive_s": 134,
+     "announce_s": 131
     },
     {
      "family": "yeti",
      "wave": 2,
-     "arrive_s": 195,
-     "announce_s": 187
+     "arrive_s": 144,
+     "announce_s": 141
     }
    ],
    "guest_count": 15

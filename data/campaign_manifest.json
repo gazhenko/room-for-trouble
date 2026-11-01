@@ -766,8 +766,8 @@
       "id": "L09",
       "title": "Please Do Disturb",
       "chapter": 3,
-      "layout": "P3",
-      "duration_hotel_s": 330,
+      "layout": "P3v2",
+      "duration_hotel_s": 230,
       "waves": [
         {
           "roster": [
@@ -802,7 +802,7 @@
       "events": [
         {
           "id": "L09_note_D",
-          "at": 95,
+          "at": 66,
           "type": "concert_pulse",
           "warning_s": 5,
           "args": {
@@ -843,14 +843,24 @@
           "label": "Softly Delivered"
         }
       ],
-      "required_goal_ids": []
+      "required_goal_ids": [],
+      "pacing": {
+        "first_s": 4,
+        "gap_s": 16,
+        "announce_s": 3,
+        "reserve_s": 105
+      },
+      "stay_s": 45,
+      "patience_s": 45,
+      "request_s": 20,
+      "linen_start": 3
     },
     {
       "id": "L10",
       "title": "Indoor Voices",
       "chapter": 3,
-      "layout": "P3",
-      "duration_hotel_s": 330,
+      "layout": "P3v2",
+      "duration_hotel_s": 230,
       "waves": [
         {
           "roster": [
@@ -915,14 +925,24 @@
           "label": "A Song and a Nap"
         }
       ],
-      "required_goal_ids": []
+      "required_goal_ids": [],
+      "pacing": {
+        "first_s": 4,
+        "gap_s": 16,
+        "announce_s": 3,
+        "reserve_s": 105
+      },
+      "stay_s": 45,
+      "patience_s": 45,
+      "request_s": 20,
+      "linen_start": 3
     },
     {
       "id": "L11",
       "title": "Curtain Confidence",
       "chapter": 3,
-      "layout": "P3",
-      "duration_hotel_s": 345,
+      "layout": "P3v2",
+      "duration_hotel_s": 240,
       "waves": [
         {
           "roster": [
@@ -958,7 +978,7 @@
       "events": [
         {
           "id": "L11_trip_B",
-          "at": 140,
+          "at": 97,
           "type": "fixture_trip",
           "warning_s": 5,
           "args": {
@@ -998,14 +1018,24 @@
           "label": "Through Helping Hands"
         }
       ],
-      "required_goal_ids": []
+      "required_goal_ids": [],
+      "pacing": {
+        "first_s": 4,
+        "gap_s": 15,
+        "announce_s": 3,
+        "reserve_s": 105
+      },
+      "stay_s": 45,
+      "patience_s": 45,
+      "request_s": 20,
+      "linen_start": 3
     },
     {
       "id": "L12",
       "title": "The Quiet-ish Concert",
       "chapter": 3,
-      "layout": "P3",
-      "duration_hotel_s": 345,
+      "layout": "P3v2",
+      "duration_hotel_s": 250,
       "waves": [
         {
           "roster": [
@@ -1042,7 +1072,7 @@
       "events": [
         {
           "id": "L12_note_1",
-          "at": 90,
+          "at": 65,
           "type": "concert_pulse",
           "warning_s": 5,
           "args": {
@@ -1052,7 +1082,7 @@
         },
         {
           "id": "L12_note_2",
-          "at": 180,
+          "at": 130,
           "type": "concert_pulse",
           "warning_s": 5,
           "args": {
@@ -1093,7 +1123,17 @@
           "label": "Encore, Please"
         }
       ],
-      "required_goal_ids": []
+      "required_goal_ids": [],
+      "pacing": {
+        "first_s": 4,
+        "gap_s": 14,
+        "announce_s": 3,
+        "reserve_s": 105
+      },
+      "stay_s": 45,
+      "patience_s": 45,
+      "request_s": 20,
+      "linen_start": 3
     },
     {
       "id": "L13",

@@ -438,7 +438,7 @@
     },
     {
       "id": "T03",
-      "layout": "P3",
+      "layout": "P3v2",
       "systems": [
         "core",
         "thermal",

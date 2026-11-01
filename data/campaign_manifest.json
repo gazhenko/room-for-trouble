@@ -2031,8 +2031,8 @@
       "id": "L21",
       "title": "Lantern Check-In",
       "chapter": 6,
-      "layout": "P6",
-      "duration_hotel_s": 345,
+      "layout": "P6v2",
+      "duration_hotel_s": 270,
       "waves": [
         {
           "roster": [
@@ -2072,7 +2072,7 @@
       "events": [
         {
           "id": "L21_parcels",
-          "at": 15,
+          "at": 12,
           "type": "parcels_spawn",
           "warning_s": 0,
           "args": {
@@ -2083,16 +2083,16 @@
             ],
             "positions": [
               [
-                3,
-                11
+                4,
+                6
               ],
               [
-                8,
-                11
+                10,
+                6
               ],
               [
-                18,
-                11
+                14,
+                6
               ]
             ],
             "goal": "festival_stand"
@@ -2100,13 +2100,13 @@
         },
         {
           "id": "L21_cloud",
-          "at": 120,
+          "at": 94,
           "type": "steam_cloud",
           "warning_s": 5,
           "args": {
             "position": [
-              17,
-              8
+              12,
+              6
             ]
           }
         }
@@ -2147,14 +2147,24 @@
         "parcel_L21_a",
         "parcel_L21_b",
         "parcel_L21_c"
-      ]
+      ],
+      "pacing": {
+        "first_s": 4,
+        "gap_s": 13,
+        "announce_s": 3,
+        "reserve_s": 110
+      },
+      "stay_s": 50,
+      "patience_s": 45,
+      "request_s": 20,
+      "linen_start": 3
     },
     {
       "id": "L22",
       "title": "Neighbors Helping Neighbors",
       "chapter": 6,
-      "layout": "P6",
-      "duration_hotel_s": 360,
+      "layout": "P6v2",
+      "duration_hotel_s": 280,
       "waves": [
         {
           "roster": [
@@ -2195,25 +2205,25 @@
       "events": [
         {
           "id": "L22_puddles",
-          "at": 90,
+          "at": 70,
           "type": "puddle_patch",
           "warning_s": 5,
           "args": {
             "positions": [
               [
-                6,
-                9
+                5,
+                6
               ],
               [
-                21,
-                8
+                15,
+                6
               ]
             ]
           }
         },
         {
           "id": "L22_trip_towels",
-          "at": 170,
+          "at": 132,
           "type": "fixture_trip",
           "warning_s": 5,
           "args": {
@@ -2253,14 +2263,24 @@
           "label": "A Comfortable Company"
         }
       ],
-      "required_goal_ids": []
+      "required_goal_ids": [],
+      "pacing": {
+        "first_s": 4,
+        "gap_s": 12,
+        "announce_s": 3,
+        "reserve_s": 110
+      },
+      "stay_s": 50,
+      "patience_s": 45,
+      "request_s": 20,
+      "linen_start": 3
     },
     {
       "id": "L23",
       "title": "A Full House, Kindly",
       "chapter": 6,
-      "layout": "P6",
-      "duration_hotel_s": 360,
+      "layout": "P6v2",
+      "duration_hotel_s": 280,
       "waves": [
         {
           "roster": [
@@ -2301,19 +2321,19 @@
       "events": [
         {
           "id": "L23_cloud",
-          "at": 85,
+          "at": 66,
           "type": "steam_cloud",
           "warning_s": 5,
           "args": {
             "position": [
-              8,
-              11
+              6,
+              6
             ]
           }
         },
         {
           "id": "L23_trip_snacks",
-          "at": 150,
+          "at": 117,
           "type": "fixture_trip",
           "warning_s": 5,
           "args": {
@@ -2322,7 +2342,7 @@
         },
         {
           "id": "L23_trip_F",
-          "at": 215,
+          "at": 167,
           "type": "fixture_trip",
           "warning_s": 5,
           "args": {
@@ -2362,14 +2382,24 @@
           "label": "Room for Tomorrow"
         }
       ],
-      "required_goal_ids": []
+      "required_goal_ids": [],
+      "pacing": {
+        "first_s": 4,
+        "gap_s": 12,
+        "announce_s": 3,
+        "reserve_s": 110
+      },
+      "stay_s": 50,
+      "patience_s": 45,
+      "request_s": 20,
+      "linen_start": 3
     },
     {
       "id": "L24",
       "title": "Room for Everyone",
       "chapter": 6,
-      "layout": "P6",
-      "duration_hotel_s": 360,
+      "layout": "P6v2",
+      "duration_hotel_s": 290,
       "waves": [
         {
           "roster": [
@@ -2411,7 +2441,7 @@
       "events": [
         {
           "id": "L24_parcels",
-          "at": 15,
+          "at": 12,
           "type": "parcels_spawn",
           "warning_s": 0,
           "args": {
@@ -2422,16 +2452,16 @@
             ],
             "positions": [
               [
-                3,
-                11
+                4,
+                6
               ],
               [
-                8,
-                11
+                10,
+                6
               ],
               [
-                18,
-                11
+                14,
+                6
               ]
             ],
             "goal": "festival_stand"
@@ -2439,19 +2469,19 @@
         },
         {
           "id": "L24_cloud",
-          "at": 110,
+          "at": 89,
           "type": "steam_cloud",
           "warning_s": 5,
           "args": {
             "position": [
-              17,
-              8
+              12,
+              6
             ]
           }
         },
         {
           "id": "L24_music",
-          "at": 210,
+          "at": 169,
           "type": "announce",
           "warning_s": 0,
           "args": {
@@ -2461,7 +2491,7 @@
         },
         {
           "id": "L24_lanterns",
-          "at": 260,
+          "at": 209,
           "type": "announce",
           "warning_s": 0,
           "args": {
@@ -2506,7 +2536,17 @@
         "parcel_L24_a",
         "parcel_L24_b",
         "parcel_L24_c"
-      ]
+      ],
+      "pacing": {
+        "first_s": 4,
+        "gap_s": 12,
+        "announce_s": 3,
+        "reserve_s": 110
+      },
+      "stay_s": 50,
+      "patience_s": 45,
+      "request_s": 20,
+      "linen_start": 4
     }
   ]
 }

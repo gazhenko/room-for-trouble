@@ -14,6 +14,11 @@ func _initialize() -> void:
 		quit(2)
 		return
 	var res := SimReplay.verify(reg, rec)
+	if res.has("refused"):
+		print("replay %s: REFUSED, recorded by simulation %s; this build is %s" % [path, res["recorded"], SimC.SIM_VERSION])
+		reg.free()
+		quit(3)
+		return
 	print("replay %s: %s  checkpoints=%d  first_divergence_tick=%d  content_match=%s" % [path,
 		"MATCH" if res["ok"] else "DIVERGED", res["checkpoints"], res["first_divergence_tick"], res["content_match"]])
 	reg.free()

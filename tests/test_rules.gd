@@ -127,6 +127,12 @@ func test_replay01_same_log_same_hashes_and_divergence_found() -> void:
 	var sim2 := SimReplay.run(content, bad)
 	var div := SimReplay.first_divergence(rec["hashes"], sim2.hashes)
 	check(div > at and div <= at + 150, "divergence located in the checkpoint after tick %d (got %d)" % [at, div])
+	# A record from another simulation version is refused, never replayed.
+	var old_rec: Dictionary = rec.duplicate(true)
+	old_rec["sim_version"] = "1.0.0"
+	var res_old := SimReplay.verify(content, old_rec)
+	check(not res_old["ok"] and res_old.get("refused", "") == "sim_version", "a v1 replay is refused by sim version")
+	eq(rec["sim_version"], SimC.SIM_VERSION, "records carry the simulation version")
 
 func test_net02_disconnect_releases_held_item_handle_and_work() -> void:
 	var sim := make_sim("L04", 2)

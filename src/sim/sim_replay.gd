@@ -6,12 +6,20 @@ extends RefCounted
 ## the hashes; the first mismatching checkpoint names the divergence window.
 
 static func capture(sim: HotelSim) -> Dictionary:
-	return {"version": 1, "cfg": sim.cfg, "content_hash": sim.content.content_hash,
+	return {"version": 2, "sim_version": SimC.SIM_VERSION, "cfg": sim.cfg, "content_hash": sim.content.content_hash,
 		"engine": Engine.get_version_info()["string"], "ticks": int(sim.s["tick"]),
 		"inputs": sim.input_log, "cmds": sim.cmd_log, "hashes": sim.hashes,
 		"final_hash": sim.state_hash()}
 
+## True when a record was made by this simulation version; older records
+## (v1 floors, pacing and scoring) cannot be replayed on v2 and are refused.
+static func compatible(rec: Dictionary) -> bool:
+	return str(rec.get("sim_version", "1.0.0")) == SimC.SIM_VERSION
+
 static func run(content, rec: Dictionary, ticks: int = -1) -> HotelSim:
+	if not compatible(rec):
+		push_error("replay recorded by simulation %s; this build is %s" % [str(rec.get("sim_version", "1.0.0")), SimC.SIM_VERSION])
+		return null
 	var sim := HotelSim.new(content, rec["cfg"])
 	var frames_at := {}
 	for e in rec["inputs"]:
@@ -55,6 +63,9 @@ static func first_divergence(a: Array, b: Array) -> int:
 	return -1
 
 static func verify(content, rec: Dictionary) -> Dictionary:
+	if not compatible(rec):
+		return {"ok": false, "refused": "sim_version", "recorded": str(rec.get("sim_version", "1.0.0")),
+			"first_divergence_tick": -1, "content_match": false, "checkpoints": 0}
 	var sim := run(content, rec)
 	var div := first_divergence(rec["hashes"], sim.hashes)
 	return {"ok": div == -1 and sim.state_hash() == rec.get("final_hash", sim.state_hash()),

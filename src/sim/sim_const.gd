@@ -7,8 +7,8 @@ extends RefCounted
 const TICK_HZ := 30
 const UM := 1_000_000                 # µm per metre
 const HOTEL_Q_PER_S := 30_000         # hotel quanta per hotel second
-const PROTOCOL_VERSION := 1
-const SIM_VERSION := "1.0.0"
+const PROTOCOL_VERSION := 2          # v2 floors, pacing and scoring: v1 clients and replays are refused
+const SIM_VERSION := "2.0.0"
 
 # Buttons in an InputFrame bitmask.
 const BTN_CARRY := 1

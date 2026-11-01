@@ -26,6 +26,9 @@ PREDICATES = {"useful_handoffs", "shared_work", "cozy_departures", "welcome_matc
 FAMILY_SYSTEM = {"yeti": "thermal", "dragon": "thermal", "ghost": "sound", "moonwolf": "sound", "sprout": "moisture"}
 LEVEL_KEYS = {"id", "title", "chapter", "layout", "duration_hotel_s", "waves", "service_count", "systems",
               "initial_rooms", "events", "ribbons", "required_goal_ids"}
+# v2 (Overcooked-scale) levels carry their own pacing and timers (DESIGN_V2.md).
+V2_KEYS = {"pacing", "patience_s", "request_s", "stay_s", "linen_start"}
+PACING_KEYS = {"first_s", "gap_s", "announce_s", "reserve_s"}
 SCALE = [650, 1000, 1250, 1500]
 CAP = [2, 4, 5, 6]
 
@@ -43,7 +46,7 @@ def main(path):
     chapters = {}
     for i, L in enumerate(levels):
         p = f"levels[{i}]"
-        extra = set(L) - LEVEL_KEYS
+        extra = set(L) - LEVEL_KEYS - V2_KEYS
         missing = LEVEL_KEYS - set(L)
         if extra: err(p, f"unknown fields {sorted(extra)}")
         if missing: err(p, f"missing fields {sorted(missing)}"); continue
@@ -52,7 +55,13 @@ def main(path):
         if not 1 <= L["chapter"] <= 6: err(p + ".chapter", "1..6")
         chapters.setdefault(L["chapter"], []).append(L["id"])
         if L["layout"] not in templates: err(p + ".layout", f"unknown layout {L['layout']}")
-        if L["duration_hotel_s"] < 270: err(p + ".duration_hotel_s", ">= 270 required")
+        v2 = templates.get(L["layout"], {}).get("base", "") != ""
+        if L["duration_hotel_s"] < (150 if v2 else 270):
+            err(p + ".duration_hotel_s", ">= %d required" % (150 if v2 else 270))
+        if "pacing" in L:
+            pc = L["pacing"]
+            if set(pc) != PACING_KEYS: err(p + ".pacing", f"expected {sorted(PACING_KEYS)}")
+            elif v2 and not 0 < pc["first_s"] <= 5: err(p + ".pacing.first_s", "first guest within 5 s on v2 floors")
         if len(L["waves"]) != 3: err(p + ".waves", "exactly 3 waves")
         if L["service_count"] not in (1, 2): err(p + ".service_count", "1 or 2")
         for s in L["systems"]:
@@ -95,7 +104,7 @@ def main(path):
             if t == "shutter_cycle" and (L["layout"] != "P5" or "shutter" not in L["systems"]): err(ep, "shutter only on P5")
             if t == "fixture_trip" and a["fixture"] == "lift_pair" and "lift" not in L["systems"]: err(ep, "lift trip needs lift")
             if t == "trunk_spawn":
-                if L["layout"] not in ("P1", "P6"): err(ep, "trunks only on P1/P6")
+                if L["layout"][:2] not in ("P1", "P6"): err(ep, "trunks only on P1/P6")
                 spawned.add(a["object_id"])
             if t == "parcels_spawn":
                 if len(a["object_ids"]) != len(a["positions"]): err(ep, "object_ids/positions length mismatch")

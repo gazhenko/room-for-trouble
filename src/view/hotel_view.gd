@@ -138,6 +138,9 @@ func _build_stations() -> void:
 	_place("towels", ModelStations.build("towel_shelf", {}), _v(F["towel_shelf"]))
 	_place("snacks", ModelStations.build("snack_tin", {}), _v(F["snack_tin"]))
 	_place("kiosk", ModelStations.build("welcome_kiosk", {}), _v(F["welcome_kiosk"]))
+	var ctrs: Array = F.get("counters", [])
+	for i in ctrs.size():
+		_place("counter:%d" % i, ModelStations.build("counter", {}), _v(ctrs[i]))
 	# Fixtures a floor never uses may be absent (the v2 chapter-1 floor has no
 	# heat pump, tap, breezer, cans or return shelf).
 	if F.has("return_shelf"):
@@ -617,6 +620,14 @@ func _sync_items(alpha: float) -> void:
 					var ln: Node3D = stations.get("lift:" + sock.substr(8), null)
 					if ln != null:
 						n.position = ln.position + Vector3(0, FIXTURE_Y["liftpad"], 0)
+				elif sock.begins_with("counter:"):
+					var cn: Node3D = stations.get(sock, null)
+					if cn != null:
+						n.position = cn.position + Vector3(0, float(cn.get_meta("top_y", 0.65)), 0)
+				elif sock.begins_with("counter:"):
+					var cn: Node3D = stations.get(sock, null)
+					if cn != null:
+						n.position = cn.position + Vector3(0, float(cn.get_meta("top_y", 0.65)), 0)
 				elif sock.begins_with("curtain:"):
 					n.visible = false
 				else:
@@ -880,6 +891,18 @@ func node_for_key(key: String) -> Node3D:
 					return item_nodes.get(int(iid), null)
 			return stations.get("ped:" + p[1], null)
 		"bench": return stations.get("reception", null)
+		"counter":
+			for iid in s.get("items", {}):
+				var it: Dictionary = s["items"][iid]
+				if it["loc"] == "sock" and it["sock"] == key:
+					return item_nodes.get(int(iid), null)
+			return stations.get(key, null)
+		"counter":
+			for iid in s.get("items", {}):
+				var it: Dictionary = s["items"][iid]
+				if it["loc"] == "sock" and it["sock"] == key:
+					return item_nodes.get(int(iid), null)
+			return stations.get(key, null)
 		"st":
 			var map := {"linen": "linen", "towels": "towels", "snacks": "snacks", "kiosk": "kiosk", "return": "return", "hamper": "hamper", "stand": "stand"}
 			return stations.get(map.get(p[1], p[1]), null)

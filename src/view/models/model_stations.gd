@@ -40,6 +40,8 @@ static func build(kind: String, opts: Dictionary = {}) -> StationNode:
 		"towel_shelf": _towel_shelf(st)
 		"snack_tin": _snack_tin(st)
 		"welcome_kiosk": _kiosk(st)
+		"counter": _counter(st)
+		"counter": _counter(st)
 		"return_shelf": _return_shelf(st)
 		"heat_pump": _heat_pump(st)
 		"tap": _tap(st)
@@ -60,6 +62,26 @@ static func build(kind: String, opts: Dictionary = {}) -> StationNode:
 			push_warning("ModelStations: unknown kind '%s'" % kind)
 			_mesh(st, "body", _c("st_unknown", _unknown_mesh))
 	return st
+
+# ================================================================ pass counter
+
+const COUNTER_TOP := 0.65
+
+## A plain wooden pass counter: anything can be set down on it and picked up
+## from either side, so two players can hand items across the counter row.
+static func _counter(st: StationNode) -> void:
+	_mesh(st, "body", _c("st_counter", _counter_mesh))
+	_pivot(st, "top", Vector3(0, COUNTER_TOP, 0))
+	st.set_meta("top_y", COUNTER_TOP)
+
+static func _counter_mesh(mk: MeshKit) -> void:
+	mk.rbox(Vector3(0, 0.3, 0), Vector3(0.78, 0.6, 0.6), Art.WALNUT, 0.04, Art.WALNUT.lightened(0.1))
+	mk.rbox(Vector3(0, 0.62, 0), Vector3(0.88, 0.06, 0.7), Art.CREAM.darkened(0.06), 0.02, Art.CREAM)
+	mk.box(Vector3(0, 0.45, 0.305), Vector3(0.62, 0.07, 0.02), Art.CORAL)
+	mk.box(Vector3(0, 0.45, -0.305), Vector3(0.62, 0.07, 0.02), Art.CORAL)
+	mk.box(Vector3(0, 0.28, 0.305), Vector3(0.2, 0.1, 0.02), Art.BRASS, Art.GOLD)
+	for sx in [-0.3, 0.3]:
+		mk.box(Vector3(sx, 0.1, 0), Vector3(0.1, 0.2, 0.56), Art.WALNUT.darkened(0.15))
 
 # ================================================================ helpers
 

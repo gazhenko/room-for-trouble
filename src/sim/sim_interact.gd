@@ -117,6 +117,18 @@ static func gate_pos(sim: HotelSim, edge: String) -> Vector2i:
 	var north := p.y <= sim.L.hall.position.y * SimC.UM
 	return Vector2i(p.x, p.y + (-250_000 if north else 250_000))
 
+static func counter_pos(sim: HotelSim, i: int) -> Vector2i:
+	return um(sim.L.fixtures["counters"][i])
+
+## The item resting on pass counter i, or 0.
+static func _counter_item(sim: HotelSim, i: int) -> int:
+	var key := "counter:%d" % i
+	for iid in sim.s["items"]:
+		var it: Dictionary = sim.s["items"][iid]
+		if it["loc"] == "sock" and it["sock"] == key:
+			return int(iid)
+	return 0
+
 static func dock_pos(sim: HotelSim, dtype: String, i: int) -> Vector2i:
 	match dtype:
 		"mop": return um(sim.L.fixtures["mop_docks"][i])
@@ -175,6 +187,9 @@ static func carry_candidates(sim: HotelSim, st: Dictionary) -> Array:
 				elif sock.begins_with("liftpad:"):
 					var li := int(sock.substr(8))
 					out.append(_cand("lift:%d" % li, um(sim.L.lift_pads[li]), not plan, why_plan, RANK_PICKUP))
+				elif sock.begins_with("counter:"):
+					var ci := int(sock.substr(8))
+					out.append(_cand(sock, counter_pos(sim, ci), not plan, why_plan, RANK_PICKUP, SimC.PICKUP_REACH))
 		if not sim.s["bench"].is_empty():
 			out.append(_cand("bench", um(F["reception"]), not plan, why_plan, RANK_PICKUP))
 		out.append(_cand("st:linen", um(F["linen_shelf"]), not plan and stv["linen"] > 0, why_plan if plan else "ui.reason.no_linen", RANK_STATION))
@@ -258,6 +273,11 @@ static func carry_candidates(sim: HotelSim, st: Dictionary) -> Array:
 			out.append(_cand("st:kiosk", um(F["welcome_kiosk"]), true, "", RANK_SOCKET))
 			if F.has("return_shelf"):
 				out.append(_cand("st:return", um(F["return_shelf"]), true, "", RANK_SOCKET))
+		if hk != "festival_trunk":
+			var counters: Array = F.get("counters", [])
+			for ci in counters.size():
+				var free := _counter_item(sim, ci) == 0
+				out.append(_cand("counter:%d" % ci, counter_pos(sim, ci), free and not plan, why_plan if plan else "ui.reason.counter_full", RANK_SOCKET))
 		if sim.has_sys("lift") and not sim.s["lifts"].is_empty() and hk != "festival_trunk":
 			for li in 2:
 				if _lift_pad_item(sim, li) == 0:
@@ -539,6 +559,23 @@ static func _do_carry(sim: HotelSim, st: Dictionary, key: String) -> void:
 				sock_item(sim, tid2, "dock:%s:%d" % [dtype, di])
 				_lock(st, "place", SimC.T_TAKE)
 				sim.emit("dock", {"seat": seat, "id": tid2})
+		"counter":
+			var ci := int(parts[1])
+			if st["held"] == 0:
+				var on_c := _counter_item(sim, ci)
+				if on_c == 0:
+					return
+				hold(sim, st, on_c)
+				_lock(st, "take", SimC.T_TAKE)
+				sim.emit("pickup", {"seat": seat, "id": on_c, "k": sim.item(on_c)["k"]})
+			else:
+				if _counter_item(sim, ci) != 0:
+					return
+				var cid2: int = st["held"]
+				st["held"] = 0
+				sock_item(sim, cid2, "counter:%d" % ci)
+				_lock(st, "place", SimC.T_TAKE)
+				sim.emit("place", {"seat": seat, "id": cid2, "counter": ci})
 		"lift":
 			var li := int(parts[1])
 			if st["held"] == 0:
@@ -1120,7 +1157,9 @@ static func step_timers(sim: HotelSim) -> void:
 	var to_return: Array = []
 	for iid in sim.s["items"]:
 		var it: Dictionary = sim.s["items"][iid]
-		if it["loc"] != "world":
+		# A ticket forgotten on a pass counter goes home like one left on the floor.
+		var parked: bool = it["loc"] == "sock" and str(it["sock"]).begins_with("counter:") and it["k"] in ["ticket", "move_ticket"]
+		if it["loc"] != "world" and not parked:
 			continue
 		it["idle"] = int(it["idle"]) + 1
 		var k: String = it["k"]

@@ -512,6 +512,8 @@ func _verb(kind: String, key: String, st: Dictionary) -> String:
 			return Loc.t("ui.verb.return" if which in ["return", "linen", "towels", "snacks", "kiosk"] else "ui.verb.put_" + which)
 		"dock":
 			return Loc.t("ui.verb.take_tool" if held == "" else "ui.verb.dock_tool")
+		"counter":
+			return Loc.t("ui.verb.counter_take" if held == "" else "ui.verb.counter_put")
 		"lift":
 			return Loc.t("ui.verb.lift_load" if held != "" else "ui.verb.take")
 		"thermo":

@@ -241,6 +241,10 @@ func _build_boxes() -> void:
 			_add_box(p, 0.75, 0.75, k)
 	if fixtures.has("breezer_dock"):
 		_add_box(fixtures["breezer_dock"], 0.75, 0.75, "breezer_dock")
+	for p in fixtures.get("counters", []):
+		_add_box(p, 0.75, 0.75, "counter")
+	for p in fixtures.get("counters", []):
+		_add_box(p, 0.75, 0.75, "counter")
 	for letter in rooms:
 		var g: Dictionary = rooms[letter]
 		_add_box(g["bed"], 1.6, 0.8, "bed_" + letter)

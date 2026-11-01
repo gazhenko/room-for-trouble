@@ -582,6 +582,14 @@ func _sync_items(alpha: float) -> void:
 			n.apply({"active": not holder.is_empty() and str(holder.get("work_key", "")).begins_with("cloud:")})
 		if n.has_method("tick"):
 			n.tick(get_process_delta_time())
+		var pop := float(n.get_meta("pop", 0.0))
+		if pop > 0.0:
+			pop = maxf(0.0, pop - get_process_delta_time() * 6.0)
+			n.set_meta("pop", pop)
+			var k := sin(pop * PI)
+			n.scale = Vector3(1.0 + 0.3 * k, 1.0 + 0.45 * k, 1.0 + 0.3 * k)
+		elif n.scale != Vector3.ONE:
+			n.scale = Vector3.ONE
 		var loc: String = it["loc"]
 		n.visible = true
 		match loc:
@@ -962,6 +970,23 @@ func on_events(events: Array) -> void:
 				var b: ActorRig = staff_rigs.get(int(e["to"]), null)
 				if a and b:
 					_spawn_fx("ribbon", a.position + Vector3(0, 1.0, 0), Art.CORAL, {"to": b.position + Vector3(0, 1.0, 0)})
+				_pop_item(int(e.get("id", 0)))
+			"quick_step":
+				var dr: ActorRig = staff_rigs.get(int(e.get("seat", -1)), null)
+				if dr:
+					dr.set_dash()
+					_spawn_fx("dust", dr.position + Vector3(0, 0.05, 0), Color("#D9C7AE"))
+			"pickup", "place", "dock":
+				_pop_item(int(e.get("id", 0)))
+			"take_stock", "take_gift", "gift_taken", "take_curtain":
+				_pop_held(int(e.get("seat", -1)))
+			"gift_placed":
+				var pn: Node3D = stations.get("plinth:" + str(e.get("room", "")), null)
+				if pn:
+					_spawn_fx("sparkle", pn.position + Vector3(0, 0.9, 0), Art.GOLD)
+				_pop_room_gift(str(e.get("room", "")))
+			"tip":
+				_spawn_fx("sparkle", Vector3(float(e.get("x", 0)) / 1e6, 1.2, float(e.get("z", 0)) / 1e6), Art.GOLD)
 			"welcome":
 				var gr: ActorRig = guest_rigs.get(int(e["guest"]), null)
 				if gr:
@@ -1011,6 +1036,22 @@ func on_events(events: Array) -> void:
 				pass
 			"assign":
 				nana_react("wave", 1.0)
+
+## A short scale punch on an item that was just picked up or set down.
+func _pop_item(iid: int) -> void:
+	var n: Node3D = item_nodes.get(iid, null)
+	if n != null:
+		n.set_meta("pop", 1.0)
+
+func _pop_held(seat: int) -> void:
+	for st in s.get("staff", []):
+		if int(st["seat"]) == seat:
+			_pop_item(int(st["held"]))
+
+func _pop_room_gift(letter: String) -> void:
+	var r: Dictionary = s.get("rooms", {}).get(letter, {})
+	if not r.is_empty():
+		_pop_item(int(r.get("gift", 0)))
 
 func _quirk_anim(r: ActorRig, a: String, secs: float) -> void:
 	r.set_meta("quirk_anim", a)
@@ -1062,6 +1103,19 @@ func _spawn_fx(kind: String, pos: Vector3, col: Color, data := {}) -> void:
 				mi.set_meta("v", Vector3(cos(a) * 1.2, 1.6 + 0.4 * (i % 3), sin(a) * 1.2) * (0.6 if kind == "sparkle" else 1.0))
 				node.add_child(mi)
 			life = 0.8 if kind == "sparkle" else 1.2
+		"dust":
+			for i4 in 5:
+				var mkd := MeshKit.new()
+				mkd.jitter = 0.0
+				mkd.sphere(Vector3.ZERO, 0.07 + 0.02 * (i4 % 2), col.lightened(0.08 * (i4 % 3)), 2, 5)
+				var mid := MeshInstance3D.new()
+				mid.mesh = mkd.commit()
+				mid.material_override = Art.fx(Color.WHITE, 0.9)
+				mid.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+				var ad := TAU * i4 / 5.0 + 0.4
+				mid.set_meta("v", Vector3(cos(ad) * 0.9, 0.35 + 0.1 * (i4 % 2), sin(ad) * 0.9))
+				node.add_child(mid)
+			life = 0.45
 		"heart", "puff", "note":
 			var mk2 := MeshKit.new()
 			mk2.jitter = 0.0
@@ -1121,6 +1175,11 @@ func _tick_fx(dt: float) -> void:
 				n.scale = Vector3.ONE * sc
 			"puff":
 				n.scale = Vector3.ONE * (0.6 + k)
+			"dust":
+				for cd in n.get_children():
+					var vd: Vector3 = cd.get_meta("v")
+					cd.position = vd * f["t"] * 1.6 + Vector3(0, 0.3 * f["t"] - 0.9 * f["t"] * f["t"], 0)
+					(cd as Node3D).scale = Vector3.ONE * (1.0 + k * 1.4) * (1.0 - k * 0.6)
 			"note_travel":
 				var to: Vector3 = f["data"]["to"]
 				n.position = f["origin"].lerp(to, k) + Vector3(0, sin(k * PI) * 0.6, 0)

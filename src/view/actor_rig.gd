@@ -23,9 +23,15 @@ var t := 0.0
 var walk_phase := 0.0
 var reduced_motion := false
 var face_dir := 0.0        # target yaw (radians)
+var dash_t := 0.0          # seconds left of the Quick Step stretch
 var _yaw := 0.0
 var _anim_t := 0.0
 var _prev_anim := ""
+var _prev_speed := 0.0
+
+## Quick Step: a short stretch along the body axis, dust at the feet is the view's job.
+func set_dash() -> void:
+	dash_t = 0.22
 
 func setup(st: String, h: float) -> void:
 	style = st
@@ -181,6 +187,9 @@ func tick(dt: float) -> void:
 	_yaw += dy * minf(1.0, dt * 14.0)
 	rotation.y = _yaw
 	var moving := speed > 0.15
+	var dv := speed - _prev_speed
+	_prev_speed = speed
+	dash_t = maxf(0.0, dash_t - dt)
 	if moving:
 		walk_phase += dt * (6.0 + speed * 2.2)
 	var sw := sin(walk_phase)
@@ -204,12 +213,20 @@ func tick(dt: float) -> void:
 		"box":
 			bob = absf(sw) * 0.04 if moving else 0.0
 		_:
-			bob = absf(sw) * 0.035 if moving else 0.012 * sin(t * 2.0)
+			bob = absf(sw) * 0.05 if moving else 0.012 * sin(t * 2.0)
 	if moving:
 		leg_a = sw * 0.55
 		arm_lr = -sw * 0.5
 		arm_rr = sw * 0.5
-		torso_lean = 0.08
+		# Lean into the run: more at speed, a nod forward when accelerating.
+		torso_lean = 0.06 + 0.16 * clampf(speed / 3.6, 0.0, 1.0) + clampf(dv * 0.12, -0.1, 0.2) * rm
+	if dash_t > 0.0:
+		var k := dash_t / 0.22
+		sq = sq * Vector3(1.0 - 0.16 * k, 1.0 + 0.22 * k, 1.0 - 0.16 * k)
+		torso_lean = 0.4 * k
+	elif dv < -1.6 and not reduced_motion:
+		# Hard stop: a quick squash the scale lerp below recovers from.
+		body.scale = Vector3(1.16, 0.86, 1.16)
 	else:
 		arm_lz = 0.04 * sin(t * 2.0)
 		arm_rz = -0.04 * sin(t * 2.0)

@@ -166,3 +166,51 @@ the engine template's broken signature, so Gatekeeper would report a downloaded 
 "damaged". Ad-hoc signing makes the bundle valid, though Gatekeeper still asks for "Open
 Anyway". Distribution signing and notarization need a paid Developer ID, which this machine
 lacks (it has only an Apple Development identity).
+
+## v2 — the Overcooked-scale rebuild (`docs/DESIGN_V2.md`)
+
+**D31 — Templates choose their floor envelope.** A template's `"base"` key names a base file
+(`default` = `data/layouts/base.json`, `v2_small` = `data/layouts/base_v2_small.json`). Chapter 1
+and T01 run on `P1v2` (13×13, four rooms); chapters 2–6 keep the classic floor until milestone 2.
+The builder, view and sim derive every position from the layout (hall rows, extents, fixtures), a
+floor may omit fixtures of systems it never uses, and rooms come from the layout rather than a
+fixed A–F list.
+
+**D32 — Camera fit reserves the HUD bands.** Pitch 44°, FOV 36°, fitted to the built floor plus
+0.6 m with the top 10% and bottom 7% kept for the order rail, clock and seat cards. `ACTOR_SCALE`
+is 2.0: a staffer is 65–70 px tall at 1280×800 (target ≥ 60).
+
+**D33 — Take, put and hand off never block movement; the dash is real.** The busy window after an
+action keeps Carry/Work from double-firing but only assign, fulfil and hamper plant the feet
+(`move_lock`). Quick Step is 1.6 m in 6 ticks with an 18-tick cooldown. Station beats: stock
+0.33 s, gift 0.5 s, fulfil 0.2 s, assign 0.4 s. Departs from brief §6.2/§6.4 on purpose.
+
+**D34 — Continuous arrivals with a per-level reserve.** Levels with a `pacing` block get the first
+guest at `first_s` (4 s) and one every `gap_s`, compressed for bigger parties so the last arrival
+keeps `reserve_s` before the timer; the clock's pips mark the real wave starts. Levels without the
+block keep the brief's three anchors. Stays, patience, request windows and the starting linen are
+per-level fields (`stay_s`, `patience_s`, `request_s`, `linen_start`).
+
+**D35 — Every guest is an order; scoring is per order with tips.** Check-in 30, gift 20, service 30
+(split per request), comfort 20, plus +10 / +5 / +5 tips for a fast check-in, gift and request.
+Tips count toward the team percent (clamped at 100). `SimScore.order_outcome` labels an order
+served / late / missed; a missed order never ends a shift (the family rule stands).
+
+**D36 — The order rail replaces the incoming cards.** One card per guest from the announcement until
+departure: steps in order with the current one lit, a patience / request / stay timer bar, the
+card's tips and a slide-out line when the order ends. Requests are planned at arrival so the card
+can show every step. Seat tags sit at the feet beside the seat ring.
+
+**D37 — Pass counters.** A layout's `counters` are solid stations with one item socket: put anything
+down, take it from either side. Tickets forgotten on a counter return to their pedestal like
+tickets on the floor.
+
+**D38 — The festival stand leaves the hall lane** (classic floor: (26,11)), and the corner assist
+probes to 0.72 m so a 0.75 m fixture is rounded instead of stopping a run.
+
+**D39 — Story sets and the hub stay on the classic P1 set in milestone 1.** `build_content.py`
+maps `P1v2` scenes to `P1` (`STORY_SET`); milestone 2 re-stages them on the v2 floors.
+
+**D40 — Tests pin rules, not coordinates.** Core and item tests that used 28×20 positions now
+derive stands from the layout; content tests use each level's reserve and skip absent fixtures;
+score tests expect the v2 split and tips.

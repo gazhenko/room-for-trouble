@@ -42,7 +42,7 @@ func _initialize() -> void:
 				_check_target_args(L["id"], str(e.get("id", e["type"])), e.get("args", {}), lay, L["layout"])
 	# Story staging: cameras, props, actors, captions.
 	var props := ModelProps.kinds() if ResourceLoader.exists("res://src/view/models/model_props.gd") else PackedStringArray()
-	var cams := ["wide_hotel", "lobby_group", "desk_close", "guest_close", "room_door", "fixture_close", "high_close", "festival_wide", "postcard_still"]  # = StoryPlayer.CAMERAS + postcard_still
+	var cams: Array = StoryStaging.CAMERAS.keys()
 	var actors := ["nana", "gus", "dot", "staff", "mallow", "flurry", "cinder", "whisp", "luna", "fern"]
 	for sid in C.story:
 		var sc: Dictionary = C.story[sid]
@@ -57,12 +57,19 @@ func _initialize() -> void:
 				var aid: String = a["id"]
 				if not (aid in actors or aid.begins_with("guest:")):
 					err("story %s: unknown actor %s" % [p.get("id", sid), aid])
-				var slay: String = p.get("layout", sc.get("layout", "P1"))
-				if C.templates.has(slay) and a.has("pos") and p.get("set", "") != "photo":
-					var SL: LayoutDef = C.layout(slay)
-					var m := SL.classic_to_local_xz(float(a["pos"][0]), float(a["pos"][1]))
-					if m.x > 0.5 and SL.is_wall_tile(LayoutDef.tile_of(int(m.x * SimC.UM)), LayoutDef.tile_of(int(m.y * SimC.UM))):
-						warnings.append("story %s: actor %s maps into a wall at (%.1f, %.1f) on %s" % [p.get("id", sid), aid, m.x, m.y, slay])
+			# Staged as the player stages it (StoryStaging): nobody stands in a
+			# wall or inside a station's footprint on the floor the beat plays on.
+			var slay: String = p.get("layout", sc.get("layout", "P1"))
+			if C.templates.has(slay) and p.get("set", "") != "photo":
+				var SL: LayoutDef = C.layout(slay)
+				var staged := StoryStaging.stage(SL, p, StoryStaging.CAMERAS, ["pip"], 1.6)   # 16:10, the Deck
+				for a2 in staged["actors"]:
+					var m: Vector3 = a2["pos3"]
+					if m.x > 0.5 and SL.is_wall_tile(LayoutDef.tile_of(int(m.x * SimC.UM)), LayoutDef.tile_of(int(m.z * SimC.UM))):
+						warnings.append("story %s: actor %s stands in a wall at (%.1f, %.1f) on %s" % [p.get("id", sid), a2["id"], m.x, m.z, slay])
+					var tag := _box_at(SL, m, 0.25)
+					if tag != "":
+						warnings.append("story %s: actor %s stands in %s at (%.1f, %.1f) on %s" % [p.get("id", sid), a2["id"], tag, m.x, m.z, slay])
 			for pr in p.get("props", []):
 				var pk: String = pr["kind"]
 				if pk.begins_with("item:"):
@@ -151,6 +158,17 @@ func _initialize() -> void:
 
 ## Rooms, radiator fixtures, lift pairs and hall positions named by an event or
 ## tutorial op must exist on the floor it runs on.
+## Tag of the solid fixture footprint (grown by `grow` metres) that contains the
+## point, or "" when the point is on open floor.
+func _box_at(lay: LayoutDef, m: Vector3, grow: float) -> String:
+	var g := int(grow * SimC.UM)
+	var px := int(m.x * SimC.UM)
+	var pz := int(m.z * SimC.UM)
+	for b in lay.boxes:
+		if px >= int(b[0]) - g and px <= int(b[2]) + g and pz >= int(b[1]) - g and pz <= int(b[3]) + g:
+			return str(b[4])
+	return ""
+
 func _check_target_args(owner: String, what: String, a: Dictionary, lay: LayoutDef, layout_id: String) -> void:
 	if a.has("room"):
 		var room := str(a["room"])

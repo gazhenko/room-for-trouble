@@ -48,7 +48,8 @@ func build(p_stage: PixelStage, layout: LayoutDef, sys: Dictionary, p_cfg: Dicti
 	add_child(fx_root)
 	_build_stations()
 	_build_room_dressing()
-	_merge_static_bodies()
+	if not cfg.get("story", false):   # story sets hide single stations in a sightline
+		_merge_static_bodies()
 	reduced_motion = bool(Settings.g("reduced_motion"))
 
 ## Every station's static "body" (one cached mesh per kind, never moved or

@@ -83,10 +83,14 @@ func _ready() -> void:
 				await get_tree().process_frame
 				for k in adv:
 					Session.screen._next()])
-	# Every pre-shift beat, for set-dressing review (--only=pre_).
+	# Every pre-shift beat and every postcard, for set-dressing review
+	# (--only=pre_ / --only=post_).
 	for i in range(1, 25):
 		var sid := "L%02d.pre" % i
 		steps.append(["pre_L%02d" % i, func(): Session.play_story(sid, func(): pass)])
+	for i in range(1, 25):
+		var sid := "L%02d.post" % i
+		steps.append(["post_L%02d" % i, func(): Session.play_story(sid, func(): pass)])
 	for st in steps:
 		if only != "" and not only in st[0]:
 			continue
@@ -95,6 +99,9 @@ func _ready() -> void:
 		var img := get_viewport().get_texture().get_image()
 		img.save_png(ProjectSettings.globalize_path("res://").path_join(out).path_join(st[0] + ".png"))
 		print("shot ", st[0])
+		# Story beats report where heads land and what blocks the speaker's face.
+		if Session.screen is StoryPlayer and is_instance_valid(Session.screen):
+			print("CHECK %s %s" % [st[0], JSON.stringify((Session.screen as StoryPlayer).frame_report())])
 	get_tree().quit()
 
 func _wait(s: float) -> void:

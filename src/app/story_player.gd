@@ -6,17 +6,7 @@ extends Control
 ## read time max(2.0, 0.045 × chars); skip asks once, and is immediate for
 ## scenes everyone has already seen. Story pauses hotel and action clocks.
 
-const CAMERAS := {
-	"wide_hotel": {"pos": [13.5, 21.0, 34.0], "look": [13.5, 0.0, 9.0], "fov": 30},
-	"lobby_group": {"pos": [6.0, 5.0, 15.5], "look": [5.0, 0.7, 9.4], "fov": 32},
-	"desk_close": {"pos": [3.4, 2.5, 12.6], "look": [2.4, 0.9, 9.3], "fov": 30},
-	"guest_close": {"pos": [0.0, 2.1, 4.8], "look": [0.0, 0.9, 0.0], "fov": 30, "relative": true},
-	"room_door": {"pos": [0.6, 3.0, 5.2], "look": [0.6, 0.9, 0.4], "fov": 30, "relative": true},
-	"fixture_close": {"pos": [0.6, 3.2, 5.4], "look": [0.6, 0.8, 0.4], "fov": 30, "relative": true},
-	"high_close": {"pos": [-0.8, 6.0, 5.0], "look": [-0.6, 0.5, -0.2], "fov": 30, "relative": true},
-	"festival_wide": {"pos": [17.0, 9.0, 20.0], "look": [17.0, 0.6, 9.5], "fov": 34},
-	"postcard_still": {"pos": [0.0, 3.2, 6.4], "look": [0.0, 0.8, 0.0], "fov": 28, "relative": true},
-}
+## Camera presets live in StoryStaging.CAMERAS (shared with the content validator).
 
 signal done
 
@@ -42,6 +32,10 @@ var _caption := ""
 var _speaker := ""
 var _credits := false
 var _finished := false
+var _view: HotelView = null
+var _staged: Dictionary = {}
+var _culled: Array = []            # hotel stations hidden for this panel (sightline to a face)
+var _fov := 30.0
 
 func setup(p_stage: PixelStage, p_captions: Captions, p_scene: Dictionary, p_then: Callable) -> void:
 	stage = p_stage
@@ -137,14 +131,13 @@ func _finish() -> void:
 	done.emit()
 	queue_free()
 
-const PHOTO_ORIGIN := Vector3(200, 0, 200)
 var _photo_set: Node3D
 
 func _ensure_photo_set() -> void:
 	if _photo_set != null and is_instance_valid(_photo_set):
 		return
 	_photo_set = Node3D.new()
-	_photo_set.position = PHOTO_ORIGIN
+	_photo_set.position = StoryStaging.PHOTO_ORIGIN
 	var mk := MeshKit.new()
 	mk.jitter = 0.0
 	var night: bool = scene.get("id", "") in ["E00"]
@@ -180,31 +173,26 @@ func _stage(p: Dictionary) -> void:
 			"shutter": fam == "P5", "lift": fam == "P5"}
 		# The real hotel set: shell, stations and made-up rooms, without mess.
 		var view := HotelView.new()
-		view.build(stage, L, sys, {})
+		# Story keeps station bodies unmerged so one in a sightline can be hidden.
+		view.build(stage, L, sys, {"story": true})
 		view.reparent(set_root)
 		for letter in view.mess_nodes:
 			(view.mess_nodes[letter] as Node3D).visible = false
 			view._apply("bed:" + letter, {"bed": "Made", "occupied": false})
+		_view = view
+		_culled.clear()
 		_layout = layout
 		actors.clear()
+	# Positions, props and the camera come from the shared staging (StoryStaging):
+	# classic authoring mapped onto this floor, scaled with the toys.
+	var aspect := size.x / size.y if size.y > 1.0 else 16.0 / 9.0
+	var staged := StoryStaging.stage(_L, p, StoryStaging.CAMERAS, _party_chars(), aspect)
+	_staged = staged
 	# Actors persist across panels by id; reposition/pose per panel.
 	var wanted := {}
-	for a in p.get("actors", []):
-		var aid: String = a["id"]
-		if aid == "staff":
-			var party := _party_chars()
-			for i in party.size():
-				var sub = a.duplicate()
-				sub["id"] = "staff%d" % i
-				var base: Array = a.get("pos", [5, 9.6])
-				var bm := _map_xz(float(base[0]), float(base[1]))
-				sub["pos"] = [bm.x + i * 0.9 - (party.size() - 1) * 0.45, bm.y]
-				sub["mapped"] = true
-				_place_actor(sub, party[i])
-				wanted["staff%d" % i] = true
-			continue
-		_place_actor(a, "")
-		wanted[aid] = true
+	for a in staged["actors"]:
+		_place_actor(a)
+		wanted[a["id"]] = true
 	for k in actors.keys():
 		if not wanted.has(k):
 			(actors[k] as Node3D).queue_free()
@@ -212,63 +200,26 @@ func _stage(p: Dictionary) -> void:
 	for c in set_root.get_children():
 		if c.has_meta("prop"):
 			c.queue_free()
-	for pr in p.get("props", []):
+	for pr in staged["props"]:
 		var kind: String = pr["kind"]
 		var node := ModelItems.build(kind.substr(5)) if kind.begins_with("item:") else ModelProps.build(kind)
-		var pp: Array = pr.get("pos", [0, 0, 0])
-		node.position = _map3(Vector3(pp[0], pp[1], pp[2]))
+		node.position = pr["pos3"]
 		node.rotation_degrees.y = float(pr.get("rot", 0))
 		if pr.has("scale"):
 			node.scale = Vector3.ONE * float(pr["scale"])
 		node.set_meta("prop", true)
 		set_root.add_child(node)
-	# Camera preset (+ optional focus for relative presets).
-	var photo: bool = p.get("set", "") == "photo"
-	if photo:
+	if staged["photo"]:
 		_ensure_photo_set()
-		for aid in actors:
-			var rig: ActorRig = actors[aid]
-			if not rig.has_meta("photo_placed"):
-				rig.position += PHOTO_ORIGIN
-				rig.set_meta("photo_placed", true)
-		for c in set_root.get_children():
-			if c.has_meta("prop") and not c.has_meta("photo_placed"):
-				c.position += PHOTO_ORIGIN
-				c.set_meta("photo_placed", true)
-	var preset: Dictionary = CAMERAS.get(p.get("camera", "wide_hotel"), CAMERAS["wide_hotel"])
-	var focus := Vector3.ZERO
-	if p.has("focus"):
-		var f: Array = p["focus"]
-		focus = _map3(Vector3(f[0], 0, f[1]))
-	var pos := Vector3(preset["pos"][0], preset["pos"][1], preset["pos"][2])
-	var look := Vector3(preset["look"][0], preset["look"][1], preset["look"][2])
-	var cam_name: String = p.get("camera", "wide_hotel")
-	if preset.get("relative", false):
-		pos += focus
-		look += focus
-	else:
-		# Absolute presets: the subject moves onto the v2 floor, the authored
-		# camera offset stays (so close-ups keep their distance); the two wide
-		# shots shrink their offset with the floor so the hotel still fills them.
-		var off := pos - look
-		look = _map3(look)
-		var k := 1.0
-		if cam_name in ["wide_hotel", "festival_wide"] and _L != null and _L.v2:
-			k = clampf(float(_L.hall.size.x) / 26.0, 0.45, 1.0)
-		pos = look + off * k
-	if p.has("cam_pos"):
-		var cp: Array = p["cam_pos"]
-		pos = _map3(Vector3(cp[0], cp[1], cp[2]))
-	if p.has("cam_look"):
-		var cl: Array = p["cam_look"]
-		look = _map3(Vector3(cl[0], cl[1], cl[2]))
-	if photo:
-		pos = PHOTO_ORIGIN + Vector3(0, 1.7, 9.6)
-		look = PHOTO_ORIGIN + Vector3(0, 0.8, -0.2)
-	stage.camera.fov = float(preset.get("fov", 30)) if not photo else 27.0
+		_photo_set.scale = Vector3.ONE * float(staged["set_scale"])
+	var pos: Vector3 = staged["cam_pos"]
+	var look: Vector3 = staged["cam_look"]
+	_fov = float(staged["fov"])
+	stage.camera.fov = _fov
 	cam_to = Transform3D(Basis(), pos).looking_at(look, Vector3.UP)
 	var drift := Vector3(-0.35, 0.12, -0.25) if not Settings.g("reduced_motion") else Vector3.ZERO
 	cam_from = Transform3D(cam_to.basis, cam_to.origin - drift)
+	_cull_occluders(pos)
 
 func _party_chars() -> Array:
 	var out: Array = []
@@ -278,8 +229,9 @@ func _party_chars() -> Array:
 		out = ["pip"]
 	return out
 
-func _place_actor(a: Dictionary, staff_char: String) -> void:
+func _place_actor(a: Dictionary) -> void:
 	var aid: String = a["id"]
+	var staff_char: String = a.get("char", "")
 	var rig: ActorRig = actors.get(aid, null)
 	if rig == null:
 		if staff_char != "":
@@ -295,11 +247,7 @@ func _place_actor(a: Dictionary, staff_char: String) -> void:
 			rig = ModelActors.guest(fam, aid)
 		set_root.add_child(rig)
 		actors[aid] = rig
-	var pos: Array = a.get("pos", [5, 9.5])
-	var pm := Vector2(float(pos[0]), float(pos[1])) if a.get("mapped", false) else _map_xz(float(pos[0]), float(pos[1]))
-	rig.position = Vector3(pm.x, float(a.get("y", 0.0)), pm.y)
-	if rig.has_meta("photo_placed"):
-		rig.remove_meta("photo_placed")
+	rig.position = a["pos3"]
 	rig.face_dir = deg_to_rad(float(a.get("face", 0)))
 	rig.set_anim(a.get("pose", "idle"))
 	rig.speed = 0.0
@@ -309,29 +257,138 @@ func _place_actor(a: Dictionary, staff_char: String) -> void:
 		(rig.extras["mask"] as Node3D).visible = a.get("mask", false)
 	rig.reduced_motion = bool(Settings.g("reduced_motion"))
 
-## Scenes are authored on the classic floor; a v2 set maps them (LayoutDef).
-func _map3(p: Vector3) -> Vector3:
-	return _L.classic_to_local(p) if _L != null else p
+## Hotel stations standing between the camera and a face are hidden for the
+## panel (the compact halls put a station row a metre in front of the lane, so
+## any shot from the south would otherwise look through the bell stand or the
+## linen shelf). Story props and actors are never hidden: they are authored.
+func _cull_occluders(cam_pos: Vector3) -> void:
+	for n in _culled:
+		if is_instance_valid(n):
+			(n as Node3D).visible = true
+	_culled.clear()
+	if _view == null or _staged.get("photo", false):
+		return
+	var targets: Array = []
+	for aid in actors:
+		var rig: ActorRig = actors[aid]
+		var h := rig.height * ModelActors.ACTOR_SCALE
+		targets.append(rig.position + Vector3(0, h * 0.78, 0))
+		targets.append(rig.position + Vector3(0, h + 0.25, 0))
+	for key in _view.stations:
+		var st: Node3D = _view.stations[key]
+		if not is_instance_valid(st) or not st.visible:
+			continue
+		var box := _world_aabb(st)
+		if box.size == Vector3.ZERO:
+			continue
+		box = box.grow(0.25)
+		for t in targets:
+			if box.intersects_segment(cam_pos, t) != null:
+				st.visible = false
+				_culled.append(st)
+				break
 
-func _map_xz(x: float, z: float) -> Vector2:
-	return _L.classic_to_local_xz(x, z) if _L != null else Vector2(x, z)
+static func _world_aabb(n: Node3D) -> AABB:
+	var box := AABB()
+	var first := true
+	var list: Array = n.find_children("*", "VisualInstance3D", true, false)
+	if n is VisualInstance3D:
+		list.append(n)
+	for vi in list:
+		if not (vi as Node3D).visible:
+			continue
+		var b: AABB = (vi as VisualInstance3D).global_transform * (vi as VisualInstance3D).get_aabb()
+		box = b if first else box.merge(b)
+		first = false
+	return box
+
+## Dev report for the UI tour (tools/dev/ui_tour.gd --only=...): where every
+## actor's head and face land in the frame at the camera's rest position, and
+## what stands between the camera and the speaker's face. Fractions of the
+## frame; the pass bar is the letterbox, the caption band and the postcard frame.
+func frame_report() -> Dictionary:
+	var cam := stage.camera
+	var keep := cam.transform
+	cam.transform = cam_to
+	var vs := Vector2(stage.viewport.size)
+	var hgt := maxf(1.0, size.y)
+	var top_lim := 34.0 / hgt + 0.004
+	var bottom_lim := 1.0
+	var caption_top := (hgt - 70.0 - 34.0) / hgt
+	if _postcard:
+		top_lim = 0.1 + 14.0 / hgt + 0.004
+		bottom_lim = 0.76 - 14.0 / hgt
+	var spk_id := _speaker_actor()
+	var p: Dictionary = panels[idx]
+	var rep := {"beat": p.get("id", ""), "camera": p.get("camera", ""), "layout": _layout, "speaker": _speaker,
+		"speaker_actor": spk_id, "photo": _postcard, "culled": _culled.size(), "shift": snappedf(float(_staged.get("shift", 0.0)), 0.01),
+		"heads": [], "heads_ok": true, "speaker_ok": true, "occluders": []}
+	for aid in actors:
+		var rig: ActorRig = actors[aid]
+		var h := rig.height * ModelActors.ACTOR_SCALE
+		var top := rig.position + Vector3(0, h + StoryStaging.HEAD_PAD, 0)
+		var face := rig.position + Vector3(0, h * 0.78, 0)
+		if cam.is_position_behind(face):
+			rep["heads"].append({"id": aid, "behind": true})
+			rep["heads_ok"] = false
+			continue
+		var pt := cam.unproject_position(top) / vs
+		var pf := cam.unproject_position(face) / vs
+		var pb := cam.unproject_position(rig.position) / vs
+		var ok := pt.y >= top_lim and pt.x >= 0.02 and pt.x <= 0.98 and pb.y <= bottom_lim
+		rep["heads"].append({"id": aid, "top": [snappedf(pt.x, 0.001), snappedf(pt.y, 0.001)], "face_y": snappedf(pf.y, 0.001), "feet_y": snappedf(pb.y, 0.001), "ok": ok})
+		if not ok:
+			rep["heads_ok"] = false
+		if aid == spk_id:
+			if not ok or pf.y > caption_top:
+				rep["speaker_ok"] = false
+			for other in actors:
+				if other == aid:
+					continue
+				var orig: ActorRig = actors[other]
+				var oh := orig.height * ModelActors.ACTOR_SCALE
+				var ob := AABB(orig.position - Vector3(oh * 0.25, 0, oh * 0.25), Vector3(oh * 0.5, oh, oh * 0.5))
+				if ob.intersects_segment(cam_to.origin, face) != null:
+					rep["occluders"].append("actor:" + other)
+			for c in set_root.get_children():
+				if c.has_meta("prop") and c is Node3D:
+					var pbx := _world_aabb(c)
+					if pbx.size != Vector3.ZERO and pbx.intersects_segment(cam_to.origin, face) != null:
+						rep["occluders"].append("prop:" + String(c.name))
+			if _view != null:
+				for key in _view.stations:
+					var st: Node3D = _view.stations[key]
+					if not is_instance_valid(st) or not st.visible:
+						continue
+					var sbx := _world_aabb(st)
+					if sbx.size != Vector3.ZERO and sbx.intersects_segment(cam_to.origin, face) != null:
+						rep["occluders"].append("station:" + str(key))
+			if not rep["occluders"].is_empty():
+				rep["speaker_ok"] = false
+	cam.transform = keep
+	return rep
+
+func _speaker_actor() -> String:
+	if _speaker == "":
+		return ""
+	if actors.has(_speaker):
+		return _speaker
+	var party := _party_chars()
+	var i := party.find(_speaker)
+	if i >= 0 and actors.has("staff%d" % i):
+		return "staff%d" % i
+	return ""
 
 static func _family_of(aid: String) -> String:
-	match aid:
-		"mallow": return "slime"
-		"flurry": return "yeti"
-		"cinder": return "dragon"
-		"whisp": return "ghost"
-		"luna": return "moonwolf"
-		"fern": return "sprout"
-	if aid.begins_with("guest:"):
-		return aid.split(":")[1]
-	return "slime"
+	return StoryStaging.family_of(aid)
 
 func _process(dt: float) -> void:
 	t += dt
 	var k := clampf(t / maxf(0.1, dur), 0.0, 1.0)
 	var e := k * k * (3.0 - 2.0 * k)
+	# The story owns the camera: a stage re-fit (resize, bounds) must not put
+	# the gameplay FOV back under a framed shot.
+	stage.camera.fov = _fov
 	stage.camera.transform = cam_from.interpolate_with(cam_to, e) if not Settings.g("reduced_motion") else cam_to
 	for aid in actors:
 		(actors[aid] as ActorRig).tick(dt)

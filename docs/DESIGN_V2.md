@@ -44,9 +44,9 @@ and one timer bar:
 
 | Step | What the team does | Timer shown | Tip for speed |
 |---|---|---|---|
-| **Key** (check-in) | take the ticket from the pedestal, put it on a clean room's plaque | lobby patience, 45 s | +10 if placed with half the patience left |
-| **Gift** | choose the family at the kiosk, carry the gift to the room plinth | — (stay bar) | +5 if installed within 20 s of the guest entering |
-| **Request ×n** | towel or snack from stock to the guest (later chapters: warmed, cooled, …) | 20 s window + 6 s late | +5 each if served in the first half of the window |
+| **Key** (check-in) | take the ticket from the pedestal, put it on a clean room's plaque | lobby patience, 45 s | +10 if placed with two thirds of the patience left (within 15 s) |
+| **Gift** | choose the family at the kiosk, carry the gift to the room plinth | — (stay bar) | +5 if installed within 15 s of the guest entering |
+| **Request ×n** | towel or snack from stock to the guest (later chapters: warmed, cooled, …) | 20 s window + 6 s late | +5 each if served in the first third of the window |
 | **Stay → checkout** | nothing; the guest leaves a dirty bed and a mess | stay, 40 s (chapter 1) | — |
 
 - A late step costs points, never the shift: a request served in the late window earns half; after
@@ -109,10 +109,13 @@ readable effect and a one-step fix.
 
 Levels carry a `pacing` block: `{first_s, gap_s, announce_s, reserve_s}`. The first guest arrives at
 **4 s** (announced 3 s earlier, so the first card is on the rail at 1 s); then one every `gap_s`
-(chapter 1: 16–18 s), compressed for bigger parties so the last arrival still leaves `reserve_s`
-(patience 45 + walk 12 + stay 40 + 3 = 100 s) before the timer. Shifts are shorter and denser:
-L01 160 s, L02 180 s, L03 200 s, L04 210 s (were 270–300 s). Wave rosters still scale by player
-count (×0.65 / 1.0 / 1.25 / 1.5).
+(chapter 1: 12–18 s), compressed for bigger parties so the last arrival still leaves `reserve_s`
+(patience 45 + walk 12 + stay 40 + 3 = 100 s) before the timer, and never faster than the rooms
+can turn over: at least (stay + 8 s) / room cap between arrivals (solo, 2 rooms: 24 s), with
+guests that no longer fit before the reserve dropped from the end. Shifts are shorter and
+denser: L01 160 s, L02 180 s, L03 200 s, L04 210 s (were 270–300 s). Wave rosters still scale by
+player count (×0.65 / 1.0 / 1.25 / 1.5); L03 and L04 grow to 8 guests at two players so the
+laundry and trunk shifts carry real load.
 
 ## 9. Visual escalation by chapter
 
@@ -144,7 +147,9 @@ one hazard and one visible thing in the lane (pipes, curtains, drains, lift cars
   with the first guest at 4 s; the 150 s reserve is replaced by each level's `reserve_s`.
 - **§10.3/§8 timings (chapter 1)**: patience 50 → 45 s, request window 25 → 20 s, stays 70–75 →
   40 s, per level.
-- **§10.4 score**: 20/20/20/40 → 30/20/30/20 plus tips; tips count toward the percent.
+- **§10.4 score**: 20/20/20/40 → 30/20/30/20 plus tips; tips count toward the percent (a
+  fast team can cover about one missed order in four).
+- **Appendix A rosters**: L03 and L04 grow from 6 to 8 two-player guests.
 - **§11.1 HUD**: incoming cards → the order rail; seat tags move from the head to the feet.
 - **§12.2**: the festival stand leaves the hall lane (classic floor: (26,11)); new fixture kind
   `counters`.

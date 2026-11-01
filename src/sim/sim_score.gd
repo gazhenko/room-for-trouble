@@ -6,10 +6,10 @@ extends RefCounted
 ## v2 per-order weights (docs/DESIGN_V2.md §6): every guest is an order worth
 ## 100 base points, plus tips for speed that can make up for a missed step.
 const PTS := {"admission": 30_000, "welcome": 20_000, "service": 30_000, "comfort": 20_000}
-const TIP_CHECKIN := 10_000     # ticket on a plaque with at least half the patience left
-const TIP_WELCOME := 5_000      # matching gift installed within 20 s of entering the room
-const TIP_REQUEST := 5_000      # a request served within the first half of its window
-const TIP_WELCOME_WINDOW_S := 20
+const TIP_CHECKIN := 10_000     # ticket on a plaque with two thirds of the patience left
+const TIP_WELCOME := 5_000      # matching gift installed within 15 s of entering the room
+const TIP_REQUEST := 5_000      # a request served within the first third of its window
+const TIP_WELCOME_WINDOW_S := 15
 
 const PREDICATES := ["useful_handoffs", "shared_work", "cozy_departures", "welcome_matches", "laundry_cycles",
 	"requests", "vent_solution", "quiet_howls", "balanced_rooms", "water_care", "helpful_guests",

@@ -39,8 +39,8 @@
       "active_rooms": [
         "A",
         "B",
-        "D",
-        "E"
+        "C",
+        "D"
       ],
       "thermal_edges": [],
       "acoustic_edges": [],

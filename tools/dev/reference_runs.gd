@@ -117,7 +117,7 @@ func run(lid: String, humans: int, diff: String, flaw: String) -> Dictionary:
 			continue
 		if not comf_by_room.has(room):
 			comf_by_room[room] = []
-		comf_by_room[room].append(float(g["points"]["comfort"]) / 400.0)
+		comf_by_room[room].append(float(g["points"]["comfort"]) / (float(SimScore.PTS["comfort"]) / 100.0))
 	var comf := {}
 	for r in comf_by_room:
 		var arr: Array = comf_by_room[r]

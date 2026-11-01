@@ -19,12 +19,15 @@
   "1": {
    "waves": [
     [
+     "slime",
      "slime"
     ],
     [
+     "slime",
      "slime"
     ],
     [
+     "slime",
      "slime"
     ]
    ],
@@ -37,18 +40,30 @@
     },
     {
      "family": "slime",
+     "wave": 0,
+     "arrive_s": 28,
+     "announce_s": 25
+    },
+    {
+     "family": "slime",
      "wave": 1,
-     "arrive_s": 20,
-     "announce_s": 17
+     "arrive_s": 52,
+     "announce_s": 49
+    },
+    {
+     "family": "slime",
+     "wave": 1,
+     "arrive_s": 76,
+     "announce_s": 73
     },
     {
      "family": "slime",
      "wave": 2,
-     "arrive_s": 36,
-     "announce_s": 33
+     "arrive_s": 100,
+     "announce_s": 97
     }
    ],
-   "guest_count": 3
+   "guest_count": 5
   },
   "2": {
    "waves": [
@@ -58,9 +73,11 @@
     ],
     [
      "slime",
+     "slime",
      "slime"
     ],
     [
+     "slime",
      "slime",
      "slime"
     ]
@@ -75,14 +92,20 @@
     {
      "family": "slime",
      "wave": 0,
-     "arrive_s": 20,
-     "announce_s": 17
+     "arrive_s": 16,
+     "announce_s": 13
     },
     {
      "family": "slime",
      "wave": 1,
-     "arrive_s": 36,
-     "announce_s": 33
+     "arrive_s": 28,
+     "announce_s": 25
+    },
+    {
+     "family": "slime",
+     "wave": 1,
+     "arrive_s": 40,
+     "announce_s": 37
     },
     {
      "family": "slime",
@@ -93,17 +116,23 @@
     {
      "family": "slime",
      "wave": 2,
-     "arrive_s": 68,
-     "announce_s": 65
+     "arrive_s": 64,
+     "announce_s": 61
     },
     {
      "family": "slime",
      "wave": 2,
-     "arrive_s": 84,
-     "announce_s": 81
+     "arrive_s": 76,
+     "announce_s": 73
+    },
+    {
+     "family": "slime",
+     "wave": 2,
+     "arrive_s": 88,
+     "announce_s": 85
     }
    ],
-   "guest_count": 6
+   "guest_count": 8
   },
   "3": {
    "waves": [
@@ -115,9 +144,11 @@
     [
      "slime",
      "slime",
+     "slime",
      "slime"
     ],
     [
+     "slime",
      "slime",
      "slime",
      "slime"
@@ -162,7 +193,7 @@
     },
     {
      "family": "slime",
-     "wave": 2,
+     "wave": 1,
      "arrive_s": 76,
      "announce_s": 73
     },
@@ -191,9 +222,11 @@
     [
      "slime",
      "slime",
+     "slime",
      "slime"
     ],
     [
+     "slime",
      "slime",
      "slime",
      "slime"
@@ -238,7 +271,7 @@
     },
     {
      "family": "slime",
-     "wave": 2,
+     "wave": 1,
      "arrive_s": 76,
      "announce_s": 73
     },

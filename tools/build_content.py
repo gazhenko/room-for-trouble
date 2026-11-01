@@ -152,10 +152,15 @@ for L in manifest["levels"]:
             gap = pacing.get("gap_s", 16)
             if n > 1:
                 gap = min(gap, (d - res - first) // (n - 1))
+            # never faster than the rooms can turn over (see ArrivalPlan.schedule)
+            gap = max(gap, -(-(L.get("stay_s", 40) + 8) // cap))
             gap = max(gap, 6)
+            n_max = max(1, (d - res - first) // gap + 1)
             idx = 0
             for wi, wave in enumerate(waves):
                 for fam in wave:
+                    if idx >= n_max:
+                        break
                     t = first + idx * gap
                     sched.append({"family": fam, "wave": wi, "arrive_s": t, "announce_s": max(0, t - ann)})
                     idx += 1

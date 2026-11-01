@@ -209,7 +209,7 @@ static func assign(sim: HotelSim, gid: int, letter: String, seat: int) -> void:
 	g["trail_d"] = 0
 	sim.emit("assign", {"guest": gid, "room": letter, "seat": seat, "fam": g["fam"]})
 	SimScore.note_admit(sim, g, seat)
-	if int(g["patience_q"]) * 2 >= patience_s(sim) * Q and not g.get("tut", false):
+	if int(g["patience_q"]) * 3 >= patience_s(sim) * Q * 2 and not g.get("tut", false):
 		SimScore.tip(sim, g, SimScore.TIP_CHECKIN, seat, "checkin")
 	if int(g["patience_q"]) * 2 >= patience_s(sim) * Q and not g.get("tut", false):
 		SimScore.tip(sim, g, SimScore.TIP_CHECKIN, seat, "checkin")
@@ -345,7 +345,7 @@ static func fulfill(sim: HotelSim, g: Dictionary, idx: int, seat: int, item_id: 
 	SimScore.note_consumed(sim, sim.item(item_id), seat, "service")
 	SimScore.bump(sim, "requests")
 	sim.emit("request_done", {"guest": g["id"], "room": g["room"], "k": rq["k"], "late": late, "seat": seat})
-	if not late and (hq - int(rq["at"])) * 2 <= request_s(sim) * Q and not g.get("tut", false):
+	if not late and (hq - int(rq["at"])) * 3 <= request_s(sim) * Q and not g.get("tut", false):
 		SimScore.tip(sim, g, SimScore.TIP_REQUEST, seat, "request")
 	if not late and (hq - int(rq["at"])) * 2 <= request_s(sim) * Q and not g.get("tut", false):
 		SimScore.tip(sim, g, SimScore.TIP_REQUEST, seat, "request")

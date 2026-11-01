@@ -50,10 +50,20 @@ static func schedule(level: Dictionary, humans: int, active_room_count: int, res
 		var gap := int(pacing.get("gap_s", 16))
 		if n > 1:
 			gap = mini(gap, (d - res - first) / (n - 1))
+		# Arrivals never outrun the rooms: with the party's room cap and the stay
+		# plus a turnaround, a guest can only be housed every (stay + 8) / cap s.
+		var h := clampi(humans, 1, 4)
+		var cap := maxi(1, mini(6, mini(SimC.ROOM_CAP_BY_HUMANS[h - 1], active_room_count)))
+		var stay := int(level.get("stay_s", 40))
+		gap = maxi(gap, int(ceil(float(stay + 8) / cap)))
 		gap = maxi(gap, 6)
+		# Guests that no longer fit before the reserve are dropped from the end.
+		var n_max := maxi(1, (d - res - first) / gap + 1)
 		for wi in waves.size():
 			var wave: Array = waves[wi]
 			for j in wave.size():
+				if arrival_index >= n_max:
+					break
 				var t := first + arrival_index * gap
 				out.append({"family": wave[j], "wave": wi, "index_in_wave": j,
 					"arrive_s": t, "announce_s": maxi(0, t - ann), "arrival_index": arrival_index})

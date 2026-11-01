@@ -38,14 +38,14 @@
     {
      "family": "slime",
      "wave": 1,
-     "arrive_s": 20,
-     "announce_s": 17
+     "arrive_s": 28,
+     "announce_s": 25
     },
     {
      "family": "slime",
      "wave": 2,
-     "arrive_s": 36,
-     "announce_s": 33
+     "arrive_s": 52,
+     "announce_s": 49
     }
    ],
    "guest_count": 3
@@ -165,41 +165,29 @@
     {
      "family": "slime",
      "wave": 0,
-     "arrive_s": 13,
-     "announce_s": 10
+     "arrive_s": 16,
+     "announce_s": 13
     },
     {
      "family": "slime",
      "wave": 1,
-     "arrive_s": 22,
-     "announce_s": 19
+     "arrive_s": 28,
+     "announce_s": 25
     },
     {
      "family": "slime",
      "wave": 1,
-     "arrive_s": 31,
-     "announce_s": 28
-    },
-    {
-     "family": "slime",
-     "wave": 2,
      "arrive_s": 40,
      "announce_s": 37
     },
     {
      "family": "slime",
      "wave": 2,
-     "arrive_s": 49,
-     "announce_s": 46
-    },
-    {
-     "family": "slime",
-     "wave": 2,
-     "arrive_s": 58,
-     "announce_s": 55
+     "arrive_s": 52,
+     "announce_s": 49
     }
    ],
-   "guest_count": 7
+   "guest_count": 5
   }
  }
 }

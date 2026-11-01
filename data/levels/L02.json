@@ -38,14 +38,14 @@
     {
      "family": "slime",
      "wave": 1,
-     "arrive_s": 20,
-     "announce_s": 17
+     "arrive_s": 28,
+     "announce_s": 25
     },
     {
      "family": "slime",
      "wave": 2,
-     "arrive_s": 36,
-     "announce_s": 33
+     "arrive_s": 52,
+     "announce_s": 49
     }
    ],
    "guest_count": 3
@@ -187,32 +187,26 @@
     {
      "family": "slime",
      "wave": 0,
-     "arrive_s": 14,
-     "announce_s": 11
+     "arrive_s": 16,
+     "announce_s": 13
     },
     {
      "family": "slime",
      "wave": 0,
-     "arrive_s": 24,
-     "announce_s": 21
+     "arrive_s": 28,
+     "announce_s": 25
     },
     {
      "family": "slime",
      "wave": 1,
-     "arrive_s": 34,
-     "announce_s": 31
+     "arrive_s": 40,
+     "announce_s": 37
     },
     {
      "family": "slime",
      "wave": 1,
-     "arrive_s": 44,
-     "announce_s": 41
-    },
-    {
-     "family": "slime",
-     "wave": 2,
-     "arrive_s": 54,
-     "announce_s": 51
+     "arrive_s": 52,
+     "announce_s": 49
     },
     {
      "family": "slime",
@@ -223,11 +217,11 @@
     {
      "family": "slime",
      "wave": 2,
-     "arrive_s": 74,
-     "announce_s": 71
+     "arrive_s": 76,
+     "announce_s": 73
     }
    ],
-   "guest_count": 8
+   "guest_count": 7
   }
  }
 }

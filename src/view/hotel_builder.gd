@@ -138,7 +138,9 @@ func _walls() -> void:
 	var caps := MeshKit.new()
 	caps.jitter = 0.02
 	var wall_col := _c("wall", Art.CREAM)
-	var trim := Color("#5E4536")
+	var trim := Color("#7D5E47")   # mid walnut: a wall top is an edge, not a dark slab
+	var xe := L.east_wall_x()
+	var ze := L.south_wall_z()
 	var skirting := _c("trim", Art.WALNUT).darkened(0.1)
 	for z in LayoutDef.H:
 		for x in LayoutDef.W:
@@ -156,8 +158,22 @@ func _walls() -> void:
 				col = wall_col
 			elif z >= L.hall_south_wall_z():
 				col = wall_col.darkened(0.04)
-			mk.box(Vector3(x, h * 0.5, z), Vector3(1.0, h, 1.0), col)
-			caps.box(Vector3(x, h + 0.04, z), Vector3(1.04, 0.08, 1.04), trim, trim.lightened(0.12))
+			# The outer ring is drawn 0.42 m thick against its inner face (collision
+			# keeps the full tile); room dividers stay a full tile so no gap shows.
+			var bx := float(x)
+			var bz := float(z)
+			var wsx := 1.0
+			var wsz := 1.0
+			if z == 0:
+				bz = 0.29; wsz = 0.42
+			elif z == ze:
+				bz = ze - 0.29; wsz = 0.42
+			if x == 0:
+				bx = 0.29; wsx = 0.42
+			elif x == xe:
+				bx = xe - 0.29; wsx = 0.42
+			mk.box(Vector3(bx, h * 0.5, bz), Vector3(wsx, h, wsz), col)
+			caps.box(Vector3(bx, h + 0.04, bz), Vector3(wsx + 0.04, 0.08, wsz + 0.04), trim, trim.lightened(0.12))
 			# Skirting board along walkable neighbours.
 			for d in [Vector2i(0, 1), Vector2i(0, -1), Vector2i(1, 0), Vector2i(-1, 0)]:
 				var nx: int = x + d.x

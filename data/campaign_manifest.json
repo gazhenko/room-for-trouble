@@ -179,21 +179,23 @@
             "slime",
             "slime"
           ],
-          "minimum_size": 1
+          "minimum_size": 2
         },
         {
           "roster": [
             "slime",
+            "slime",
             "slime"
           ],
-          "minimum_size": 1
+          "minimum_size": 2
         },
         {
           "roster": [
             "slime",
+            "slime",
             "slime"
           ],
-          "minimum_size": 1
+          "minimum_size": 2
         }
       ],
       "service_count": 2,
@@ -246,7 +248,7 @@
       "required_goal_ids": [],
       "pacing": {
         "first_s": 4,
-        "gap_s": 16,
+        "gap_s": 12,
         "announce_s": 3,
         "reserve_s": 100
       },
@@ -267,21 +269,23 @@
             "slime",
             "slime"
           ],
-          "minimum_size": 1
+          "minimum_size": 2
         },
         {
           "roster": [
             "slime",
+            "slime",
             "slime"
           ],
-          "minimum_size": 1
+          "minimum_size": 2
         },
         {
           "roster": [
             "slime",
+            "slime",
             "slime"
           ],
-          "minimum_size": 1
+          "minimum_size": 2
         }
       ],
       "service_count": 1,
@@ -343,7 +347,7 @@
       ],
       "pacing": {
         "first_s": 4,
-        "gap_s": 18,
+        "gap_s": 14,
         "announce_s": 3,
         "reserve_s": 100
       },

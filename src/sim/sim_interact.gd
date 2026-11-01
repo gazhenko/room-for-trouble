@@ -117,6 +117,27 @@ static func gate_pos(sim: HotelSim, edge: String) -> Vector2i:
 	var north := p.y <= sim.L.hall.position.y * SimC.UM
 	return Vector2i(p.x, p.y + (-250_000 if north else 250_000))
 
+## A howl startles staff near the room's door: half a second frozen and the
+## held item set down at their feet (never lost).
+static func startle_near(sim: HotelSim, x: int, z: int, radius: int) -> void:
+	for st in sim.s["staff"]:
+		if not st["present"] or st["grip"] != 0:
+			continue
+		var dx: int = st["x"] - x
+		var dz: int = st["z"] - z
+		if dx * dx + dz * dz > radius * radius:
+			continue
+		st["stun_t"] = SimC.STUN_TICKS
+		st["work_key"] = ""
+		var dropped := 0
+		if st["held"] != 0:
+			var spot := floor_spot(sim, st["x"], st["z"], st["fx"], st["fz"], st["x"], st["z"])
+			if spot.x != -1:
+				dropped = st["held"]
+				place_world(sim, dropped, spot.x, spot.y)
+				st["held"] = 0
+		sim.emit("startled", {"seat": st["seat"], "dropped": dropped})
+
 static func counter_pos(sim: HotelSim, i: int) -> Vector2i:
 	return um(sim.L.fixtures["counters"][i])
 
@@ -236,10 +257,13 @@ static func carry_candidates(sim: HotelSim, st: Dictionary) -> Array:
 					var g: Dictionary = sim.s["guests"][gid]
 					if g["state"] != "staying":
 						continue
-					var rq := SimGuests.open_request(sim, g, hk)
+					var rq := SimGuests.open_request_for(sim, g, it)
 					var any_open := SimGuests.any_open_request(sim, g)
 					if rq >= 0:
 						out.append(_cand("guest:%d" % gid, Vector2i(g["x"], g["z"]), true, "", RANK_SOCKET))
+					elif SimGuests.open_request(sim, g, hk) >= 0:
+						var need_t := SimGuests.needed_temp(sim.has_sys("thermal"), g["fam"], hk)
+						out.append(_cand("guest:%d" % gid, Vector2i(g["x"], g["z"]), false, "ui.reason.needs_" + need_t, RANK_SOCKET))
 					elif any_open:
 						out.append(_cand("guest:%d" % gid, Vector2i(g["x"], g["z"]), false, "ui.reason.wrong_item", RANK_SOCKET))
 				var stname := "st:towels" if hk == "towel" else "st:snacks"
@@ -365,7 +389,14 @@ static func work_candidates(sim: HotelSim, st: Dictionary) -> Array:
 		for e in sim.L.thermal_edges:
 			out.append(_cand("gate:" + e, gate_pos(sim, e), true, "", RANK_STATION))
 		if F.has("heat_pump"):
-			out.append(_cand("pump", um(F["heat_pump"]), true, "", RANK_STATION))
+			if hk in ["towel", "snack"]:
+				# The middle step: warm a towel / chill a snack (one second at the pump).
+				var it_t: Dictionary = sim.item(st["held"])
+				var tempered := str(it_t.get("temp", "")) != ""
+				out.append(_cand("temper:%d" % st["held"], um(F["heat_pump"]), not plan and not tempered,
+					wp if plan else "ui.reason.already_tempered", RANK_STATION))
+			else:
+				out.append(_cand("pump", um(F["heat_pump"]), true, "", RANK_STATION))
 	if sim.has_sys("moisture") and hk == "watering_can" and F.has("tap"):
 		out.append(_cand("tap", um(F["tap"]), not plan, wp, RANK_STATION))
 	if hk == "":
@@ -596,9 +627,8 @@ static func _do_carry(sim: HotelSim, st: Dictionary, key: String) -> void:
 			SimGoals.grip(sim, st, int(parts[1]), int(parts[2]))
 		"guest":
 			var gid3 := int(parts[1])
-			var hk := held_kind(sim, st)
 			var g3 := sim.guest(gid3)
-			var rq := SimGuests.open_request(sim, g3, hk)
+			var rq := SimGuests.open_request_for(sim, g3, sim.item(st["held"]))
 			if rq < 0:
 				return
 			var iid5: int = st["held"]
@@ -751,6 +781,7 @@ static func work_duration(sim: HotelSim, key: String) -> int:
 		"puddle": return SimC.T_MOP_PUDDLE
 		"cloud": return SimC.T_BREEZER
 		"frost": return SimC.T_FROST
+		"temper": return SimC.T_TEMPER
 		"thermo": return SimC.T_THERMO
 		"tray": return SimC.T_WATER
 		"gate": return SimC.T_GATE
@@ -879,6 +910,13 @@ static func _commit_work(sim: HotelSim, key: String, seats: Array) -> void:
 			r3["frost"] = false
 			r3["frost_cd"] = 20
 			sim.emit("frost_cleared", {"room": parts[1], "seat": seat})
+		"temper":
+			var it_t := sim.item(int(parts[1]))
+			if it_t.is_empty() or not it_t["k"] in ["towel", "snack"]:
+				ok = false
+			else:
+				it_t["temp"] = "warm" if it_t["k"] == "towel" else "cool"
+				sim.emit("tempered", {"seat": seat, "id": int(parts[1]), "temp": it_t["temp"]})
 		"thermo":
 			var r4 := sim.room(parts[1])
 			var order := ["neutral", "warm", "cool"]

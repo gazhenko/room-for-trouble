@@ -364,6 +364,10 @@ func _deliver(st: Dictionary, hk: String) -> Dictionary:
 			for gid in sim.s["guests"]:
 				var g2: Dictionary = sim.s["guests"][gid]
 				if g2["state"] == "staying" and SimGuests.open_request(sim, g2, hk) >= 0:
+					var need_t := SimGuests.needed_temp(sim.has_sys("thermal"), g2["fam"], hk)
+					if need_t != "" and str(it.get("temp", "")) != need_t and F.has("heat_pump"):
+						var iid_t: int = st["held"]
+						return _task("temper:%d" % iid_t, "work", _um(F["heat_pump"]), "", func(): return str(sim.item(iid_t).get("temp", "")) != need_t)
 					return _task("guest:%d" % gid, "carry", Vector2i(g2["x"], g2["z"]), "", func(): return SimGuests.open_request(sim, sim.guest(gid), hk) >= 0)
 			return _return_task(st)
 		"mop":

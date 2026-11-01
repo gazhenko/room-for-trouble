@@ -59,7 +59,14 @@
         "welcome_rug"
       ],
       "initial_humidity": {},
-      "base": "v2_small"
+      "base": "v2_small",
+      "light": {
+        "sun": "#FFEFD2",
+        "energy": 1.08,
+        "elevation_deg": 40.5,
+        "background": "#8CB27A",
+        "mood": "late morning"
+      }
     },
     {
       "id": "P2",
@@ -134,7 +141,14 @@
         "radiators"
       ],
       "initial_humidity": {},
-      "base": "v2_six"
+      "base": "v2_six",
+      "light": {
+        "sun": "#FFF7E8",
+        "energy": 1.15,
+        "elevation_deg": 44.0,
+        "background": "#93B67D",
+        "mood": "noon"
+      }
     },
     {
       "id": "P3",
@@ -221,7 +235,14 @@
         "moon_lamps"
       ],
       "initial_humidity": {},
-      "base": "v2_six"
+      "base": "v2_six",
+      "light": {
+        "sun": "#FFD9B0",
+        "energy": 1.0,
+        "elevation_deg": 34.0,
+        "background": "#7F9F6D",
+        "mood": "dusk"
+      }
     },
     {
       "id": "P4",
@@ -318,7 +339,14 @@
         "A": 40,
         "D": 40
       },
-      "base": "v2_six"
+      "base": "v2_six",
+      "light": {
+        "sun": "#F0F7D6",
+        "energy": 1.1,
+        "elevation_deg": 42.0,
+        "background": "#86B07A",
+        "mood": "greenhouse light"
+      }
     },
     {
       "id": "P5",
@@ -443,7 +471,7 @@
         "divider"
       ],
       "initial_humidity": {},
-      "base": "v2_six",
+      "base": "v2_split",
       "divider": [
         9,
         6
@@ -455,11 +483,11 @@
       "lift_pads": [
         [
           1,
-          6
+          7
         ],
         [
           17,
-          6
+          7
         ]
       ],
       "room_overrides": {
@@ -469,6 +497,13 @@
             4
           ]
         }
+      },
+      "light": {
+        "sun": "#FFCFA3",
+        "energy": 0.95,
+        "elevation_deg": 30.0,
+        "background": "#76955F",
+        "mood": "evening"
       }
     },
     {
@@ -574,6 +609,13 @@
           16,
           6
         ]
+      },
+      "light": {
+        "sun": "#C9D2FF",
+        "energy": 0.85,
+        "elevation_deg": 28.0,
+        "background": "#58715B",
+        "mood": "night festival"
       }
     }
   ]

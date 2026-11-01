@@ -22,6 +22,7 @@ var thermal_edges: Array = []
 var acoustic_edges: Array = []
 var systems_available: Array = []
 var palette: Dictionary = {}
+var light: Dictionary = {}          # per-chapter sun colour / energy / elevation / background
 var decor: Array = []
 var initial_humidity: Dictionary = {}
 var divider: Vector2i = Vector2i(-1, -1)
@@ -54,6 +55,7 @@ static func build(base: Dictionary, tpl: Dictionary, mirror: bool) -> LayoutDef:
 	L.acoustic_edges = tpl.get("acoustic_edges", []).duplicate()
 	L.systems_available = tpl.get("systems_available", []).duplicate()
 	L.palette = tpl.get("palette", {}).duplicate()
+	L.light = tpl.get("light", {}).duplicate()
 	L.decor = tpl.get("decor", []).duplicate()
 	L.initial_humidity = tpl.get("initial_humidity", {}).duplicate()
 	var hr: Array = base["hall"]
@@ -189,6 +191,78 @@ func entrance_z() -> float:
 	for e in entrance:
 		s += float((e as Vector2i).y)
 	return s / entrance.size()
+
+## Capsule-aware reachability on a 0.25 m grid: walls from tiles plus every
+## solid fixture box, inflated by the staff radius (the tile flood is blind to
+## stations sealing a one-tile corridor). With shutter_closed the shutter tile is
+## solid too. Both points snap to the nearest free cell.
+func capsule_reachable(from_um: Vector2i, to_um: Vector2i, radius_um: int, shutter_closed := false) -> bool:
+	var res := 250_000
+	var w := W * 4
+	var h := H * 4
+	var free := PackedByteArray()
+	free.resize(w * h)
+	for j in h:
+		for i in w:
+			var cx := -500_000 + i * res + res / 2
+			var cz := -500_000 + j * res + res / 2
+			free[j * w + i] = 1 if _capsule_free(cx, cz, radius_um, shutter_closed) else 0
+	var a := _nearest_free_cell(free, w, h, from_um, res)
+	var b := _nearest_free_cell(free, w, h, to_um, res)
+	if a.x < 0 or b.x < 0:
+		return false
+	var seen := PackedByteArray()
+	seen.resize(w * h)
+	var q: Array = [a]
+	seen[a.y * w + a.x] = 1
+	var qi := 0
+	while qi < q.size():
+		var c: Vector2i = q[qi]
+		qi += 1
+		if c == b:
+			return true
+		for d in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
+			var n: Vector2i = c + d
+			if n.x < 0 or n.y < 0 or n.x >= w or n.y >= h:
+				continue
+			if seen[n.y * w + n.x] == 1 or free[n.y * w + n.x] == 0:
+				continue
+			seen[n.y * w + n.x] = 1
+			q.append(n)
+	return false
+
+func _capsule_free(x: int, z: int, r: int, shutter_closed: bool) -> bool:
+	if x < -500_000 + r or z < -500_000 + r or x > (W - 1) * SimC.UM + 500_000 - r or z > (H - 1) * SimC.UM + 500_000 - r:
+		return false
+	var tx := tile_of(x)
+	var tz := tile_of(z)
+	for j in range(tz - 1, tz + 2):
+		for i in range(tx - 1, tx + 2):
+			var solid := is_wall_tile(i, j) or (shutter_closed and shutter == Vector2i(i, j))
+			if not solid:
+				continue
+			var bx0 := i * SimC.UM - 500_000
+			var bz0 := j * SimC.UM - 500_000
+			if x > bx0 - r and x < bx0 + SimC.UM + r and z > bz0 - r and z < bz0 + SimC.UM + r:
+				return false
+	for b in boxes:
+		if x > b[0] - r and x < b[2] + r and z > b[1] - r and z < b[3] + r:
+			return false
+	return true
+
+func _nearest_free_cell(free: PackedByteArray, w: int, h: int, p: Vector2i, res: int) -> Vector2i:
+	var ci := clampi(int(floor((p.x + 500_000) / float(res))), 0, w - 1)
+	var cj := clampi(int(floor((p.y + 500_000) / float(res))), 0, h - 1)
+	for ring in 6:
+		for dj in range(-ring, ring + 1):
+			for di in range(-ring, ring + 1):
+				var i := ci + di
+				var j := cj + dj
+				if i < 0 or j < 0 or i >= w or j >= h:
+					continue
+				if free[j * w + i] == 1:
+					return Vector2i(i, j)
+	return Vector2i(-1, -1)
 
 ## True when a wall tile touches a walkable tile (filler inside a thick wall mass
 ## never needs geometry).

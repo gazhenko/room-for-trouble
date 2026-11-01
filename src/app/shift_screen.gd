@@ -66,7 +66,8 @@ func _build_view() -> void:
 		systems = sim.systems
 	view = HotelView.new()
 	view.build(stage, L, systems, cfg)
-	# Frame the floor that was actually built (the compact prototype is 19x15).
+	stage.set_light(L.light)
+	# Frame the floor that was actually built.
 	var u := L.used
 	stage.set_bounds(Vector3(u.position.x - 0.6, 0.0, u.position.y - 0.6), Vector3(u.end.x - 1 + 0.6, 0.6, u.end.y - 1 + 0.7))
 	view.local_seats = router_to_sim.values()
@@ -254,7 +255,7 @@ const SFX := {"pickup": "pickup", "place": "place", "handoff": "handoff", "work_
 	"request_open": "request_appear", "request_done": "request_done", "request_missed": "request_late",
 	"checkout": "goodbye", "trip_reset": "trip_reset", "bell": "bell_ring", "lift_depart": "lift_depart",
 	"lift_arrive": "lift_arrive", "trunk_delivered": "trunk_open", "parcel_installed": "parcel_place",
-	"wet_feet": "wet_squeak", "quick_step": "quick_step", "frost": "frost_ting", "cloud": "steam_puff",
+	"wet_feet": "wet_squeak", "slip": "frost_ting", "startled": "wet_squeak", "tempered": "work_finish", "quick_step": "quick_step", "frost": "frost_ting", "cloud": "steam_puff",
 	"trip": "trip", "puddle": "overflow", "grip": "pickup", "release": "place", "kiosk_cycle": "ui_move",
 	"pressed_linen": "linen_fold", "dock": "place", "frost_cleared": "work_finish", "cloud_gone": "fan",
 	"relocate": "ticket_assign", "move_ticket": "pickup", "tool_home": "gus_rattle", "find_tools": "gus_rattle"}

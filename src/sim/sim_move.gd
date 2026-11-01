@@ -12,6 +12,8 @@ static func step_all(sim: HotelSim) -> void:
 			st["step_cd"] -= 1
 		if st["bump_t"] > 0:
 			st["bump_t"] -= 1
+		if int(st.get("stun_t", 0)) > 0:
+			st["stun_t"] = int(st["stun_t"]) - 1
 		if not st["present"]:
 			st["vx"] = 0; st["vz"] = 0
 			continue
@@ -35,7 +37,7 @@ static func input_vec(st: Dictionary) -> Vector2i:
 static func _step_staff(sim: HotelSim, st: Dictionary) -> void:
 	var inp := input_vec(st)
 	var locked: bool = not st["act"].is_empty() and st["act"].get("lock", false) and st["act"].get("move_lock", true)
-	if locked:
+	if locked or int(st.get("stun_t", 0)) > 0:
 		inp = Vector2i.ZERO
 	# Quick step
 	if st["step_t"] > 0:
@@ -59,6 +61,8 @@ static func _step_staff(sim: HotelSim, st: Dictionary) -> void:
 		SimEnv.staff_step_noise(sim, st)
 		return
 	var speed := SimC.SPEED_CARRY if st["held"] != 0 else SimC.SPEED
+	if _in_cloud(sim, st):
+		speed = speed * SimC.CLOUD_SLOW_MILLI / 1000   # steam: you can still push through, slowly
 	var tvx := inp.x * speed / 127
 	var tvz := inp.y * speed / 127
 	var accel := SimC.ACCEL
@@ -192,6 +196,17 @@ static func _corner_assist(sim: HotelSim, st: Dictionary, inp: Vector2i, blocked
 				st["x"] = sweep_axis(sim, st["x"], st["z"], stepv, true, SimC.RADIUS)
 			return
 
+## True while the avatar stands inside a steam cloud.
+static func _in_cloud(sim: HotelSim, st: Dictionary) -> bool:
+	for cid in sim.s.get("clouds", {}):
+		var c: Dictionary = sim.s["clouds"][cid]
+		var dx: int = int(c["x"]) - int(st["x"])
+		var dz: int = int(c["z"]) - int(st["z"])
+		if dx * dx + dz * dz < SimC.STEAM_RADIUS * SimC.STEAM_RADIUS:
+			return true
+	return false
+
+## Puddles and frozen doorsteps send a running avatar into a short slide.
 static func _puddle_contact(sim: HotelSim, st: Dictionary) -> void:
 	if st.get("assists", {}).get("steady_feet", false):
 		return
@@ -201,8 +216,19 @@ static func _puddle_contact(sim: HotelSim, st: Dictionary) -> void:
 		var dz: int = p["z"] - st["z"]
 		if dx * dx + dz * dz < 420_000 * 420_000:
 			if st["slide_t"] == 0 and (st["vx"] != 0 or st["vz"] != 0):
-				st["slide_t"] = 8
+				st["slide_t"] = SimC.SLIDE_TICKS
 				sim.emit("wet_feet", {"seat": st["seat"], "puddle": pid})
+			return
+	for letter in sim.L.active_rooms:
+		if not sim.s["rooms"][letter].get("frost", false):
+			continue
+		var d: Vector2i = sim.L.rooms[letter]["door"]
+		var fx: int = d.x * SimC.UM - st["x"]
+		var fz: int = d.y * SimC.UM - st["z"]
+		if fx * fx + fz * fz < 650_000 * 650_000:
+			if st["slide_t"] == 0 and (st["vx"] != 0 or st["vz"] != 0):
+				st["slide_t"] = SimC.SLIDE_TICKS
+				sim.emit("slip", {"seat": st["seat"], "kind": "frost", "room": letter})
 			return
 
 static func dist(ax: int, az: int, bx: int, bz: int) -> int:

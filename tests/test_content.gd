@@ -49,6 +49,22 @@ func test_map01_routes_reachable() -> void:
 				for letter in L.active_rooms:
 					check(seen2.has(L.rooms[letter]["door"]), "%s room %s reachable with shutter closed" % [tid, letter])
 
+func test_map03_capsule_reachable() -> void:
+	# Every door and station must be reachable for the staff capsule against the
+	# fixture boxes, with the shutter open and closed (P5v2 once sealed its own bypass).
+	for tid in content.templates:
+		var L: LayoutDef = content.layout(tid)
+		var s0: Vector2i = L.fixtures["staff_starts"][0]
+		var start := Vector2i(s0.x * SimC.UM, s0.y * SimC.UM)
+		for letter in L.active_rooms:
+			var d: Vector2i = L.rooms[letter]["door"]
+			check(L.capsule_reachable(start, Vector2i(d.x * SimC.UM, d.y * SimC.UM), SimC.RADIUS, false), "%s door %s capsule-reachable" % [tid, letter])
+			if L.shutter.x >= 0:
+				check(L.capsule_reachable(start, Vector2i(d.x * SimC.UM, d.y * SimC.UM), SimC.RADIUS, true), "%s door %s capsule-reachable with the shutter closed" % [tid, letter])
+		for k in ["linen_shelf", "hamper", "towel_shelf", "snack_tin", "welcome_kiosk", "group_bell"]:
+			var a: Vector2i = L.fixtures[k]
+			check(L.capsule_reachable(start, Vector2i(a.x * SimC.UM, a.y * SimC.UM), SimC.RADIUS, false), "%s %s capsule-reachable" % [tid, k])
+
 func _flood(L: LayoutDef, start: Vector2i, shutter_closed: bool) -> Dictionary:
 	var seen := {start: true}
 	var q: Array = [start]

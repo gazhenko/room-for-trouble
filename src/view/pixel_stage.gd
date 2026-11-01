@@ -103,6 +103,18 @@ func _ready() -> void:
 	get_viewport().size_changed.connect(_apply_scale)
 	_apply_scale()
 
+## Per-chapter light (DESIGN_V2 §9): sun colour, energy and elevation plus the
+## ground/background colour. The azimuth stays on SUN_DIR so tops, fronts and
+## sides keep their band separation; only the elevation moves.
+func set_light(d: Dictionary) -> void:
+	sun.light_color = Color(str(d.get("sun", "#FFEFD2")))
+	sun.light_energy = float(d.get("energy", 1.08))
+	var elev := deg_to_rad(float(d.get("elevation_deg", 40.5)))
+	var flat := Vector2(SUN_DIR.x, SUN_DIR.z).normalized()
+	var dir := Vector3(flat.x * cos(elev), -sin(elev), flat.y * cos(elev))
+	sun.basis = Basis.looking_at(dir.normalized(), Vector3.UP)
+	env.environment.background_color = Color(str(d.get("background", "#8CB27A")))
+
 func set_pixel_lines(lines: int) -> void:
 	target_lines = lines
 	_apply_scale()

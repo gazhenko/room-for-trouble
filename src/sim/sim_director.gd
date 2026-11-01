@@ -99,6 +99,9 @@ static func _fire(sim: HotelSim, inc: Dictionary) -> void:
 			inc["until_s"] = now + 3
 		"howl":
 			SimEnv.queue_pulse(sim, room, 72, {"kind": "howl", "guest": data.get("guest", 0)})
+			if sim.L.rooms.has(room):
+				var dp := SimInteract.door_pos(sim, room)
+				SimInteract.startle_near(sim, dp.x, dp.y, SimC.STARTLE_RADIUS)
 			inc["until_s"] = now + 2
 		"concert_pulse":
 			SimEnv.queue_pulse(sim, room, int(data.get("amplitude", 60)), {"kind": "concert"})

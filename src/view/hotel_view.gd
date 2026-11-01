@@ -988,6 +988,21 @@ func on_events(events: Array) -> void:
 				_pop_room_gift(str(e.get("room", "")))
 			"tip":
 				_spawn_fx("sparkle", Vector3(float(e.get("x", 0)) / 1e6, 1.2, float(e.get("z", 0)) / 1e6), Art.GOLD)
+			"tempered":
+				var tr: ActorRig = staff_rigs.get(int(e.get("seat", -1)), null)
+				if tr:
+					_spawn_fx("puff", tr.position + Vector3(0, 1.3, 0), Art.WARM if e.get("temp", "") == "warm" else Art.COLD, {"scale": 0.7})
+				_pop_item(int(e.get("id", 0)))
+			"startled":
+				var sr: ActorRig = staff_rigs.get(int(e.get("seat", -1)), null)
+				if sr:
+					sr.set_anim("concern")
+					_spawn_fx("note", sr.position + Vector3(0, 1.6, 0), Art.SOUND, {"scale": 0.8})
+				_pop_item(int(e.get("dropped", 0)))
+			"slip":
+				var lr: ActorRig = staff_rigs.get(int(e.get("seat", -1)), null)
+				if lr:
+					_spawn_fx("sparkle", lr.position + Vector3(0, 0.2, 0), Art.COLD)
 			"welcome":
 				var gr: ActorRig = guest_rigs.get(int(e["guest"]), null)
 				if gr:

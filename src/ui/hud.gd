@@ -329,6 +329,9 @@ func _draw_guests() -> void:
 		UiKit.draw_icon(self, icon, c, sz)
 		if need == "service":
 			UiKit.draw_ring(self, c, sz * 0.62 + 3, _req_frac(_open_req(g)), Art.GOLD, 3.0)
+			var tp := str(_open_req(g).get("temp", ""))
+			if tp != "":
+				UiKit.draw_icon(self, "sys_warm" if tp == "warm" else "sys_cold", c + Vector2(-sz * 0.45, -sz * 0.45), 13)
 
 func _comfort_icon(g: Dictionary) -> String:
 	var r: Dictionary = s["rooms"].get(g["room"], {})
@@ -521,6 +524,9 @@ func _draw_prompts() -> void:
 			if not it.is_empty():
 				var hp := _w2s(rig.position + Vector3(0.45, 0.9, 0))
 				UiKit.draw_icon(self, ITEM_ICON.get(it["k"], "sys_help"), hp, 18, Color(1, 1, 1, 0.9))
+				var htp := str(it.get("temp", ""))
+				if htp != "":
+					UiKit.draw_icon(self, "sys_warm" if htp == "warm" else "sys_cold", hp + Vector2(9, -9), 11)
 
 func _verb(kind: String, key: String, st: Dictionary) -> String:
 	var k := key.split(":")[0]
@@ -543,6 +549,8 @@ func _verb(kind: String, key: String, st: Dictionary) -> String:
 			return Loc.t("ui.verb.take_tool" if held == "" else "ui.verb.dock_tool")
 		"counter":
 			return Loc.t("ui.verb.counter_take" if held == "" else "ui.verb.counter_put")
+		"temper":
+			return Loc.t("ui.verb.temper_warm" if held == "towel" else "ui.verb.temper_cool")
 		"lift":
 			return Loc.t("ui.verb.lift_load" if held != "" else "ui.verb.take")
 		"thermo":
@@ -719,7 +727,8 @@ func _draw_orders() -> void:
 			var k: String = plan[j]
 			var done: bool = j < reqs.size() and reqs[j]["st"] in ["done", "late"]
 			var missed: bool = j < reqs.size() and reqs[j]["st"] == "missed"
-			steps.append([ITEM_ICON.get(k, "sys_help"), done, missed])
+			var need_t := SimGuests.needed_temp(view.systems.has("thermal"), g["fam"], k)
+			steps.append([ITEM_ICON.get(k, "sys_help"), done, missed, "" if need_t == "" else ("sys_warm" if need_t == "warm" else "sys_cold")])
 		var cur := -1
 		for j in steps.size():
 			if not steps[j][1] and (steps[j].size() < 3 or not steps[j][2]):
@@ -733,6 +742,8 @@ func _draw_orders() -> void:
 			if j == cur:
 				UiKit.draw_bubble(self, c, 11, Color("#FFF1C9"), fam_col)
 			UiKit.draw_icon(self, steps[j][0], c, 18, Color(1, 1, 1, 0.45 if (done2 or missed2) else 1.0))
+			if steps[j].size() >= 4 and str(steps[j][3]) != "":
+				UiKit.draw_icon(self, str(steps[j][3]), c + Vector2(-8, -8), 11)
 			if done2:
 				UiKit.draw_icon(self, "sys_check", c + Vector2(5, 5), 12)
 			elif missed2:

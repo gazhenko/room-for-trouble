@@ -1,0 +1,432 @@
+{
+  "schema_version": 1,
+  "comment": "v2 split-lobby floor (P5v2): the six-room floor with a 4-row hall so the divider (upper lane row) and shutter (north row) always leave the lower lane row as a bypass, as the brief's split lobby requires. Rooms A-F at 5x3; north doors on z=4, south doors on z=9; counter row on z=8. Tile-centre coordinates in metres; rectangles are inclusive tile sets [x0,z0,x1,z1].",
+  "envelope": [
+    28,
+    20
+  ],
+  "hall": [
+    1,
+    5,
+    17,
+    8
+  ],
+  "entrance": {
+    "tiles": [
+      [
+        0,
+        6
+      ]
+    ],
+    "outside": [
+      -1.6,
+      6.0
+    ]
+  },
+  "rooms": {
+    "A": {
+      "number": 101,
+      "rect": [
+        1,
+        1,
+        5,
+        3
+      ],
+      "door": [
+        3,
+        4
+      ],
+      "bed": [
+        2,
+        2
+      ],
+      "plinth": [
+        4,
+        2
+      ],
+      "thermostat": [
+        4,
+        3
+      ],
+      "tray": [
+        1,
+        3
+      ],
+      "drop": [
+        5,
+        3
+      ],
+      "side": "north"
+    },
+    "B": {
+      "number": 102,
+      "rect": [
+        7,
+        1,
+        11,
+        3
+      ],
+      "door": [
+        9,
+        4
+      ],
+      "bed": [
+        8,
+        2
+      ],
+      "plinth": [
+        10,
+        2
+      ],
+      "thermostat": [
+        10,
+        3
+      ],
+      "tray": [
+        7,
+        3
+      ],
+      "drop": [
+        11,
+        3
+      ],
+      "side": "north"
+    },
+    "C": {
+      "number": 103,
+      "rect": [
+        13,
+        1,
+        17,
+        3
+      ],
+      "door": [
+        15,
+        4
+      ],
+      "bed": [
+        14,
+        2
+      ],
+      "plinth": [
+        16,
+        2
+      ],
+      "thermostat": [
+        16,
+        3
+      ],
+      "tray": [
+        13,
+        3
+      ],
+      "drop": [
+        17,
+        3
+      ],
+      "side": "north"
+    },
+    "D": {
+      "number": 104,
+      "rect": [
+        1,
+        10,
+        5,
+        12
+      ],
+      "door": [
+        3,
+        9
+      ],
+      "bed": [
+        2,
+        11
+      ],
+      "plinth": [
+        4,
+        11
+      ],
+      "thermostat": [
+        4,
+        10
+      ],
+      "tray": [
+        1,
+        10
+      ],
+      "drop": [
+        5,
+        10
+      ],
+      "side": "south"
+    },
+    "E": {
+      "number": 105,
+      "rect": [
+        7,
+        10,
+        11,
+        12
+      ],
+      "door": [
+        9,
+        9
+      ],
+      "bed": [
+        8,
+        11
+      ],
+      "plinth": [
+        10,
+        11
+      ],
+      "thermostat": [
+        10,
+        10
+      ],
+      "tray": [
+        7,
+        10
+      ],
+      "drop": [
+        11,
+        10
+      ],
+      "side": "south"
+    },
+    "F": {
+      "number": 106,
+      "rect": [
+        13,
+        10,
+        17,
+        12
+      ],
+      "door": [
+        15,
+        9
+      ],
+      "bed": [
+        14,
+        11
+      ],
+      "plinth": [
+        16,
+        11
+      ],
+      "thermostat": [
+        16,
+        10
+      ],
+      "tray": [
+        13,
+        10
+      ],
+      "drop": [
+        17,
+        10
+      ],
+      "side": "south"
+    }
+  },
+  "fixtures": {
+    "reception": [
+      2,
+      5
+    ],
+    "pedestals": [
+      [
+        4,
+        5
+      ],
+      [
+        5,
+        5
+      ],
+      [
+        7,
+        5
+      ],
+      [
+        8,
+        5
+      ],
+      [
+        10,
+        5
+      ],
+      [
+        11,
+        5
+      ]
+    ],
+    "linen_shelf": [
+      4,
+      8
+    ],
+    "hamper": [
+      5,
+      8
+    ],
+    "counters": [
+      [
+        7,
+        8
+      ],
+      [
+        13,
+        8
+      ]
+    ],
+    "towel_shelf": [
+      8,
+      8
+    ],
+    "snack_tin": [
+      10,
+      8
+    ],
+    "welcome_kiosk": [
+      11,
+      8
+    ],
+    "return_shelf": [
+      17,
+      8
+    ],
+    "tap": [
+      16,
+      8
+    ],
+    "heat_pump": [
+      14,
+      8
+    ],
+    "mop_docks": [
+      [
+        13,
+        5
+      ],
+      [
+        16,
+        5
+      ]
+    ],
+    "breezer_dock": [
+      14,
+      5
+    ],
+    "can_docks": [
+      [
+        1,
+        8
+      ],
+      [
+        17,
+        5
+      ]
+    ],
+    "group_bell": [
+      2,
+      8
+    ],
+    "staff_starts": [
+      [
+        5,
+        6
+      ],
+      [
+        7,
+        6
+      ],
+      [
+        11,
+        6
+      ],
+      [
+        13,
+        6
+      ]
+    ]
+  },
+  "gates": {
+    "AB": [
+      6,
+      5
+    ],
+    "BC": [
+      12,
+      5
+    ],
+    "DE": [
+      6,
+      8
+    ],
+    "EF": [
+      12,
+      8
+    ]
+  },
+  "thermal_edges_all": [
+    "AB",
+    "BC",
+    "DE",
+    "EF"
+  ],
+  "acoustic_edges_all": [
+    "AD",
+    "BE",
+    "CF"
+  ],
+  "drains": [
+    [
+      3,
+      7
+    ],
+    [
+      9,
+      7
+    ],
+    [
+      15,
+      7
+    ]
+  ],
+  "trunk_parking": [
+    [
+      2,
+      7
+    ],
+    [
+      6,
+      7
+    ],
+    [
+      11,
+      7
+    ]
+  ],
+  "parcel_pads": [
+    [
+      4,
+      7
+    ],
+    [
+      10,
+      7
+    ],
+    [
+      14,
+      7
+    ]
+  ],
+  "cozy_corner": [
+    -1.4,
+    8.4
+  ],
+  "outside_bench": [
+    -1.4,
+    4.6
+  ],
+  "queue_offset_z": -0.32
+}

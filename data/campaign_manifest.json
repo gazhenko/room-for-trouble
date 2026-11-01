@@ -1610,8 +1610,8 @@
           "type": "shutter_cycle",
           "warning_s": 0,
           "args": {
-            "period": 45,
-            "warning": 5,
+            "period": 30,
+            "warning": 4,
             "closed": 8
           }
         },
@@ -1729,8 +1729,8 @@
           "type": "shutter_cycle",
           "warning_s": 0,
           "args": {
-            "period": 45,
-            "warning": 5,
+            "period": 30,
+            "warning": 4,
             "closed": 8
           }
         },
@@ -1838,8 +1838,8 @@
           "type": "shutter_cycle",
           "warning_s": 0,
           "args": {
-            "period": 45,
-            "warning": 5,
+            "period": 30,
+            "warning": 4,
             "closed": 8
           }
         },

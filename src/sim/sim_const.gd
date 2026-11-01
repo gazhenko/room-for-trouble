@@ -78,6 +78,13 @@ const T_LIFT_SEND := 24
 const T_LIFT_TRANSIT := 60
 const T_GOODBYE := 24
 const T_RING := 1
+const T_TEMPER := 30                 # warm a towel / chill a snack at the heat pump (1.0 s)
+
+# Lane hazards (DESIGN_V2 §7)
+const CLOUD_SLOW_MILLI := 400        # run speed inside a steam cloud
+const SLIDE_TICKS := 14              # puddle / frost slide with reduced control
+const STUN_TICKS := 15               # a howl startles staff for 0.5 s
+const STARTLE_RADIUS := 2_500_000    # from the howling room's door
 
 const WORK_ONE := 1000
 const WORK_TWO := 1600

@@ -82,13 +82,30 @@ func _initialize() -> void:
 		for st in t["steps"]:
 			if not loc.has(st["caption"]):
 				err("tutorial %s: caption %s missing" % [tid, st["caption"]])
-	# Layout anchors reachable from the hall (MAP01 summary).
+	# Layout anchors reachable from the hall (MAP01 summary), with the staff capsule
+	# against fixture boxes too (a station can seal a one-tile corridor that the
+	# tile flood would pass).
 	for tid in C.templates:
 		var Lay: LayoutDef = C.layout(tid)
+		var start0: Vector2i = Lay.fixtures["staff_starts"][0]
+		var start := Vector2i(start0.x * SimC.UM, start0.y * SimC.UM)
 		for letter in Lay.active_rooms:
 			var d: Vector2i = Lay.rooms[letter]["door"]
 			if Lay.is_wall_tile(d.x, d.y):
 				err("%s: door %s is a wall" % [tid, letter])
+			for closed in [false, true]:
+				if closed and Lay.shutter.x < 0:
+					continue
+				if not Lay.capsule_reachable(start, Vector2i(d.x * SimC.UM, d.y * SimC.UM), SimC.RADIUS, closed):
+					err("%s: door %s is not reachable for the staff capsule%s" % [tid, letter, " with the shutter closed" if closed else ""])
+		for k in Lay.fixtures:
+			if k in ["staff_starts", "pedestals", "goal_pad"]:
+				continue
+			var anchors: Array = Lay.fixtures[k] if Lay.fixtures[k] is Array else [Lay.fixtures[k]]
+			for an in anchors:
+				var ap := Vector2i(an.x * SimC.UM, an.y * SimC.UM)
+				if not Lay.capsule_reachable(start, ap, SimC.RADIUS, false):
+					err("%s: fixture %s at %s is not reachable for the staff capsule" % [tid, k, str(an)])
 	# Localization keys used literally by code.
 	var used := {}
 	var rx := RegEx.new()

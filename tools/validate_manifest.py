@@ -37,7 +37,7 @@ def main(path):
     m = json.loads(pathlib.Path(path).read_text())
     base = json.loads((ROOT / "data/layouts/base.json").read_text())
     bases = {"default": base}
-    for name in ("v2_small", "v2_six"):
+    for name in ("v2_small", "v2_six", "v2_split"):
         bp = ROOT / f"data/layouts/base_{name}.json"
         if bp.exists():
             bases[name] = json.loads(bp.read_text())

@@ -175,7 +175,7 @@ func _setup_staff() -> void:
 			"slide_t": 0, "transp_t": 0, "last_carry_t": -999, "ready": false,
 			"hl_c": "", "hl_c_ok": false, "hl_c_why": "", "hl_w": "", "hl_w_ok": false, "hl_w_why": "",
 			"noise_s": -1, "inspect": false, "ax": 0, "az": 0, "idle_t": 0, "moving": false,
-			"ping_cd": 0, "hint_i": -1, "hint_t": 0, "work_anim": "", "bump_t": 0,
+			"ping_cd": 0, "hint_i": -1, "hint_t": 0, "work_anim": "", "bump_t": 0, "stun_t": 0,
 		})
 
 func _setup_schedule() -> void:

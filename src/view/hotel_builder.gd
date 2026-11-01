@@ -79,7 +79,7 @@ func _north_gaps() -> Array:
 func _ground() -> void:
 	var mk := MeshKit.new()
 	mk.jitter = 0.0
-	var grass := Color("#8CB27A")
+	var grass := Color(str(L.light.get("background", "#8CB27A")))
 	mk.flat(Vector3(13.5, -0.06, 9.5), Vector2(52, 40), grass)
 	_add(mk, Art.toon_tex("grass", Art.grass(4), 1.0, 0.25, Color(1, 1, 1)), "Ground", false)
 	# Garden path to the front door.
@@ -357,10 +357,15 @@ func _template_decor() -> void:
 				mk.pop()
 	if "lanterns" in deco or "garlands" in deco:
 		var cols := [Art.CORAL, Art.GOLD, Art.SKY, Art.PLUM, Art.SAGE]
+		# Lanterns glow (the festival night is lit by them, DESIGN_V2 §9).
+		var glow := MeshKit.new()
 		for i in int((xe - 1.0) / 2.15):
 			var x := 1.6 + i * 2.15
-			mk.sphere(Vector3(x, 1.55, hz0 - 0.45), 0.14, cols[i % 5], 3, 6, Vector3(1, 1.25, 1))
+			glow.sphere(Vector3(x, 1.55, hz0 - 0.45), 0.14, cols[i % 5], 3, 6, Vector3(1, 1.25, 1))
 			mk.cyl(Vector3(x, 1.68, hz0 - 0.45), 0.04, 0.12, Art.INK, 4)
+		var glow_mat := Art.toon_unique()
+		glow_mat.set_shader_parameter("emission", Color(1.0, 0.86, 0.55, 0.55))
+		_add(glow, glow_mat, "Lanterns", false)
 		for i in int(xe) - 1:
 			mk.cone(Vector3(1.0 + i * 1.0, 1.38, hz0 - 0.5), 0.09, -0.18, cols[i % 5], 3)
 	if "paper_moon" in deco:

@@ -39,6 +39,28 @@ static func planned_requests(sim: HotelSim, arrival_index: int) -> Array:
 		out.append(k)
 	return out
 
+## The middle step of a service chain (DESIGN_V2 §5): on thermal floors a
+## dragon's towel must be warmed and a yeti's snack chilled at the heat pump.
+static func needed_temp(thermal: bool, fam: String, kind: String) -> String:
+	if not thermal:
+		return ""
+	if fam == "dragon" and kind == "towel":
+		return "warm"
+	if fam == "yeti" and kind == "snack":
+		return "cool"
+	return ""
+
+## Index of an open request this exact item satisfies (kind and temperature), or -1.
+static func open_request_for(sim: HotelSim, g: Dictionary, it: Dictionary) -> int:
+	if g.is_empty() or it.is_empty():
+		return -1
+	var kind: String = it["k"]
+	var temp := str(it.get("temp", ""))
+	for rq in g["reqs"]:
+		if rq["k"] == kind and rq["st"] == "open" and (str(rq.get("temp", "")) == "" or str(rq.get("temp", "")) == temp):
+			return rq["i"]
+	return -1
+
 ## Lobby patience and service deadlines: a level may override the brief's
 ## constants (v2 chapter-1 shifts use 45 s and 20 s).
 static func patience_s(sim: HotelSim) -> int:
@@ -272,9 +294,11 @@ static func _build_requests(sim: HotelSim, g: Dictionary) -> void:
 		if "extra_towels" in mods: k = "towel"
 		elif "snack_social" in mods: k = "snack"
 		var at: int = g["stay_start_q"] + int(offs[i]) * Q
-		var dl: int = at + request_s(sim) * Q
+		var need_t := needed_temp(sim.has_sys("thermal"), g["fam"], k)
+		# A request with a middle step (warm / chill at the pump) gets 8 s more.
+		var dl: int = at + (request_s(sim) + (8 if need_t != "" else 0)) * Q
 		var late: int = mini(dl + SimC.LATE_S * Q, g["checkout_q"])
-		g["reqs"].append({"k": k, "at": at, "dl": dl, "late": late, "st": "wait", "i": i})
+		g["reqs"].append({"k": k, "at": at, "dl": dl, "late": late, "st": "wait", "i": i, "temp": need_t})
 
 # ============================================================ relocation
 

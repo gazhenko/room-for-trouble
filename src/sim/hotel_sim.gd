@@ -135,7 +135,7 @@ func _setup_stations() -> void:
 		if cfg.get("mode") == "playground":
 			curtain_pool = 6
 	s["st"] = {
-		"linen": mini(SimC.LINEN_CAP, active_count + 2), "hamper_q": 0, "hamper_t": 0, "laundry_hold": 0,
+		"linen": mini(SimC.LINEN_CAP, int(level.get("linen_start", active_count + 2))), "hamper_q": 0, "hamper_t": 0, "laundry_hold": 0,
 		"hamper_pad": [], "towels": SimC.STOCK_START, "towel_t": 0, "snacks": SimC.STOCK_START, "snack_t": 0,
 		"kiosk_sel": 0, "curtains_free": curtain_pool, "curtain_pool": curtain_pool, "pump": "balanced",
 		"trips": {}, "press_user": -1, "rot": 0,
@@ -186,8 +186,9 @@ func _setup_schedule() -> void:
 	var max_stay := 0
 	for f in SimC.FAMILIES:
 		max_stay = maxi(max_stay, int(content.guest_def(f)["stay_s"]))
-	var reserve := 150
+	var reserve := ArrivalPlan.reserve_for(level)
 	schedule = ArrivalPlan.schedule(level, s["humans"], L.active_rooms.size(), reserve)
+	s["wave_marks"] = ArrivalPlan.wave_marks(level, s["humans"], L.active_rooms.size())
 	var variants_used := {}
 	for a in schedule:
 		var gid := alloc_id()

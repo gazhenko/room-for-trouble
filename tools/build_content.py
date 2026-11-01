@@ -142,13 +142,30 @@ for L in manifest["levels"]:
             n = max(min(max(n, 1), cap), w["minimum_size"])
             waves.append([w["roster"][i % b] for i in range(n)])
         d = L["duration_hotel_s"]
-        anchors = [30, (30 + d - 150) // 2, d - 150]
         sched = []
-        for wi, wave in enumerate(waves):
-            k = len(wave)
-            for j, fam in enumerate(wave):
-                t = anchors[wi] - 5 * (k - 1 - j)
-                sched.append({"family": fam, "wave": wi, "arrive_s": t, "announce_s": max(0, t - 8)})
+        pacing = L.get("pacing")
+        if pacing:
+            # v2 continuous flow (ArrivalPlan.schedule): first_s, then one every
+            # gap_s, compressed so the last arrival keeps reserve_s before the end.
+            n = sum(len(w) for w in waves)
+            first, res, ann = pacing.get("first_s", 4), pacing.get("reserve_s", 100), pacing.get("announce_s", 3)
+            gap = pacing.get("gap_s", 16)
+            if n > 1:
+                gap = min(gap, (d - res - first) // (n - 1))
+            gap = max(gap, 6)
+            idx = 0
+            for wi, wave in enumerate(waves):
+                for fam in wave:
+                    t = first + idx * gap
+                    sched.append({"family": fam, "wave": wi, "arrive_s": t, "announce_s": max(0, t - ann)})
+                    idx += 1
+        else:
+            anchors = [30, (30 + d - 150) // 2, d - 150]
+            for wi, wave in enumerate(waves):
+                k = len(wave)
+                for j, fam in enumerate(wave):
+                    t = anchors[wi] - 5 * (k - 1 - j)
+                    sched.append({"family": fam, "wave": wi, "arrive_s": t, "announce_s": max(0, t - 8)})
         per[str(h)] = {"waves": waves, "schedule": sched, "guest_count": len(sched)}
     write(f"data/levels/{L['id']}.json", {"schema_version": 1, "generated_from": "data/campaign_manifest.json",
           "id": L["id"], "title": L["title"], "chapter": L["chapter"], "layout": L["layout"],

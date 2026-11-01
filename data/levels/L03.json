@@ -32,20 +32,20 @@
     {
      "family": "slime",
      "wave": 0,
-     "arrive_s": 30,
-     "announce_s": 22
+     "arrive_s": 4,
+     "announce_s": 1
     },
     {
      "family": "slime",
      "wave": 1,
-     "arrive_s": 82,
-     "announce_s": 74
+     "arrive_s": 20,
+     "announce_s": 17
     },
     {
      "family": "slime",
      "wave": 2,
-     "arrive_s": 135,
-     "announce_s": 127
+     "arrive_s": 36,
+     "announce_s": 33
     }
    ],
    "guest_count": 3
@@ -69,38 +69,38 @@
     {
      "family": "slime",
      "wave": 0,
-     "arrive_s": 25,
-     "announce_s": 17
+     "arrive_s": 4,
+     "announce_s": 1
     },
     {
      "family": "slime",
      "wave": 0,
-     "arrive_s": 30,
-     "announce_s": 22
+     "arrive_s": 20,
+     "announce_s": 17
     },
     {
      "family": "slime",
      "wave": 1,
-     "arrive_s": 77,
-     "announce_s": 69
+     "arrive_s": 36,
+     "announce_s": 33
     },
     {
      "family": "slime",
      "wave": 1,
-     "arrive_s": 82,
-     "announce_s": 74
+     "arrive_s": 52,
+     "announce_s": 49
     },
     {
      "family": "slime",
      "wave": 2,
-     "arrive_s": 130,
-     "announce_s": 122
+     "arrive_s": 68,
+     "announce_s": 65
     },
     {
      "family": "slime",
      "wave": 2,
-     "arrive_s": 135,
-     "announce_s": 127
+     "arrive_s": 84,
+     "announce_s": 81
     }
    ],
    "guest_count": 6
@@ -127,56 +127,56 @@
     {
      "family": "slime",
      "wave": 0,
-     "arrive_s": 20,
-     "announce_s": 12
+     "arrive_s": 4,
+     "announce_s": 1
     },
     {
      "family": "slime",
      "wave": 0,
-     "arrive_s": 25,
-     "announce_s": 17
+     "arrive_s": 16,
+     "announce_s": 13
     },
     {
      "family": "slime",
      "wave": 0,
-     "arrive_s": 30,
-     "announce_s": 22
+     "arrive_s": 28,
+     "announce_s": 25
     },
     {
      "family": "slime",
      "wave": 1,
-     "arrive_s": 72,
-     "announce_s": 64
+     "arrive_s": 40,
+     "announce_s": 37
     },
     {
      "family": "slime",
      "wave": 1,
-     "arrive_s": 77,
-     "announce_s": 69
+     "arrive_s": 52,
+     "announce_s": 49
     },
     {
      "family": "slime",
      "wave": 1,
-     "arrive_s": 82,
-     "announce_s": 74
+     "arrive_s": 64,
+     "announce_s": 61
     },
     {
      "family": "slime",
      "wave": 2,
-     "arrive_s": 125,
-     "announce_s": 117
+     "arrive_s": 76,
+     "announce_s": 73
     },
     {
      "family": "slime",
      "wave": 2,
-     "arrive_s": 130,
-     "announce_s": 122
+     "arrive_s": 88,
+     "announce_s": 85
     },
     {
      "family": "slime",
      "wave": 2,
-     "arrive_s": 135,
-     "announce_s": 127
+     "arrive_s": 100,
+     "announce_s": 97
     }
    ],
    "guest_count": 9
@@ -203,56 +203,56 @@
     {
      "family": "slime",
      "wave": 0,
-     "arrive_s": 20,
-     "announce_s": 12
+     "arrive_s": 4,
+     "announce_s": 1
     },
     {
      "family": "slime",
      "wave": 0,
-     "arrive_s": 25,
-     "announce_s": 17
+     "arrive_s": 16,
+     "announce_s": 13
     },
     {
      "family": "slime",
      "wave": 0,
-     "arrive_s": 30,
-     "announce_s": 22
+     "arrive_s": 28,
+     "announce_s": 25
     },
     {
      "family": "slime",
      "wave": 1,
-     "arrive_s": 72,
-     "announce_s": 64
+     "arrive_s": 40,
+     "announce_s": 37
     },
     {
      "family": "slime",
      "wave": 1,
-     "arrive_s": 77,
-     "announce_s": 69
+     "arrive_s": 52,
+     "announce_s": 49
     },
     {
      "family": "slime",
      "wave": 1,
-     "arrive_s": 82,
-     "announce_s": 74
+     "arrive_s": 64,
+     "announce_s": 61
     },
     {
      "family": "slime",
      "wave": 2,
-     "arrive_s": 125,
-     "announce_s": 117
+     "arrive_s": 76,
+     "announce_s": 73
     },
     {
      "family": "slime",
      "wave": 2,
-     "arrive_s": 130,
-     "announce_s": 122
+     "arrive_s": 88,
+     "announce_s": 85
     },
     {
      "family": "slime",
      "wave": 2,
-     "arrive_s": 135,
-     "announce_s": 127
+     "arrive_s": 100,
+     "announce_s": 97
     }
    ],
    "guest_count": 9

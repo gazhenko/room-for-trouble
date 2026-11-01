@@ -3,6 +3,14 @@ extends RefCounted
 ## One transparent team result (§10.4) and teamwork ribbon predicates (§10.5).
 ## Points are tracked in milli-points; nothing is rounded per guest.
 
+## v2 per-order weights (docs/DESIGN_V2.md §6): every guest is an order worth
+## 100 base points, plus tips for speed that can make up for a missed step.
+const PTS := {"admission": 30_000, "welcome": 20_000, "service": 30_000, "comfort": 20_000}
+const TIP_CHECKIN := 10_000     # ticket on a plaque with at least half the patience left
+const TIP_WELCOME := 5_000      # matching gift installed within 20 s of entering the room
+const TIP_REQUEST := 5_000      # a request served within the first half of its window
+const TIP_WELCOME_WINDOW_S := 20
+
 const PREDICATES := ["useful_handoffs", "shared_work", "cozy_departures", "welcome_matches", "laundry_cycles",
 	"requests", "vent_solution", "quiet_howls", "balanced_rooms", "water_care", "helpful_guests",
 	"relocations", "trunk_goal", "safe_lift_deliveries", "festival_parcels", "tidy_rooms"]
@@ -133,13 +141,13 @@ static func tidy_count(sim: HotelSim) -> int:
 			n += 1
 	return n
 
-## Per-guest point components in milli-points.
+## Per-guest (per-order) point components in milli-points.
 static func guest_points(sim: HotelSim, g: Dictionary) -> Dictionary:
-	var adm := 20_000 if g["admitted"] and not g["abandoned"] else 0
-	var wel := 20_000 if g["welcomed"] else 0
+	var adm: int = PTS["admission"] if g["admitted"] and not g["abandoned"] else 0
+	var wel: int = PTS["welcome"] if g["welcomed"] else 0
 	var svc := 0
 	var nreq: int = maxi(1, g["reqs"].size()) if g["admitted"] else int(sim.level.get("service_count", 1))
-	var per := 20_000 / nreq
+	var per: int = PTS["service"] / nreq
 	for rq in g["reqs"]:
 		if rq["st"] == "done":
 			svc += per
@@ -147,18 +155,37 @@ static func guest_points(sim: HotelSim, g: Dictionary) -> Dictionary:
 			svc += per / 2
 	var comf := 0
 	if g["admitted"] and g["stay_len"] > 0:
-		comf = 40_000 * mini(g["comf_s"], g["stay_len"]) / g["stay_len"]
-	return {"admission": adm, "welcome": wel, "service": svc, "comfort": comf, "total": adm + wel + svc + comf}
+		comf = PTS["comfort"] * mini(g["comf_s"], g["stay_len"]) / g["stay_len"]
+	var tips := int(g.get("tips", 0))
+	return {"admission": adm, "welcome": wel, "service": svc, "comfort": comf, "tips": tips,
+		"total": adm + wel + svc + comf + tips}
+
+## How an order ended: served (every step on time), late (something was late or
+## skipped) or missed (the guest gave up in the lobby).
+static func order_outcome(g: Dictionary) -> String:
+	if g["abandoned"] or not g["admitted"]:
+		return "missed"
+	if not g["welcomed"]:
+		return "late"
+	for rq in g["reqs"]:
+		if rq["st"] in ["late", "missed"]:
+			return "late"
+	return "served"
 
 static func team_result(sim: HotelSim) -> Dictionary:
 	var total := 0
-	var comp := {"admission": 0, "welcome": 0, "service": 0, "comfort": 0}
+	var comp := {"admission": 0, "welcome": 0, "service": 0, "comfort": 0, "tips": 0}
+	var orders := {"served": 0, "late": 0, "missed": 0}
 	var per_guest: Array = []
 	var count := 0
 	for gid in sim.s["guests"]:
 		var g: Dictionary = sim.s["guests"][gid]
 		var p := guest_points(sim, g)
-		per_guest.append({"id": gid, "fam": g["fam"], "var": g["var"], "points": p, "abandoned": g["abandoned"]})
+		var outcome := order_outcome(g)
+		if g["state"] in ["announced", "lobby", "walking", "staying"] and not g["abandoned"]:
+			outcome = "late" if g["admitted"] else "missed"   # still open at the timer
+		orders[outcome] = int(orders[outcome]) + 1
+		per_guest.append({"id": gid, "fam": g["fam"], "var": g["var"], "points": p, "abandoned": g["abandoned"], "outcome": outcome})
 		total += p["total"]
 		for k in comp:
 			comp[k] += p[k]
@@ -175,7 +202,18 @@ static func team_result(sim: HotelSim) -> Dictionary:
 		if sim.s["guests"][gid]["admitted"]:
 			admitted += 1
 	return {"percent": percent, "stars": stars, "total_milli": total, "components": comp, "guests": per_guest,
-		"scheduled": count, "admitted": admitted}
+		"scheduled": count, "admitted": admitted, "orders": orders}
+
+## Records a speed tip on a guest's order and tells the presentation.
+static func tip(sim: HotelSim, g: Dictionary, amount_milli: int, seat: int, why: String) -> void:
+	g["tips"] = int(g.get("tips", 0)) + amount_milli
+	var x: int = g["x"]
+	var z: int = g["z"]
+	var st := sim.staff_by_seat(seat) if seat >= 0 else {}
+	if not st.is_empty():
+		x = st["x"]; z = st["z"]
+	bump(sim, "tips", amount_milli / 1000)
+	sim.emit("tip", {"guest": g["id"], "amount": amount_milli / 1000, "seat": seat, "why": why, "x": x, "z": z})
 
 static func ribbon_value(sim: HotelSim, predicate: String) -> int:
 	var st: Dictionary = sim.s["stats"]

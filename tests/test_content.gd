@@ -21,7 +21,10 @@ func test_data02_expansion_all_counts() -> void:
 			for a in sched:
 				check(int(a["arrive_s"]) >= 0, "%s/%d nonnegative arrivals" % [L["id"], h])
 				last = maxi(last, int(a["arrive_s"]))
-			check(int(L["duration_hotel_s"]) - last >= 148, "%s/%d final reserve" % [L["id"], h])
+			# v2 levels declare their own reserve (pacing.reserve_s); classic levels keep 150 s.
+			check(int(L["duration_hotel_s"]) - last >= ArrivalPlan.reserve_for(L) - 2, "%s/%d final reserve" % [L["id"], h])
+			if L.has("pacing"):
+				check(int(sched[0]["arrive_s"]) <= 5, "%s/%d first guest within 5 s" % [L["id"], h])
 		var solo := ArrivalPlan.expand_waves(L, 1, lay.active_rooms.size())
 		var fams := {}
 		for w in solo:
@@ -65,6 +68,8 @@ func test_map02_fixtures_have_access() -> void:
 	for tid in content.templates:
 		var L: LayoutDef = content.layout(tid)
 		for k in ["reception", "linen_shelf", "hamper", "towel_shelf", "snack_tin", "welcome_kiosk", "return_shelf", "tap"]:
+			if not L.fixtures.has(k):
+				continue   # a floor may omit fixtures of systems it never uses (v2 chapter 1)
 			var p: Vector2i = L.fixtures[k]
 			var open := 0
 			for d in [Vector2i(0, 1), Vector2i(0, -1), Vector2i(1, 0), Vector2i(-1, 0)]:

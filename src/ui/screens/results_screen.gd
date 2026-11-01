@@ -57,12 +57,16 @@ func _ready() -> void:
 	v.add_child(stats_box)
 	var comp: Dictionary = res.get("components", {})
 	var sched := maxi(1, int(res.get("scheduled", 1)))
-	for k in ["admission", "welcome", "service", "comfort"]:
-		var max_pts = {"admission": 20, "welcome": 20, "service": 20, "comfort": 40}[k] * sched
+	var orders: Dictionary = res.get("orders", {})
+	if not orders.is_empty():
+		var ol := UiKit.label(Loc.t("ui.res.orders", {"served": int(orders.get("served", 0)), "late": int(orders.get("late", 0)), "missed": int(orders.get("missed", 0))}), 18, UiKit.INK, HORIZONTAL_ALIGNMENT_CENTER)
+		v.add_child(ol)
+	for k in ["admission", "welcome", "service", "comfort", "tips"]:
+		var max_pts: float = (float(SimScore.PTS[k]) / 1000.0 if SimScore.PTS.has(k) else 25.0) * sched
 		var got := float(comp.get(k, 0)) / 1000.0
 		var h := UiKit.hbox(8)
-		h.add_child(UiKit.icon({"admission": "item_ticket", "welcome": "gift_slime", "service": "item_towel", "comfort": "sys_cozy"}[k], 28))
-		var l := UiKit.label(Loc.t("ui.res." + k), 20)
+		h.add_child(UiKit.icon({"admission": "item_ticket", "welcome": "gift_slime", "service": "item_towel", "comfort": "sys_cozy", "tips": "sys_star"}[k], 28))
+		var l := UiKit.label(Loc.t("ui.res." + k) + ("  +%d" % int(got) if k == "tips" else ""), 20)
 		l.custom_minimum_size = Vector2(170, 0)
 		h.add_child(l)
 		var bar := ProgressBar.new()

@@ -6,7 +6,7 @@
       "title": "First Bell",
       "chapter": 1,
       "layout": "P1v2",
-      "duration_hotel_s": 270,
+      "duration_hotel_s": 160,
       "waves": [
         {
           "roster": [
@@ -66,14 +66,24 @@
           "label": "A Fresh Start"
         }
       ],
-      "required_goal_ids": []
+      "required_goal_ids": [],
+      "pacing": {
+        "first_s": 4,
+        "gap_s": 16,
+        "announce_s": 3,
+        "reserve_s": 100
+      },
+      "stay_s": 40,
+      "patience_s": 45,
+      "request_s": 20,
+      "linen_start": 4
     },
     {
       "id": "L02",
       "title": "Towels, Please",
       "chapter": 1,
       "layout": "P1v2",
-      "duration_hotel_s": 270,
+      "duration_hotel_s": 180,
       "waves": [
         {
           "roster": [
@@ -145,14 +155,24 @@
           "label": "Happy Feet"
         }
       ],
-      "required_goal_ids": []
+      "required_goal_ids": [],
+      "pacing": {
+        "first_s": 4,
+        "gap_s": 16,
+        "announce_s": 3,
+        "reserve_s": 100
+      },
+      "stay_s": 40,
+      "patience_s": 45,
+      "request_s": 20,
+      "linen_start": 3
     },
     {
       "id": "L03",
       "title": "Laundry Day",
       "chapter": 1,
       "layout": "P1v2",
-      "duration_hotel_s": 285,
+      "duration_hotel_s": 200,
       "waves": [
         {
           "roster": [
@@ -223,14 +243,24 @@
           "label": "Fresh Sheets"
         }
       ],
-      "required_goal_ids": []
+      "required_goal_ids": [],
+      "pacing": {
+        "first_s": 4,
+        "gap_s": 16,
+        "announce_s": 3,
+        "reserve_s": 100
+      },
+      "stay_s": 40,
+      "patience_s": 45,
+      "request_s": 20,
+      "linen_start": 2
     },
     {
       "id": "L04",
       "title": "A Very Long Suitcase",
       "chapter": 1,
       "layout": "P1v2",
-      "duration_hotel_s": 300,
+      "duration_hotel_s": 210,
       "waves": [
         {
           "roster": [
@@ -310,7 +340,17 @@
       ],
       "required_goal_ids": [
         "trunk_L04"
-      ]
+      ],
+      "pacing": {
+        "first_s": 4,
+        "gap_s": 18,
+        "announce_s": 3,
+        "reserve_s": 100
+      },
+      "stay_s": 40,
+      "patience_s": 45,
+      "request_s": 20,
+      "linen_start": 3
     },
     {
       "id": "L05",

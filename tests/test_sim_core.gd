@@ -36,7 +36,9 @@ func test_schedule_l01_solo() -> void:
 	var last := 0
 	for a in sim2.schedule:
 		last = maxi(last, a["arrive_s"])
-	check(last <= 270 - 150, "final arrival preserves the 150 s reserve")
+	var lvl: Dictionary = sim2.level
+	check(last <= int(lvl["duration_hotel_s"]) - ArrivalPlan.reserve_for(lvl), "final arrival preserves the level's reserve")
+	eq(sim2.schedule[0]["arrive_s"], 4, "v2 pacing: the first guest arrives at 4 s")
 
 func test_determinism_same_inputs() -> void:
 	var a := make_sim("L06", 2)
@@ -55,10 +57,15 @@ func test_walk_and_collide() -> void:
 	var sim := make_sim("L01", 1)
 	activate(sim)
 	var st: Dictionary = sim.s["staff"][0]
-	# Walk north into the wall between the hall and room B (no door at x=10).
+	# Walk north into the hall's north wall from the tile beside room A's door
+	# (positions come from the layout; chapter 1 plays on the v2 floor).
+	var door: Vector2i = sim.L.rooms["A"]["door"]
+	st["x"] = (door.x + 1) * SimC.UM
+	st["z"] = int((sim.L.hall.position.y + 1) * SimC.UM)
 	for i in 120:
 		sim.step([frame(0, 0, -127)])
-	check(st["z"] >= int(7.5 * SimC.UM) + SimC.RADIUS - 1, "wall stops the avatar (z=%d)" % st["z"])
+	var wall_face := int((sim.L.hall.position.y - 0.5) * SimC.UM)
+	check(st["z"] >= wall_face + SimC.RADIUS - 1, "wall stops the avatar (z=%d)" % st["z"])
 	# Top speed sanity: walk east 1 second.
 	var x0: int = st["x"]
 	for i in 30:
@@ -69,15 +76,19 @@ func test_take_linen_and_place() -> void:
 	var sim := make_sim("L01", 1)
 	activate(sim)
 	var st: Dictionary = sim.s["staff"][0]
-	st["x"] = 5 * SimC.UM; st["z"] = int(9.1 * SimC.UM); st["fx"] = 0; st["fz"] = 1000
+	# Stand 0.9 m on the lane side of the linen shelf, facing it.
+	var ls: Vector2i = sim.L.fixtures["linen_shelf"]
+	var hall_mid := float(sim.L.hall.position.y) + (sim.L.hall.size.y - 1) * 0.5
+	var toward := -1 if float(ls.y) > hall_mid else 1
+	st["x"] = ls.x * SimC.UM; st["z"] = int((ls.y + toward * 0.9) * SimC.UM); st["fx"] = 0; st["fz"] = -toward * 1000
 	sim.step([])
-	eq(st["hl_c"], "st:linen", "linen shelf highlighted from the upper lane")
+	eq(st["hl_c"], "st:linen", "linen shelf highlighted from the lane")
 	var before: int = sim.s["st"]["linen"]
 	sim.step([frame(0, 0, 0, SimC.BTN_CARRY, SimC.BTN_CARRY)])
 	check(st["held"] != 0, "holding a bundle")
 	eq(sim.s["st"]["linen"], before - 1, "stock decremented once")
 	run_ticks(sim, 6)
-	st["fx"] = 0; st["fz"] = -1000
+	st["fx"] = 0; st["fz"] = toward * 1000
 	sim.step([])
 	sim.step([frame(0, 0, 0, SimC.BTN_CARRY, SimC.BTN_CARRY)])
 	run_ticks(sim, 6)

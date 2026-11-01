@@ -66,8 +66,10 @@ func test_work01_shared_rate_and_single_commit() -> void:
 	check(r["bed"] == "Dirty", "D starts dirty")
 	var a: Dictionary = sim.s["staff"][0]
 	var b: Dictionary = sim.s["staff"][1]
-	_place(a, 3.0, 14.2, 0, 1000)
-	_place(b, 3.8, 14.2, 0, 1000)
+	# Both stand on the hall side of D's bed, within reach (positions from the layout).
+	var bed: Vector2i = sim.L.rooms["D"]["bed"]
+	_place(a, float(bed.x), bed.y - 0.8, 0, 1000)
+	_place(b, bed.x + 0.8, bed.y - 0.8, 0, 1000)
 	sim.step([])
 	var key := "strip:D"
 	eq(a["hl_w"], key, "A targets the bed")

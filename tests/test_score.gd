@@ -24,12 +24,18 @@ func test_score01_star_boundaries() -> void:
 		_perfect_guest(sim, g)
 		g["comf_s"] = 0     # 60 points each
 	var r := SimScore.team_result(sim)
-	eq(r["percent"], 60, "60% without comfort")
-	eq(r["stars"], 1, "55 ≤ 60 < 75 → one star")
+	# v2 weights: 30 check-in + 20 gift + 30 service = 80 without comfort (comfort is a 20-point bonus).
+	eq(r["percent"], 80, "80% without comfort")
+	eq(r["stars"], 2, "75 ≤ 80 < 90 → two stars")
 	for g in gs:
-		g["comf_s"] = int(g["stay_len"] * 3 / 4)   # +30 → 90
+		g["comf_s"] = int(g["stay_len"] * 3 / 4)   # +15 → 95
 	r = SimScore.team_result(sim)
-	check(r["percent"] >= 89 and r["percent"] <= 90, "≈90%")
+	check(r["percent"] >= 94 and r["percent"] <= 95, "≈95%")
+	for g in gs:
+		g["comf_s"] = 0
+		g["tips"] = 10_000   # a fast check-in tip makes up for lost comfort
+	r = SimScore.team_result(sim)
+	eq(r["percent"], 90, "tips count toward the team percent")
 
 func test_score02_late_half_and_abandoned_zero() -> void:
 	var sim := make_sim("L02", 1)
@@ -38,7 +44,7 @@ func test_score02_late_half_and_abandoned_zero() -> void:
 	_perfect_guest(sim, g)
 	g["reqs"][0]["st"] = "late"
 	var p := SimScore.guest_points(sim, g)
-	eq(p["service"], 15_000, "two requests: one on time (10) + one late (5)")
+	eq(p["service"], 22_500, "two requests: one on time (15) + one late (7.5)")
 	var g2: Dictionary = gs[1]
 	g2["abandoned"] = true
 	var p2 := SimScore.guest_points(sim, g2)

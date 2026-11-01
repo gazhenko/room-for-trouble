@@ -32,20 +32,20 @@
     {
      "family": "slime",
      "wave": 0,
-     "arrive_s": 30,
-     "announce_s": 22
+     "arrive_s": 4,
+     "announce_s": 1
     },
     {
      "family": "slime",
      "wave": 1,
-     "arrive_s": 75,
-     "announce_s": 67
+     "arrive_s": 20,
+     "announce_s": 17
     },
     {
      "family": "slime",
      "wave": 2,
-     "arrive_s": 120,
-     "announce_s": 112
+     "arrive_s": 36,
+     "announce_s": 33
     }
    ],
    "guest_count": 3
@@ -68,32 +68,32 @@
     {
      "family": "slime",
      "wave": 0,
-     "arrive_s": 25,
-     "announce_s": 17
+     "arrive_s": 4,
+     "announce_s": 1
     },
     {
      "family": "slime",
      "wave": 0,
-     "arrive_s": 30,
-     "announce_s": 22
+     "arrive_s": 20,
+     "announce_s": 17
     },
     {
      "family": "slime",
      "wave": 1,
-     "arrive_s": 75,
-     "announce_s": 67
+     "arrive_s": 36,
+     "announce_s": 33
     },
     {
      "family": "slime",
      "wave": 2,
-     "arrive_s": 115,
-     "announce_s": 107
+     "arrive_s": 52,
+     "announce_s": 49
     },
     {
      "family": "slime",
      "wave": 2,
-     "arrive_s": 120,
-     "announce_s": 112
+     "arrive_s": 68,
+     "announce_s": 65
     }
    ],
    "guest_count": 5
@@ -118,44 +118,44 @@
     {
      "family": "slime",
      "wave": 0,
-     "arrive_s": 20,
-     "announce_s": 12
+     "arrive_s": 4,
+     "announce_s": 1
     },
     {
      "family": "slime",
      "wave": 0,
-     "arrive_s": 25,
-     "announce_s": 17
+     "arrive_s": 16,
+     "announce_s": 13
     },
     {
      "family": "slime",
      "wave": 0,
-     "arrive_s": 30,
-     "announce_s": 22
+     "arrive_s": 28,
+     "announce_s": 25
     },
     {
      "family": "slime",
      "wave": 1,
-     "arrive_s": 75,
-     "announce_s": 67
+     "arrive_s": 40,
+     "announce_s": 37
     },
     {
      "family": "slime",
      "wave": 2,
-     "arrive_s": 110,
-     "announce_s": 102
+     "arrive_s": 52,
+     "announce_s": 49
     },
     {
      "family": "slime",
      "wave": 2,
-     "arrive_s": 115,
-     "announce_s": 107
+     "arrive_s": 64,
+     "announce_s": 61
     },
     {
      "family": "slime",
      "wave": 2,
-     "arrive_s": 120,
-     "announce_s": 112
+     "arrive_s": 76,
+     "announce_s": 73
     }
    ],
    "guest_count": 7
@@ -181,50 +181,50 @@
     {
      "family": "slime",
      "wave": 0,
-     "arrive_s": 20,
-     "announce_s": 12
+     "arrive_s": 4,
+     "announce_s": 1
     },
     {
      "family": "slime",
      "wave": 0,
-     "arrive_s": 25,
-     "announce_s": 17
+     "arrive_s": 14,
+     "announce_s": 11
     },
     {
      "family": "slime",
      "wave": 0,
-     "arrive_s": 30,
-     "announce_s": 22
+     "arrive_s": 24,
+     "announce_s": 21
     },
     {
      "family": "slime",
      "wave": 1,
-     "arrive_s": 70,
-     "announce_s": 62
+     "arrive_s": 34,
+     "announce_s": 31
     },
     {
      "family": "slime",
      "wave": 1,
-     "arrive_s": 75,
-     "announce_s": 67
+     "arrive_s": 44,
+     "announce_s": 41
     },
     {
      "family": "slime",
      "wave": 2,
-     "arrive_s": 110,
-     "announce_s": 102
+     "arrive_s": 54,
+     "announce_s": 51
     },
     {
      "family": "slime",
      "wave": 2,
-     "arrive_s": 115,
-     "announce_s": 107
+     "arrive_s": 64,
+     "announce_s": 61
     },
     {
      "family": "slime",
      "wave": 2,
-     "arrive_s": 120,
-     "announce_s": 112
+     "arrive_s": 74,
+     "announce_s": 71
     }
    ],
    "guest_count": 8

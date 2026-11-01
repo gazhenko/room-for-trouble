@@ -11,8 +11,8 @@ static func make_guest(sim: HotelSim, gid: int, fam: String, variant: String, a:
 	return {
 		"id": gid, "fam": fam, "var": variant, "ai": int(a.get("arrival_index", 0)), "wave": int(a.get("wave", 0)),
 		"state": "announced", "arrive_q": int(a["arrive_s"]) * Q, "announce_q": int(a["announce_s"]) * Q,
-		"slot": -1, "ticket": 0, "room": "", "patience_q": SimC.PATIENCE_S * Q,
-		"stay_start_q": 0, "stay_s": 0, "stay_len": int(gdef.get("stay_s", 70)), "checkout_q": 0,
+		"slot": -1, "ticket": 0, "room": "", "patience_q": patience_s(sim) * Q,
+		"stay_start_q": 0, "stay_s": 0, "stay_len": int(sim.level.get("stay_s", gdef.get("stay_s", 70))), "checkout_q": 0,
 		"welcomed": false, "reqs": [], "comf_s": 0, "occ_s": 0, "samples": [], "streak": 0,
 		"quirk": "pending", "quirk_q": 0, "quirk_mech": false,
 		"helper_used": false, "helper_ready": false, "moved": false, "move_ticket": 0, "relocating": false,
@@ -22,7 +22,30 @@ static func make_guest(sim: HotelSim, gid: int, fam: String, variant: String, a:
 		"last_fail_q": -999 * Q, "comfortable": true, "dest": [0, 0], "anim": "walk", "face": 1,
 		"cozy_q": 0, "vent_mark_s": -999, "watered": false, "water_comf": false, "quiet_howls": 0,
 		"announced": false, "hold_stay": false,
+		"tips": 0, "plan": planned_requests(sim, int(a.get("arrival_index", 0))),
 	}
+
+## The service requests a guest will make, known from arrival so the order card
+## can show every step up front (same rule _build_requests uses).
+static func planned_requests(sim: HotelSim, arrival_index: int) -> Array:
+	var n := int(sim.level.get("service_count", 1))
+	var order := ["towel", "snack"] if arrival_index % 2 == 0 else ["snack", "towel"]
+	var mods: Array = sim.cfg.get("modifiers", [])
+	var out: Array = []
+	for i in n:
+		var k: String = order[i]
+		if "extra_towels" in mods: k = "towel"
+		elif "snack_social" in mods: k = "snack"
+		out.append(k)
+	return out
+
+## Lobby patience and service deadlines: a level may override the brief's
+## constants (v2 chapter-1 shifts use 45 s and 20 s).
+static func patience_s(sim: HotelSim) -> int:
+	return int(sim.level.get("patience_s", SimC.PATIENCE_S))
+
+static func request_s(sim: HotelSim) -> int:
+	return int(sim.level.get("request_s", SimC.REQUEST_S))
 
 # ============================================================ per tick
 
@@ -186,6 +209,10 @@ static func assign(sim: HotelSim, gid: int, letter: String, seat: int) -> void:
 	g["trail_d"] = 0
 	sim.emit("assign", {"guest": gid, "room": letter, "seat": seat, "fam": g["fam"]})
 	SimScore.note_admit(sim, g, seat)
+	if int(g["patience_q"]) * 2 >= patience_s(sim) * Q and not g.get("tut", false):
+		SimScore.tip(sim, g, SimScore.TIP_CHECKIN, seat, "checkin")
+	if int(g["patience_q"]) * 2 >= patience_s(sim) * Q and not g.get("tut", false):
+		SimScore.tip(sim, g, SimScore.TIP_CHECKIN, seat, "checkin")
 
 static func cancel_reservation(sim: HotelSim, letter: String, seat: int) -> void:
 	var r := sim.room(letter)
@@ -233,6 +260,10 @@ static func _reach_room(sim: HotelSim, g: Dictionary) -> void:
 static func _build_requests(sim: HotelSim, g: Dictionary) -> void:
 	var n := int(sim.level.get("service_count", 1))
 	var offs := [22] if n == 1 else [15, 40]
+	if sim.level.has("stay_s"):
+		# Shorter v2 stays: requests open at 30% (one) or 20% and 50% (two) of the stay.
+		var sl: int = g["stay_len"]
+		offs = [sl * 3 / 10] if n == 1 else [sl / 5, sl / 2]
 	var order := ["towel", "snack"] if g["ai"] % 2 == 0 else ["snack", "towel"]
 	var mods: Array = sim.cfg.get("modifiers", [])
 	g["reqs"] = []
@@ -241,7 +272,7 @@ static func _build_requests(sim: HotelSim, g: Dictionary) -> void:
 		if "extra_towels" in mods: k = "towel"
 		elif "snack_social" in mods: k = "snack"
 		var at: int = g["stay_start_q"] + int(offs[i]) * Q
-		var dl: int = at + SimC.REQUEST_S * Q
+		var dl: int = at + request_s(sim) * Q
 		var late: int = mini(dl + SimC.LATE_S * Q, g["checkout_q"])
 		g["reqs"].append({"k": k, "at": at, "dl": dl, "late": late, "st": "wait", "i": i})
 
@@ -314,6 +345,10 @@ static func fulfill(sim: HotelSim, g: Dictionary, idx: int, seat: int, item_id: 
 	SimScore.note_consumed(sim, sim.item(item_id), seat, "service")
 	SimScore.bump(sim, "requests")
 	sim.emit("request_done", {"guest": g["id"], "room": g["room"], "k": rq["k"], "late": late, "seat": seat})
+	if not late and (hq - int(rq["at"])) * 2 <= request_s(sim) * Q and not g.get("tut", false):
+		SimScore.tip(sim, g, SimScore.TIP_REQUEST, seat, "request")
+	if not late and (hq - int(rq["at"])) * 2 <= request_s(sim) * Q and not g.get("tut", false):
+		SimScore.tip(sim, g, SimScore.TIP_REQUEST, seat, "request")
 	if sim.tutorial != null:
 		sim.tutorial.on_request_done(sim, g)
 
@@ -411,6 +446,10 @@ static func _set_welcomed(sim: HotelSim, g: Dictionary, seat: int) -> void:
 		g["slippers_on"] = true
 	SimScore.bump(sim, "welcome_matches")
 	sim.emit("welcome", {"guest": g["id"], "room": g["room"], "fam": g["fam"], "seat": seat})
+	if sim.s["hotel_q"] - int(g["stay_start_q"]) <= SimScore.TIP_WELCOME_WINDOW_S * Q and not g.get("tut", false):
+		SimScore.tip(sim, g, SimScore.TIP_WELCOME, seat, "welcome")
+	if sim.s["hotel_q"] - int(g["stay_start_q"]) <= SimScore.TIP_WELCOME_WINDOW_S * Q and not g.get("tut", false):
+		SimScore.tip(sim, g, SimScore.TIP_WELCOME, seat, "welcome")
 	if sim.tutorial != null:
 		sim.tutorial.on_welcome(sim, g)
 
@@ -559,7 +598,7 @@ static func helper_preview(sim: HotelSim, g: Dictionary) -> Dictionary:
 			var any := false
 			for gid in sim.s["guests"]:
 				var o: Dictionary = sim.s["guests"][gid]
-				if o["state"] == "lobby" and o["patience_q"] < SimC.PATIENCE_S * Q:
+				if o["state"] == "lobby" and o["patience_q"] < patience_s(sim) * Q:
 					any = true
 			return {"useful": any, "text": "helper.moonwolf"}
 		"sprout":
@@ -628,7 +667,7 @@ static func invoke_helper(sim: HotelSim, gid: int, seat: int) -> void:
 			for ogid in sim.s["guests"]:
 				var o: Dictionary = sim.s["guests"][ogid]
 				if o["state"] == "lobby":
-					o["patience_q"] = mini(SimC.PATIENCE_S * Q, o["patience_q"] + 10 * Q)
+					o["patience_q"] = mini(patience_s(sim) * Q, o["patience_q"] + 10 * Q)
 		"sprout":
 			r["hum"] = mini(80, r["hum"] + 20) if r["hum"] < 80 else r["hum"]
 			if not sim.s["puddles"].is_empty():

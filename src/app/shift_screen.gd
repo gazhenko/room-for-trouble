@@ -291,6 +291,8 @@ func _feedback(events: Array) -> void:
 				pass
 			"request_done":
 				_rumble(seat, 0.25, 0.0, 0.08)
+			"tip":
+				Audio.sfx("sting_star", -6.0, 1.15 + 0.05 * (int(e.get("amount", 5)) / 5), "Music")
 			"request_missed":
 				captions.bark("bark.missed_request", "nana")
 			"guest_cozy":

@@ -22,6 +22,8 @@ var local_seats: Array = []          # sim seat ids controlled here
 var seat_device: Dictionary = {}     # sim seat -> router seat (for glyphs)
 var ui_scale := 1.0
 var bubbles: Array = []              # transient text bubbles [{seat, text, icon, t}]
+var floats: Array = []               # rising "+N" tip texts [{text, pos, t, col}]
+var done_cards: Array = []           # order cards sliding out [{gid, outcome, t}]
 var notices: Array = []              # top-right notices [{icon, text, t, prio}]
 var banner := {}                     # {text, sub, t, icon}
 var coach := {}
@@ -53,6 +55,12 @@ func _process(dt: float) -> void:
 	for n in notices:
 		n["t"] -= dt
 	notices = notices.filter(func(n): return n["t"] > 0.0)
+	for f in floats:
+		f["t"] -= dt
+	floats = floats.filter(func(f): return f["t"] > 0.0)
+	for c in done_cards:
+		c["t"] -= dt
+	done_cards = done_cards.filter(func(c): return c["t"] > 0.0)
 	if banner.has("t") and float(banner["t"]) < 900.0:
 		banner["t"] = float(banner["t"]) - dt
 		if banner["t"] <= 0.0:
@@ -118,6 +126,14 @@ func _on_event(e: Dictionary) -> void:
 			show_banner(Loc.t("bark.timer_wraps"), "", 3.0, "sys_bell")
 		"countdown":
 			pass
+		"tip":
+			var p := _w2s(Vector3(float(e.get("x", 0)) / 1e6, 1.6, float(e.get("z", 0)) / 1e6))
+			floats.append({"text": "+%d" % int(e.get("amount", 0)), "pos": p, "t": 1.1, "col": Art.GOLD.darkened(0.15), "gid": int(e.get("guest", 0))})
+		"checkout", "guest_cozy":
+			var gid := int(e.get("guest", e.get("id", 0)))
+			var g: Dictionary = s.get("guests", {}).get(gid, {})
+			if not g.is_empty():
+				done_cards.append({"gid": gid, "outcome": "missed" if e["type"] == "guest_cozy" else SimScore.order_outcome(g), "t": 1.6, "fam": g["fam"]})
 
 func _warn_vars(args: Dictionary) -> Dictionary:
 	var v := {}
@@ -174,6 +190,7 @@ func _draw() -> void:
 	if _any_inspect():
 		_draw_inspect()
 	_draw_prompts()
+	_draw_floats()
 	_draw_top()
 	_draw_bottom()
 	_draw_center()
@@ -267,7 +284,7 @@ func _draw_tickets() -> void:
 			continue
 		var pp: Vector2i = view.L.fixtures["pedestals"][i]
 		var sp := _w2s(Vector3(pp.x, 1.05, pp.y))
-		var frac := float(g["patience_q"]) / float(SimC.PATIENCE_S * SimC.HOTEL_Q_PER_S)
+		var frac := float(g["patience_q"]) / float(int(level.get("patience_s", SimC.PATIENCE_S)) * SimC.HOTEL_Q_PER_S)
 		UiKit.draw_bubble(self, sp, 14)
 		UiKit.draw_icon(self, "fam_" + g["fam"], sp, 22)
 		if not s.get("cozy", false):
@@ -397,17 +414,27 @@ func _draw_pings() -> void:
 		UiKit.draw_text_outlined(self, sp + Vector2(0, -22), Loc.t("ui.ping." + ph), 15, col.darkened(0.45))
 		draw_line(sp + Vector2(0, 16), sp + Vector2(0, 30), col, 3.0)
 
+func _draw_floats() -> void:
+	for f in floats:
+		var k: float = 1.0 - float(f["t"]) / 1.1
+		var p: Vector2 = f["pos"] + Vector2(0, -36.0 * k)
+		var a := clampf(2.5 - k * 2.5, 0.0, 1.0)
+		var col: Color = f["col"]
+		col.a = a
+		UiKit.draw_text_outlined(self, p, f["text"], 22, col, Color(1, 1, 1, a * 0.9))
+
 func _draw_prompts() -> void:
-	# Seat tags (P1..P4) first, so a teammate's tag never covers someone's prompt.
+	# Seat tags (P1..P4) sit at the feet, beside the seat ring, so they never
+	# cover a face or a prompt (§11.1 asked for tags; the head was the wrong place).
 	for st0 in s.get("staff", []):
 		var rig0: ActorRig = view.staff_rigs.get(int(st0["seat"]), null)
 		if rig0 == null or not rig0.visible:
 			continue
-		var head0 := _w2s(rig0.position + Vector3(0, rig0.height * ModelActors.ACTOR_SCALE + 0.35, 0))
+		var feet0 := _w2s(rig0.position)
 		var col0: Color = SEAT_COLORS[int(st0["seat"]) % 4]
-		var tr := Rect2(head0 + Vector2(-15, -14), Vector2(30, 20))
-		draw_style_box(UiKit._box(col0, UiKit.INK, 2, 4, 0), tr)
-		UiKit.draw_text_outlined(self, head0 + Vector2(0, 2), "P%d" % (int(st0["seat"]) + 1), 15, UiKit.INK, Color(0, 0, 0, 0))
+		var tr := Rect2(feet0 + Vector2(10, 2), Vector2(24, 16))
+		draw_style_box(UiKit._box(col0, UiKit.INK, 1, 3, 0), tr)
+		UiKit.draw_text_outlined(self, tr.get_center() + Vector2(0, 5), "P%d" % (int(st0["seat"]) + 1), 12, UiKit.INK, Color(0, 0, 0, 0))
 	for st in s.get("staff", []):
 		var seat: int = st["seat"]
 		var rig: ActorRig = view.staff_rigs.get(seat, null)
@@ -580,45 +607,134 @@ func _draw_top() -> void:
 		var bar := Rect2(r.position + Vector2(12, 44), Vector2(r.size.x - 24, 5))
 		draw_rect(bar, Color("#D9C7AE"))
 		draw_rect(Rect2(bar.position, Vector2(bar.size.x * frac, bar.size.y)), Art.CORAL)
-		var anchors := ArrivalPlan.anchors(dur)
-		for i in 3:
+		var anchors: Array = s.get("wave_marks", ArrivalPlan.anchors(dur))
+		for i in anchors.size():
 			var ax := bar.position.x + bar.size.x * clampf(float(anchors[i]) / dur, 0, 1)
 			draw_circle(Vector2(ax, bar.position.y + 2), 5, UiKit.INK)
 			draw_circle(Vector2(ax, bar.position.y + 2), 3, Art.GOLD if hs >= anchors[i] else UiKit.CREAM)
 	else:
 		UiKit.draw_text_outlined(self, Vector2(cx, r.position.y + 34), Loc.t("ui.hud.practice"), 20, UiKit.INK, Color(0, 0, 0, 0))
-	_draw_incoming()
+	_draw_orders()
 	_draw_objectives()
 
-func _draw_incoming() -> void:
-	var upcoming: Array = []
+## The order rail (docs/DESIGN_V2.md §4): one card per guest from the moment
+## they are announced until they leave. Each card shows the steps in order
+## (key, gift, each request) with the current one lit, and a timer bar: lobby
+## patience, then the open request's window, then the stay.
+const CARD_W := 112.0
+const CARD_H := 70.0
+
+func _order_cards() -> Array:
+	var cards: Array = []
 	for gid in s.get("guests", {}):
 		var g: Dictionary = s["guests"][gid]
-		if g["state"] == "announced":
-			upcoming.append(g)
-	upcoming.sort_custom(func(a, b): return a["arrive_q"] < b["arrive_q"])
+		if g["state"] == "announced" and not g.get("announced", false):
+			continue
+		if g["state"] in ["announced", "lobby", "walking", "staying"]:
+			cards.append(g)
+	cards.sort_custom(func(a, b): return int(a["ai"]) < int(b["ai"]))
+	return cards
+
+func _draw_orders() -> void:
+	var cards := _order_cards()
 	var x := 14.0
-	var y := 12.0
+	var y := 10.0
 	var hq := float(s.get("hotel_q", 0))
-	# Cards stop before the centre clock (UI scale can leave room for fewer than 3).
 	var limit_x := size.x * 0.5 - 92.0 - 10.0 if show_clock else size.x * 0.6
-	var fit := clampi(int((limit_x - x - 62.0) / 112.0), 1, 3)
-	var shown := mini(fit, upcoming.size())
+	var fit := clampi(int((limit_x - x - 50.0) / (CARD_W + 8.0)), 1, 5)
+	var shown := mini(fit, cards.size())
+	var pat_q := float(int(level.get("patience_s", SimC.PATIENCE_S)) * SimC.HOTEL_Q_PER_S)
 	for i in shown:
-		var g: Dictionary = upcoming[i]
-		var announced: bool = g.get("announced", false)
-		var r := Rect2(Vector2(x, y), Vector2(104, 64))
-		draw_style_box(UiKit._box(UiKit.PAPER if announced else Color("#EFE6D8"), Art.FAMILY_COLORS[g["fam"]].darkened(0.35), 3, 8, 0), r)
-		UiKit.draw_icon(self, "fam_" + g["fam"], r.position + Vector2(24, 26), 36)
-		UiKit.draw_icon(self, "gift_" + g["fam"], r.position + Vector2(62, 18), 22)
-		UiKit.draw_icon(self, _family_need_icon(g["fam"]), r.position + Vector2(86, 18), 22)
-		var secs := maxi(0, int((float(g["arrive_q"]) - hq) / SimC.HOTEL_Q_PER_S))
-		draw_string(_font, r.position + Vector2(52, 54), "%ds" % secs, HORIZONTAL_ALIGNMENT_LEFT, -1, 16, UiKit.INK)
-		x += 112.0
-	if upcoming.size() > shown:
-		var r2 := Rect2(Vector2(x, y + 8), Vector2(54, 48))
+		var g: Dictionary = cards[i]
+		var r := Rect2(Vector2(x, y), Vector2(CARD_W, CARD_H))
+		var fam_col: Color = Art.FAMILY_COLORS[g["fam"]].darkened(0.35)
+		var urgent := false
+		var frac := 1.0
+		var bar_col := Art.GOLD
+		var sub := ""
+		match g["state"]:
+			"announced":
+				var secs := maxi(0, int(ceil((float(g["arrive_q"]) - hq) / SimC.HOTEL_Q_PER_S)))
+				sub = Loc.t("ui.order.arrives", {"n": secs})
+				bar_col = Color("#C9BFB0")
+			"lobby":
+				frac = clampf(float(g["patience_q"]) / pat_q, 0.0, 1.0)
+				urgent = frac < 0.3
+				bar_col = Color("#8BD17C") if frac > 0.5 else (Art.GOLD if frac > 0.25 else Art.CORAL)
+			"walking":
+				bar_col = UiKit.SKY
+			"staying":
+				var rq := _open_req(g)
+				if not rq.is_empty():
+					frac = _req_frac(rq)
+					urgent = frac < 0.3
+					bar_col = Art.GOLD if frac > 0.25 else Art.CORAL
+				else:
+					var sl := maxf(1.0, float(g["stay_len"]))
+					frac = 1.0 - clampf(float(g["stay_s"]) / sl, 0.0, 1.0)
+					bar_col = UiKit.SAGE
+		var pulse := 1.0 if (not urgent or Settings.g("reduced_motion")) else 0.85 + 0.15 * absf(sin(_t * 8.0))
+		var bgc := UiKit.PAPER if g["state"] != "announced" else Color("#EFE6D8")
+		if urgent:
+			bgc = bgc.lerp(Art.CORAL, 0.25 * pulse)
+		draw_rect(Rect2(r.position + Vector2(0, 3), r.size), UiKit.SHADOW)
+		draw_style_box(UiKit._box(bgc, fam_col, 3, 8, 0), r)
+		UiKit.draw_icon(self, "fam_" + g["fam"], r.position + Vector2(20, 24), 30)
+		# Steps: key, gift, then each planned request.
+		var steps: Array = [["item_ticket", g["admitted"]], ["gift_" + g["fam"], g["welcomed"]]]
+		var reqs: Array = g.get("reqs", [])
+		var plan: Array = g.get("plan", [])
+		for j in plan.size():
+			var k: String = plan[j]
+			var done: bool = j < reqs.size() and reqs[j]["st"] in ["done", "late"]
+			var missed: bool = j < reqs.size() and reqs[j]["st"] == "missed"
+			steps.append([ITEM_ICON.get(k, "sys_help"), done, missed])
+		var cur := -1
+		for j in steps.size():
+			if not steps[j][1] and (steps[j].size() < 3 or not steps[j][2]):
+				cur = j
+				break
+		var sx := r.position.x + 44.0
+		for j in steps.size():
+			var c := Vector2(sx + j * 22.0, r.position.y + 20.0)
+			var done2: bool = steps[j][1]
+			var missed2: bool = steps[j].size() >= 3 and steps[j][2]
+			if j == cur:
+				UiKit.draw_bubble(self, c, 11, Color("#FFF1C9"), fam_col)
+			UiKit.draw_icon(self, steps[j][0], c, 18, Color(1, 1, 1, 0.45 if (done2 or missed2) else 1.0))
+			if done2:
+				UiKit.draw_icon(self, "sys_check", c + Vector2(5, 5), 12)
+			elif missed2:
+				UiKit.draw_icon(self, "sys_soft_no", c + Vector2(5, 5), 12)
+		if sub != "":
+			draw_string(_font, r.position + Vector2(44, 50), sub, HORIZONTAL_ALIGNMENT_LEFT, -1, 13, UiKit.INK)
+		var bar := Rect2(r.position + Vector2(8, CARD_H - 11), Vector2(CARD_W - 16, 6))
+		draw_rect(bar, Color("#D9C7AE"))
+		draw_rect(Rect2(bar.position, Vector2(bar.size.x * frac, bar.size.y)), bar_col)
+		if int(g.get("tips", 0)) > 0:
+			UiKit.draw_text_outlined(self, r.position + Vector2(CARD_W - 16, 50), "+%d" % (int(g["tips"]) / 1000), 13, Art.GOLD.darkened(0.3), Color(1, 1, 1, 0.9))
+		x += CARD_W + 8.0
+	if cards.size() > shown:
+		var r2 := Rect2(Vector2(x, y + 10), Vector2(44, 48))
 		draw_style_box(UiKit._box(Color("#EFE6D8"), UiKit.WALNUT, 2, 8, 0), r2)
-		draw_string(_font, r2.position + Vector2(10, 32), "+%d" % (upcoming.size() - shown), HORIZONTAL_ALIGNMENT_LEFT, -1, 20, UiKit.INK)
+		draw_string(_font, r2.position + Vector2(8, 32), "+%d" % (cards.size() - shown), HORIZONTAL_ALIGNMENT_LEFT, -1, 20, UiKit.INK)
+	# Finished orders slide out below the rail.
+	var dx := 14.0
+	for c in done_cards:
+		var k2: float = 1.0 - float(c["t"]) / 1.6
+		var cr := Rect2(Vector2(dx, y + CARD_H + 6.0 + k2 * 10.0), Vector2(CARD_W, 26))
+		var a := clampf(1.6 - k2 * 1.6, 0.0, 1.0)
+		var oc: Color = Color("#8BD17C") if c["outcome"] == "served" else (Art.GOLD if c["outcome"] == "late" else Art.CORAL)
+		oc.a = a
+		var bg := UiKit.PAPER
+		bg.a = a
+		draw_style_box(UiKit._box(bg, oc, 2, 6, 0), cr)
+		UiKit.draw_icon(self, "fam_" + str(c["fam"]), cr.position + Vector2(14, 13), 18, Color(1, 1, 1, a))
+		var t := Loc.t("ui.order." + str(c["outcome"]))
+		var tc := UiKit.INK
+		tc.a = a
+		draw_string(_font, cr.position + Vector2(28, 18), t, HORIZONTAL_ALIGNMENT_LEFT, -1, 14, tc)
+		dx += CARD_W + 8.0
 
 static func _family_need_icon(fam: String) -> String:
 	match fam:

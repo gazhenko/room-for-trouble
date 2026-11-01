@@ -57,7 +57,7 @@ static func build(base: Dictionary, tpl: Dictionary, mirror: bool) -> LayoutDef:
 	L.decor = tpl.get("decor", []).duplicate()
 	L.initial_humidity = tpl.get("initial_humidity", {}).duplicate()
 	var hr: Array = base["hall"]
-	L.hall = Rect2i(hr[0], hr[1], hr[2] - hr[0] + 1, hr[3] - hr[1] + 1)
+	L.hall = L._mrect(hr)   # mirrored with the rooms (the v2 floors are not symmetric about x=13.5)
 	var overrides: Dictionary = tpl.get("room_overrides", {})
 	for letter in base["rooms"]:
 		var r: Dictionary = base["rooms"][letter].duplicate(true)

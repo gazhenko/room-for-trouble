@@ -47,7 +47,7 @@ static func wall_height_for(L: LayoutDef, x: int, z: int) -> float:
 	var hz0 := L.hall.position.y
 	var hz1 := L.hall.end.y - 1
 	if z == 0:
-		return 2.3
+		return 1.9
 	if z == L.south_wall_z():
 		return 0.28
 	if z < hz0 - 1:
@@ -306,11 +306,13 @@ func _exterior() -> void:
 		var tx := 1.0 + i * 2.0
 		mk.sphere(Vector3(tx, 0.35, -1.1), 0.55, hedge.lightened(0.05 * (i % 3)), 3, 7, Vector3(1.2, 0.8, 1))
 		mk.sphere(Vector3(tx + 0.5, 0.3, ze + 1.3), 0.5, hedge.darkened(0.05 * (i % 2)), 3, 7, Vector3(1.2, 0.7, 1))
+	# Trees shrink with the floor so a four-room hotel is not dwarfed by its garden.
+	var ts := 1.0 if xe >= 20.0 else 0.72
 	for tz in [1.5, 4.5, ze - 4.0, ze - 1.0]:
-		mk.cyl(Vector3(-1.4, 0, tz), 0.12, 0.8, Art.WALNUT, 6)
-		mk.sphere(Vector3(-1.4, 1.25, tz), 0.65, Color("#7BAA6B"), 3, 7)
-		mk.cyl(Vector3(xe + 1.4, 0, tz), 0.12, 0.8, Art.WALNUT, 6)
-		mk.sphere(Vector3(xe + 1.4, 1.25, tz), 0.65, Color("#7BAA6B").darkened(0.06), 3, 7)
+		mk.cyl(Vector3(-1.4, 0, tz), 0.12 * ts, 0.8 * ts, Art.WALNUT, 6)
+		mk.sphere(Vector3(-1.4, 1.25 * ts, tz), 0.65 * ts, Color("#7BAA6B"), 3, 7)
+		mk.cyl(Vector3(xe + 1.4, 0, tz), 0.12 * ts, 0.8 * ts, Art.WALNUT, 6)
+		mk.sphere(Vector3(xe + 1.4, 1.25 * ts, tz), 0.65 * ts, Color("#7BAA6B").darkened(0.06), 3, 7)
 	# Flowers along the front.
 	for i in int(xe / 1.5):
 		var fx := 0.5 + i * 1.5

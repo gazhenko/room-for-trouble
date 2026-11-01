@@ -4,7 +4,7 @@
  "id": "L02",
  "title": "Towels, Please",
  "chapter": 1,
- "layout": "P1",
+ "layout": "P1v2",
  "story": {
   "pre": "L02.pre",
   "post": "L02.post",

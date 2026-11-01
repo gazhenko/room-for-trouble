@@ -3,7 +3,7 @@ extends RefCounted
 ## Procedural character models (§3.2, §3.3, §17). Characters face +z.
 ## Staff share one footprint; silhouette/material swaps never alter timing.
 
-const ACTOR_SCALE := 1.8   # toy proportions: a staffer is ~1.3 m on a 1 m tile (1.45 gave a 28 px avatar at 800p)
+const ACTOR_SCALE := 2.0   # toy proportions: a staffer is ~1.45 m on a 1 m tile (1.45 gave a 28 px avatar at 800p)
 
 static func _eyes(mk: MeshKit, y: float, z: float, gap: float, r: float, white := true, pupil_col := Art.INK) -> void:
 	for sx in [-1.0, 1.0]:

@@ -54,7 +54,7 @@ static func _thermal(sim: HotelSim) -> void:
 	# 5–6. radiator requests and shared capacity
 	var hot_req: Array = []
 	var cold_req: Array = []
-	for letter in SimC.ROOM_LETTERS:
+	for letter in rooms:
 		var r: Dictionary = rooms[letter]
 		if not r["active"]:
 			continue
@@ -116,8 +116,9 @@ static func _allocate(reqs: Array, available: int, each: int, delta: Dictionary,
 	var base := available / reqs.size()
 	var rem := available - base * reqs.size()
 	var ordered: Array = []
-	for i in SimC.ROOM_LETTERS.size():
-		var letter: String = SimC.ROOM_LETTERS[(i + rot) % 6]
+	var letters: Array = delta.keys()
+	for i in letters.size():
+		var letter: String = letters[(i + rot) % letters.size()]
 		if letter in reqs:
 			ordered.append(letter)
 	for letter in ordered:

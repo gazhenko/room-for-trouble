@@ -181,7 +181,7 @@ static func carry_candidates(sim: HotelSim, st: Dictionary) -> Array:
 		out.append(_cand("st:towels", um(F["towel_shelf"]), not plan and stv["towels"] > 0, why_plan if plan else "ui.reason.restocking", RANK_STATION))
 		out.append(_cand("st:snacks", um(F["snack_tin"]), not plan and stv["snacks"] > 0, why_plan if plan else "ui.reason.restocking", RANK_STATION))
 		out.append(_cand("st:kiosk", um(F["welcome_kiosk"]), not plan, why_plan, RANK_STATION))
-		if sim.has_sys("sound"):
+		if sim.has_sys("sound") and F.has("return_shelf"):
 			out.append(_cand("st:return", um(F["return_shelf"]), not plan and stv["curtains_free"] > 0, why_plan if plan else "ui.reason.no_curtains", RANK_STATION))
 		for tid in sim.s["trunks"]:
 			var tr: Dictionary = sim.s["trunks"][tid]
@@ -210,10 +210,12 @@ static func carry_candidates(sim: HotelSim, st: Dictionary) -> Array:
 					out.append(_cand("plaque:" + letter, plaque_pos(sim, letter), why2 == "", why2, RANK_SOCKET))
 			"linen_clean":
 				out.append(_cand("st:linen", um(F["linen_shelf"]), stv["linen"] < SimC.LINEN_CAP, "ui.reason.shelf_full", RANK_SOCKET))
-				out.append(_cand("st:return", um(F["return_shelf"]), true, "", RANK_SOCKET))
+				if F.has("return_shelf"):
+					out.append(_cand("st:return", um(F["return_shelf"]), true, "", RANK_SOCKET))
 			"linen_dirty":
 				out.append(_cand("st:hamper", um(F["hamper"]), true, "", RANK_SOCKET))
-				out.append(_cand("st:return", um(F["return_shelf"]), false, "ui.reason.dirty_to_hamper", RANK_SOCKET))
+				if F.has("return_shelf"):
+					out.append(_cand("st:return", um(F["return_shelf"]), false, "ui.reason.dirty_to_hamper", RANK_SOCKET))
 			"towel", "snack":
 				for gid in sim.s["guests"]:
 					var g: Dictionary = sim.s["guests"][gid]
@@ -228,9 +230,11 @@ static func carry_candidates(sim: HotelSim, st: Dictionary) -> Array:
 				var stname := "st:towels" if hk == "towel" else "st:snacks"
 				var stock: int = stv["towels"] if hk == "towel" else stv["snacks"]
 				out.append(_cand(stname, um(F["towel_shelf" if hk == "towel" else "snack_tin"]), stock < SimC.STOCK_CAP, "ui.reason.shelf_full", RANK_SOCKET))
-				out.append(_cand("st:return", um(F["return_shelf"]), true, "", RANK_SOCKET))
+				if F.has("return_shelf"):
+					out.append(_cand("st:return", um(F["return_shelf"]), true, "", RANK_SOCKET))
 			"curtain_roll":
-				out.append(_cand("st:return", um(F["return_shelf"]), true, "", RANK_SOCKET))
+				if F.has("return_shelf"):
+					out.append(_cand("st:return", um(F["return_shelf"]), true, "", RANK_SOCKET))
 			"mop", "breezer", "watering_can":
 				var dtype := "mop" if hk == "mop" else ("breezer" if hk == "breezer" else "can")
 				var docks: Array
@@ -245,13 +249,15 @@ static func carry_candidates(sim: HotelSim, st: Dictionary) -> Array:
 					var free := _dock_item(sim, dtype, i) == 0
 					out.append(_cand(key, dock_pos(sim, dtype, i), free, "ui.reason.dock_full", RANK_SOCKET))
 			"festival_parcel":
-				out.append(_cand("st:stand", um(F["festival_stand"]), true, "", RANK_SOCKET))
+				if F.has("festival_stand"):
+					out.append(_cand("st:stand", um(F["festival_stand"]), true, "", RANK_SOCKET))
 		if hk.begins_with("welcome_"):
 			for letter in sim.L.active_rooms:
 				var r := sim.room(letter)
 				out.append(_cand("plinth:" + letter, um(sim.L.rooms[letter]["plinth"]), r["gift"] == 0, "ui.reason.plinth_full", RANK_SOCKET))
 			out.append(_cand("st:kiosk", um(F["welcome_kiosk"]), true, "", RANK_SOCKET))
-			out.append(_cand("st:return", um(F["return_shelf"]), true, "", RANK_SOCKET))
+			if F.has("return_shelf"):
+				out.append(_cand("st:return", um(F["return_shelf"]), true, "", RANK_SOCKET))
 		if sim.has_sys("lift") and not sim.s["lifts"].is_empty() and hk != "festival_trunk":
 			for li in 2:
 				if _lift_pad_item(sim, li) == 0:
@@ -338,8 +344,9 @@ static func work_candidates(sim: HotelSim, st: Dictionary) -> Array:
 	if sim.has_sys("thermal"):
 		for e in sim.L.thermal_edges:
 			out.append(_cand("gate:" + e, gate_pos(sim, e), true, "", RANK_STATION))
-		out.append(_cand("pump", um(F["heat_pump"]), true, "", RANK_STATION))
-	if sim.has_sys("moisture") and hk == "watering_can":
+		if F.has("heat_pump"):
+			out.append(_cand("pump", um(F["heat_pump"]), true, "", RANK_STATION))
+	if sim.has_sys("moisture") and hk == "watering_can" and F.has("tap"):
 		out.append(_cand("tap", um(F["tap"]), not plan, wp, RANK_STATION))
 	if hk == "":
 		var busy: bool = sim.s["st"]["press_user"] != -1 and sim.s["st"]["press_user"] != st["seat"]

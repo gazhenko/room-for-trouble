@@ -147,6 +147,9 @@ func _drive(st: Dictionary) -> Dictionary:
 	stats["busy_ticks"] += 1
 	if st["grip"] != 0:
 		return _drive_trunk(st, t)
+	if t["action"] == "drop":
+		t["done"] = true
+		return {"seat": seat, "ax": 0, "az": 0, "held": SimC.BTN_CARRY, "pressed": SimC.BTN_CARRY}
 	var goal: Vector2i = t["stand"]
 	var pos := Vector2i(st["x"], st["z"])
 	var d := SimMove.dist(pos.x, pos.y, goal.x, goal.y)
@@ -362,7 +365,7 @@ func _deliver(st: Dictionary, hk: String) -> Dictionary:
 				var g2: Dictionary = sim.s["guests"][gid]
 				if g2["state"] == "staying" and SimGuests.open_request(sim, g2, hk) >= 0:
 					return _task("guest:%d" % gid, "carry", Vector2i(g2["x"], g2["z"]), "", func(): return SimGuests.open_request(sim, sim.guest(gid), hk) >= 0)
-			return _task("st:return", "carry", _um(F["return_shelf"]))
+			return _return_task(st)
 		"mop":
 			var t := _mop_target(st)
 			if not t.is_empty():
@@ -384,7 +387,7 @@ func _deliver(st: Dictionary, hk: String) -> Dictionary:
 			var target := _curtain_room()
 			if target != "":
 				return _task("hang:" + target, "work", SimInteract.door_pos(sim, target), "curtain:" + target, func(): return sim.room(target)["curtain"] == 0)
-			return _task("st:return", "carry", _um(F["return_shelf"]))
+			return _return_task(st)
 		"festival_parcel":
 			return _task("st:stand", "carry", _um(F["festival_stand"]))
 		"move_ticket":
@@ -400,6 +403,16 @@ func _deliver(st: Dictionary, hk: String) -> Dictionary:
 				return _task("plinth:" + letter2, "carry", _um(sim.L.rooms[letter2]["plinth"]), "", func(): return sim.room(letter2)["gift"] == 0)
 		return _task("st:kiosk", "carry", _um(F["welcome_kiosk"]))
 	return {}
+
+## Put an unneeded item back: the return shelf where the floor has one,
+## otherwise set it down where we stand (a counter if one is highlighted).
+func _return_task(st: Dictionary) -> Dictionary:
+	var F: Dictionary = sim.L.fixtures
+	if F.has("return_shelf"):
+		return _task("st:return", "carry", _um(F["return_shelf"]))
+	var here := Vector2i(st["x"], st["z"])
+	var t := {"key": "", "action": "drop", "anchor": here, "stand": here, "claim": ""}
+	return t
 
 func _dock_task(dtype: String) -> Dictionary:
 	var n := 2 if dtype in ["mop"] else (1 if dtype == "breezer" else SimInteract._can_count(sim))

@@ -7,7 +7,7 @@ extends SubViewportContainer
 
 signal fitted
 
-const PITCH_DEG := 50.0
+const PITCH_DEG := 44.0
 const FOV_DEG := 36.0
 ## Key light direction (the way the light travels). Chosen so tops (N·L 0.65)
 ## and the west faces (0.68) sit safely inside the full band, camera-facing
@@ -16,8 +16,8 @@ const FOV_DEG := 36.0
 ## Shadows fall sideways (east, slightly north) where the camera can see them.
 const SUN_DIR := Vector3(0.68, -0.65, -0.34)
 const SAFE_X := 0.965
-const SAFE_TOP := 0.86
-const SAFE_BOTTOM := -0.92
+const SAFE_TOP := 0.80      # the order rail and clock live in the top 10%
+const SAFE_BOTTOM := -0.86  # the seat cards live in the bottom 7%
 
 var viewport: SubViewport
 var world: Node3D

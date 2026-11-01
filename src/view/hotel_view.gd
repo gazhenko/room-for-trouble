@@ -138,18 +138,25 @@ func _build_stations() -> void:
 	_place("towels", ModelStations.build("towel_shelf", {}), _v(F["towel_shelf"]))
 	_place("snacks", ModelStations.build("snack_tin", {}), _v(F["snack_tin"]))
 	_place("kiosk", ModelStations.build("welcome_kiosk", {}), _v(F["welcome_kiosk"]))
-	_place("return", ModelStations.build("return_shelf", {}), _v(F["return_shelf"]))
-	_place("pump", ModelStations.build("heat_pump", {}), _v(F["heat_pump"]))
-	_place("tap", ModelStations.build("tap", {}), _v(F["tap"]))
+	# Fixtures a floor never uses may be absent (the v2 chapter-1 floor has no
+	# heat pump, tap, breezer, cans or return shelf).
+	if F.has("return_shelf"):
+		_place("return", ModelStations.build("return_shelf", {}), _v(F["return_shelf"]))
+	if F.has("heat_pump"):
+		_place("pump", ModelStations.build("heat_pump", {}), _v(F["heat_pump"]))
+	if F.has("tap"):
+		_place("tap", ModelStations.build("tap", {}), _v(F["tap"]))
 	var mops: Array = F["mop_docks"]
 	for i in mops.size():
 		_place("dock:mop:%d" % i, ModelStations.build("tool_dock", {"tool": "mop"}), _v(mops[i]))
-	_place("dock:breezer:0", ModelStations.build("tool_dock", {"tool": "breezer"}), _v(F["breezer_dock"]))
-	var cans: Array = F["can_docks"]
+	if F.has("breezer_dock"):
+		_place("dock:breezer:0", ModelStations.build("tool_dock", {"tool": "breezer"}), _v(F["breezer_dock"]))
+	var cans: Array = F.get("can_docks", [])
 	for i in cans.size():
 		_place("dock:can:%d" % i, ModelStations.build("tool_dock", {"tool": "can"}), _v(cans[i]))
 	_place("bell", ModelStations.build("group_bell", {}), _v(F["group_bell"]))
-	_place("stand", ModelStations.build("festival_stand", {}), _v(F["festival_stand"]))
+	if F.has("festival_stand"):
+		_place("stand", ModelStations.build("festival_stand", {}), _v(F["festival_stand"]))
 	_place("goal_pad", ModelStations.build("goal_pad", {}), _v(F["goal_pad"], 0.01))
 	_no_shadows(stations["goal_pad"])
 	for i in L.lift_pads.size():

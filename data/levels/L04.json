@@ -4,7 +4,7 @@
  "id": "L04",
  "title": "A Very Long Suitcase",
  "chapter": 1,
- "layout": "P1",
+ "layout": "P1v2",
  "story": {
   "pre": "L04.pre",
   "post": "L04.post",

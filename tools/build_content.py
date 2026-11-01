@@ -24,6 +24,9 @@ loc = {}
 for part in (S.UI, S.SETTINGS, S.CAST, S.GUESTS, S.ITEMS, S.BARKS, S.MODS, S.COSMETICS, S.CHAPTERS, S.TUTORIALS, S.CREDITS_EXTRA):
     loc.update(part)
 
+STORY_SET = {"P1v2": "P1"}
+FOUR_ROOM_TEMPLATES = ("P1", "P1v2")
+
 # ---------------------------------------------------------------- levels
 cards = re.split(r"\n### (L\d\d) — ", brief)
 purposes = {}
@@ -92,7 +95,9 @@ for L in manifest["levels"]:
     lid = L["id"]
     pre, mid, post = ST.LEVELS[lid]
     cam, focus, cap, speaker, actors = pre[:5]
-    layout = L["layout"]
+    # Story scenes are staged on the classic sets until milestone 2 re-stages them
+    # on the v2 floors (actor and focus coordinates are authored on those sets).
+    layout = STORY_SET.get(L["layout"], L["layout"])
     pp = ST.P(f"{lid}.pre", cam, cap, speaker, 6, actors, ST.PRE_PROPS.get(lid, []), focus=focus, layout=layout)
     level_scenes.append({"id": f"{lid}.pre", "layout": layout, "music": "planning",
                          "title_key": f"story.{lid}.pre.title", "panels": [panel_out(pp, lid, 0)]})
@@ -126,7 +131,7 @@ write("data/story/levels.json", {"schema_version": 1, "scenes": level_scenes, "g
 SCALE = [650, 1000, 1250, 1500]
 CAP = [2, 4, 5, 6]
 for L in manifest["levels"]:
-    tpl_active = 4 if L["layout"] == "P1" else 6
+    tpl_active = 4 if L["layout"] in FOUR_ROOM_TEMPLATES else 6
     per = {}
     for h in range(1, 5):
         cap = min(6, CAP[h - 1], tpl_active)

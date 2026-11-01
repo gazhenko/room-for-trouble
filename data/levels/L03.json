@@ -4,7 +4,7 @@
  "id": "L03",
  "title": "Laundry Day",
  "chapter": 1,
- "layout": "P1",
+ "layout": "P1v2",
  "story": {
   "pre": "L03.pre",
   "post": "L03.post",

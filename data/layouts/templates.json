@@ -2,62 +2,316 @@
   "schema_version": 1,
   "templates": [
     {
-      "id": "P1", "key": "welcome_lobby", "name_key": "layout.P1.name",
-      "active_rooms": ["A", "B", "D", "E"],
-      "thermal_edges": [], "acoustic_edges": [],
-      "systems_available": ["core", "festival"],
-      "palette": {"wall": "#F7EAD6", "accent": "#E88D79", "floor": "#C9A27E", "trim": "#805C49", "rug": "#E88D79"},
-      "decor": ["boxes", "renovation_fence", "welcome_rug", "potted_fern"],
+      "id": "P1",
+      "key": "welcome_lobby",
+      "name_key": "layout.P1.name",
+      "active_rooms": [
+        "A",
+        "B",
+        "D",
+        "E"
+      ],
+      "thermal_edges": [],
+      "acoustic_edges": [],
+      "systems_available": [
+        "core",
+        "festival"
+      ],
+      "palette": {
+        "wall": "#F7EAD6",
+        "accent": "#E88D79",
+        "floor": "#C9A27E",
+        "trim": "#805C49",
+        "rug": "#E88D79"
+      },
+      "decor": [
+        "boxes",
+        "renovation_fence",
+        "welcome_rug",
+        "potted_fern"
+      ],
       "initial_humidity": {}
     },
     {
-      "id": "P2", "key": "radiator_row", "name_key": "layout.P2.name",
-      "active_rooms": ["A", "B", "C", "D", "E", "F"],
-      "thermal_edges": ["AB", "BC", "DE", "EF"], "acoustic_edges": [],
-      "systems_available": ["core", "thermal"],
-      "palette": {"wall": "#F2E2C4", "accent": "#8EBBC7", "floor": "#B98F6E", "trim": "#E88D79", "rug": "#8EBBC7"},
-      "decor": ["brass_pipes", "sun_snow_bunting", "radiators"],
+      "id": "P1v2",
+      "key": "welcome_lobby_v2",
+      "name_key": "layout.P1.name",
+      "active_rooms": [
+        "A",
+        "B",
+        "D",
+        "E"
+      ],
+      "thermal_edges": [],
+      "acoustic_edges": [],
+      "systems_available": [
+        "core",
+        "festival"
+      ],
+      "palette": {
+        "wall": "#F7EAD6",
+        "accent": "#E88D79",
+        "floor": "#C9A27E",
+        "trim": "#805C49",
+        "rug": "#E88D79"
+      },
+      "decor": [
+        "welcome_rug"
+      ],
+      "initial_humidity": {},
+      "base": "v2_small"
+    },
+    {
+      "id": "P2",
+      "key": "radiator_row",
+      "name_key": "layout.P2.name",
+      "active_rooms": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F"
+      ],
+      "thermal_edges": [
+        "AB",
+        "BC",
+        "DE",
+        "EF"
+      ],
+      "acoustic_edges": [],
+      "systems_available": [
+        "core",
+        "thermal"
+      ],
+      "palette": {
+        "wall": "#F2E2C4",
+        "accent": "#8EBBC7",
+        "floor": "#B98F6E",
+        "trim": "#E88D79",
+        "rug": "#8EBBC7"
+      },
+      "decor": [
+        "brass_pipes",
+        "sun_snow_bunting",
+        "radiators"
+      ],
       "initial_humidity": {}
     },
     {
-      "id": "P3", "key": "quiet_wing", "name_key": "layout.P3.name",
-      "active_rooms": ["A", "B", "C", "D", "E", "F"],
-      "thermal_edges": ["AB", "BC", "DE", "EF"], "acoustic_edges": ["AD", "BE", "CF"],
-      "systems_available": ["core", "thermal", "sound"],
-      "palette": {"wall": "#E3DAEC", "accent": "#8C7CA8", "floor": "#9C7A68", "trim": "#F7EAD6", "rug": "#8C7CA8"},
-      "decor": ["brass_pipes", "note_trim", "cream_curtains", "moon_lamps"],
+      "id": "P3",
+      "key": "quiet_wing",
+      "name_key": "layout.P3.name",
+      "active_rooms": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F"
+      ],
+      "thermal_edges": [
+        "AB",
+        "BC",
+        "DE",
+        "EF"
+      ],
+      "acoustic_edges": [
+        "AD",
+        "BE",
+        "CF"
+      ],
+      "systems_available": [
+        "core",
+        "thermal",
+        "sound"
+      ],
+      "palette": {
+        "wall": "#E3DAEC",
+        "accent": "#8C7CA8",
+        "floor": "#9C7A68",
+        "trim": "#F7EAD6",
+        "rug": "#8C7CA8"
+      },
+      "decor": [
+        "brass_pipes",
+        "note_trim",
+        "cream_curtains",
+        "moon_lamps"
+      ],
       "initial_humidity": {}
     },
     {
-      "id": "P4", "key": "conservatory", "name_key": "layout.P4.name",
-      "active_rooms": ["A", "B", "C", "D", "E", "F"],
-      "thermal_edges": ["AB", "BC", "DE", "EF"], "acoustic_edges": ["AD", "BE", "CF"],
-      "systems_available": ["core", "thermal", "sound", "moisture"],
-      "palette": {"wall": "#E4EDDC", "accent": "#8BAE91", "floor": "#A88B62", "trim": "#E8BF66", "rug": "#8BAE91"},
-      "decor": ["brass_pipes", "note_trim", "planters", "drains", "glass_roof"],
-      "initial_humidity": {"A": 40, "D": 40}
+      "id": "P4",
+      "key": "conservatory",
+      "name_key": "layout.P4.name",
+      "active_rooms": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F"
+      ],
+      "thermal_edges": [
+        "AB",
+        "BC",
+        "DE",
+        "EF"
+      ],
+      "acoustic_edges": [
+        "AD",
+        "BE",
+        "CF"
+      ],
+      "systems_available": [
+        "core",
+        "thermal",
+        "sound",
+        "moisture"
+      ],
+      "palette": {
+        "wall": "#E4EDDC",
+        "accent": "#8BAE91",
+        "floor": "#A88B62",
+        "trim": "#E8BF66",
+        "rug": "#8BAE91"
+      },
+      "decor": [
+        "brass_pipes",
+        "note_trim",
+        "planters",
+        "drains",
+        "glass_roof"
+      ],
+      "initial_humidity": {
+        "A": 40,
+        "D": 40
+      }
     },
     {
-      "id": "P5", "key": "split_lobby", "name_key": "layout.P5.name",
-      "active_rooms": ["A", "B", "C", "D", "E", "F"],
-      "thermal_edges": ["AB", "BC", "DE", "EF"], "acoustic_edges": ["AD", "BE", "CF"],
-      "systems_available": ["core", "thermal", "sound", "moisture", "shutter", "lift"],
-      "palette": {"wall": "#DDEBEE", "accent": "#8EBBC7", "floor": "#805C49", "trim": "#E8BF66", "rug": "#8EBBC7"},
-      "decor": ["brass_pipes", "note_trim", "travel_stickers", "divider"],
-      "divider": [13, 9],
-      "shutter": [13, 8],
-      "room_overrides": {"B": {"door": [14, 7]}},
-      "fixture_overrides": {"group_bell": [12, 9]},
-      "lift_pads": [[1, 10], [24, 11]],
+      "id": "P5",
+      "key": "split_lobby",
+      "name_key": "layout.P5.name",
+      "active_rooms": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F"
+      ],
+      "thermal_edges": [
+        "AB",
+        "BC",
+        "DE",
+        "EF"
+      ],
+      "acoustic_edges": [
+        "AD",
+        "BE",
+        "CF"
+      ],
+      "systems_available": [
+        "core",
+        "thermal",
+        "sound",
+        "moisture",
+        "shutter",
+        "lift"
+      ],
+      "palette": {
+        "wall": "#DDEBEE",
+        "accent": "#8EBBC7",
+        "floor": "#805C49",
+        "trim": "#E8BF66",
+        "rug": "#8EBBC7"
+      },
+      "decor": [
+        "brass_pipes",
+        "note_trim",
+        "travel_stickers",
+        "divider"
+      ],
+      "divider": [
+        13,
+        9
+      ],
+      "shutter": [
+        13,
+        8
+      ],
+      "room_overrides": {
+        "B": {
+          "door": [
+            14,
+            7
+          ]
+        }
+      },
+      "fixture_overrides": {
+        "group_bell": [
+          12,
+          9
+        ]
+      },
+      "lift_pads": [
+        [
+          1,
+          10
+        ],
+        [
+          24,
+          11
+        ]
+      ],
       "initial_humidity": {}
     },
     {
-      "id": "P6", "key": "grand_hall", "name_key": "layout.P6.name",
-      "active_rooms": ["A", "B", "C", "D", "E", "F"],
-      "thermal_edges": ["AB", "BC", "DE", "EF"], "acoustic_edges": ["AD", "BE", "CF"],
-      "systems_available": ["core", "thermal", "sound", "moisture", "festival"],
-      "palette": {"wall": "#F7EAD6", "accent": "#E8BF66", "floor": "#9C6E52", "trim": "#E88D79", "rug": "#8C7CA8"},
-      "decor": ["brass_pipes", "note_trim", "lanterns", "paper_moon", "garlands", "planters"],
+      "id": "P6",
+      "key": "grand_hall",
+      "name_key": "layout.P6.name",
+      "active_rooms": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F"
+      ],
+      "thermal_edges": [
+        "AB",
+        "BC",
+        "DE",
+        "EF"
+      ],
+      "acoustic_edges": [
+        "AD",
+        "BE",
+        "CF"
+      ],
+      "systems_available": [
+        "core",
+        "thermal",
+        "sound",
+        "moisture",
+        "festival"
+      ],
+      "palette": {
+        "wall": "#F7EAD6",
+        "accent": "#E8BF66",
+        "floor": "#9C6E52",
+        "trim": "#E88D79",
+        "rug": "#8C7CA8"
+      },
+      "decor": [
+        "brass_pipes",
+        "note_trim",
+        "lanterns",
+        "paper_moon",
+        "garlands",
+        "planters"
+      ],
       "initial_humidity": {}
     }
   ]

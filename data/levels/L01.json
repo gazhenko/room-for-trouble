@@ -4,7 +4,7 @@
  "id": "L01",
  "title": "First Bell",
  "chapter": 1,
- "layout": "P1",
+ "layout": "P1v2",
  "story": {
   "pre": "L01.pre",
   "post": "L01.post",

@@ -16,7 +16,6 @@ const DEFAULTS := {
 	"hints": true, "read_aloud": false, "difficulty": "family", "pace_milli": 1000,
 	"gus_assist": false, "endpoint": "wss://play.example.invalid/game", "language": "en",
 	"pseudo_loc": false, "shared_keyboard_ok": false,
-	"compact_floor": false,   # prototype: 19x15 floor envelope (data/layouts/base_compact.json)
 }
 
 const SEAT_DEFAULTS := {

@@ -5,7 +5,7 @@
       "id": "L01",
       "title": "First Bell",
       "chapter": 1,
-      "layout": "P1",
+      "layout": "P1v2",
       "duration_hotel_s": 270,
       "waves": [
         {
@@ -72,7 +72,7 @@
       "id": "L02",
       "title": "Towels, Please",
       "chapter": 1,
-      "layout": "P1",
+      "layout": "P1v2",
       "duration_hotel_s": 270,
       "waves": [
         {
@@ -151,7 +151,7 @@
       "id": "L03",
       "title": "Laundry Day",
       "chapter": 1,
-      "layout": "P1",
+      "layout": "P1v2",
       "duration_hotel_s": 285,
       "waves": [
         {
@@ -229,7 +229,7 @@
       "id": "L04",
       "title": "A Very Long Suitcase",
       "chapter": 1,
-      "layout": "P1",
+      "layout": "P1v2",
       "duration_hotel_s": 300,
       "waves": [
         {
@@ -270,7 +270,7 @@
             "object_id": "trunk_L04",
             "position": [
               2,
-              11
+              6
             ],
             "goal": "festival_stand"
           }

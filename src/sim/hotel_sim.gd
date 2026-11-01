@@ -102,7 +102,7 @@ func _setup() -> void:
 func _setup_rooms() -> void:
 	var overrides: Dictionary = level.get("initial_rooms", {})
 	var mods: Array = cfg.get("modifiers", [])
-	for letter in SimC.ROOM_LETTERS:
+	for letter in L.rooms:
 		var g: Dictionary = L.rooms[letter]
 		var hum := int(L.initial_humidity.get(letter, SimC.HUMIDITY_BASE))
 		if "damp_start" in mods and systems.has("moisture"):

@@ -8,6 +8,7 @@ const GAMEPLAY_FILES := [
 	"res://data/items/items.json",
 	"res://data/items/stations.json",
 	"res://data/layouts/base.json",
+	"res://data/layouts/base_v2_small.json",
 	"res://data/layouts/templates.json",
 	"res://data/campaign_manifest.json",
 	"res://data/tutorials/tutorials.json",
@@ -19,7 +20,7 @@ var items: Dictionary = {}
 var stations: Dictionary = {}
 var templates: Dictionary = {}
 var base_layout: Dictionary = {}
-var base_layout_compact: Dictionary = {}   # prototype 19x15 envelope (compact_floor)
+var base_layouts: Dictionary = {}   # name -> base envelope; templates pick one with "base"
 var levels: Array = []
 var levels_by_id: Dictionary = {}
 var tutorials: Dictionary = {}
@@ -47,7 +48,7 @@ func load_all() -> void:
 	for d in st.get("stations", []):
 		stations[d["id"]] = d
 	base_layout = _read("res://data/layouts/base.json")
-	base_layout_compact = _read("res://data/layouts/base_compact.json")
+	base_layouts = {"default": base_layout, "v2_small": _read("res://data/layouts/base_v2_small.json")}
 	var tp := _read("res://data/layouts/templates.json")
 	for d in tp.get("templates", []):
 		templates[d["id"]] = d
@@ -94,25 +95,12 @@ func _compute_hash() -> String:
 	ctx.update(("protocol:%d" % SimC.PROTOCOL_VERSION).to_utf8_buffer())
 	return ctx.finish().hex_encode().substr(0, 16)
 
-## Prototype switch: Settings → compact_floor (or RFT_COMPACT=1 for headless
-## tools) builds every template on the compact 19x15 envelope.
-func compact_floor() -> bool:
-	if base_layout_compact.is_empty():
-		return false
-	if OS.get_environment("RFT_COMPACT") == "1":
-		return true
-	var ml := Engine.get_main_loop()
-	if ml is SceneTree:
-		var st := (ml as SceneTree).root.get_node_or_null("Settings")
-		if st != null and st.has_method("g"):
-			return bool(st.g("compact_floor"))
-	return false
-
 func layout(template_id: String, mirror: bool = false) -> LayoutDef:
-	var compact := compact_floor()
-	var k := template_id + ("_m" if mirror else "") + ("_c" if compact else "")
+	var k := template_id + ("_m" if mirror else "")
 	if not _layout_cache.has(k):
-		_layout_cache[k] = LayoutDef.build(base_layout_compact if compact else base_layout, templates[template_id], mirror)
+		var tpl: Dictionary = templates[template_id]
+		var base: Dictionary = base_layouts.get(tpl.get("base", "default"), base_layout)
+		_layout_cache[k] = LayoutDef.build(base, tpl, mirror)
 	return _layout_cache[k]
 
 func level(level_id: String) -> Dictionary:

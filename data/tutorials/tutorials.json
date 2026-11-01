@@ -2,97 +2,622 @@
   "schema_version": 1,
   "tutorials": [
     {
-      "id": "T01", "layout": "P1", "systems": ["core"], "assignable": ["A", "B"],
-      "cast": ["nana", "gus", "mallow"], "final_caption": "tut.T01.final",
+      "id": "T01",
+      "layout": "P1v2",
+      "systems": [
+        "core"
+      ],
+      "assignable": [
+        "A",
+        "B"
+      ],
+      "cast": [
+        "nana",
+        "gus",
+        "mallow"
+      ],
+      "final_caption": "tut.T01.final",
       "init": [
-        {"op": "set_room", "room": "A", "bed": "Stripped", "mess": 0},
-        {"op": "set_room", "room": "B", "bed": "Made", "mess": 0}
+        {
+          "op": "set_room",
+          "room": "A",
+          "bed": "Stripped",
+          "mess": 0
+        },
+        {
+          "op": "set_room",
+          "room": "B",
+          "bed": "Made",
+          "mess": 0
+        }
       ],
       "steps": [
-        {"id": "T01.1", "speaker": "nana", "caption": "tut.T01.1", "icon": "sys_move",
-         "ops": [{"op": "circles", "positions": [[7, 9], [18, 9]]}],
-         "complete": {"type": "circles"}, "hint": ["circle"], "auto": [{"op": "touch_circles"}]},
-        {"id": "T01.2", "speaker": "gus", "caption": "tut.T01.2", "icon": "item_linen_clean",
-         "complete": {"type": "room_bed", "room": "A", "bed": "Made"}, "hint": ["st:linen", "make:A"],
-         "auto": [{"op": "set_room", "room": "A", "bed": "Made"}]},
-        {"id": "T01.3", "speaker": "mallow", "caption": "tut.T01.3", "icon": "item_ticket",
-         "ops": [{"op": "spawn_guest", "tag": "mallow", "fam": "slime", "variant": "mallow"}],
-         "complete": {"type": "guest_in_room", "tag": "mallow"}, "hint": ["ped:0", "plaque:A"],
-         "auto": [{"op": "assign", "tag": "mallow", "room": "A"}]},
-        {"id": "T01.4", "speaker": "nana", "caption": "tut.T01.4", "icon": "gift_slime",
-         "ops": [{"op": "kiosk", "fam": "slime"}],
-         "complete": {"type": "welcomed", "tag": "mallow"}, "hint": ["st:kiosk", "plinth:A"],
-         "auto": [{"op": "welcome", "tag": "mallow"}]},
-        {"id": "T01.5", "speaker": "nana", "caption": "tut.T01.5", "caption_multi": "tut.T01.5m", "icon": "item_towel",
-         "ops": [{"op": "force_request", "tag": "mallow", "kind": "towel"}],
-         "complete": {"type": "request_done", "tag": "mallow"}, "hint": ["st:towels", "guest:mallow"],
-         "auto": [{"op": "fulfill", "tag": "mallow"}]},
-        {"id": "T01.6", "speaker": "mallow", "caption": "tut.T01.6", "icon": "sys_wave",
-         "ops": [{"op": "allow_goodbye", "tag": "mallow"}],
-         "complete": {"type": "guest_departed", "tag": "mallow"}, "hint": ["goodbye:mallow"],
-         "auto": [{"op": "goodbye", "tag": "mallow"}]},
-        {"id": "T01.7", "speaker": "nana", "caption": "tut.T01.7", "icon": "tool_mop",
-         "complete": {"type": "room_reset", "room": "A"}, "hint": ["strip:A", "st:hamper", "dock:mop:0", "mess:A", "st:linen", "make:A"],
-         "auto": [{"op": "set_room", "room": "A", "bed": "Made", "mess": 0}, {"op": "note", "what": "hamper"}]},
-        {"id": "T01.8", "speaker": "gus", "caption": "tut.T01.8", "icon": "sys_bell",
-         "complete": {"type": "bell"}, "hint": ["bell"], "auto": [{"op": "ring"}]}
+        {
+          "id": "T01.1",
+          "speaker": "nana",
+          "caption": "tut.T01.1",
+          "icon": "sys_move",
+          "ops": [
+            {
+              "op": "circles",
+              "positions": [
+                [
+                  4,
+                  6
+                ],
+                [
+                  9,
+                  6
+                ]
+              ]
+            }
+          ],
+          "complete": {
+            "type": "circles"
+          },
+          "hint": [
+            "circle"
+          ],
+          "auto": [
+            {
+              "op": "touch_circles"
+            }
+          ]
+        },
+        {
+          "id": "T01.2",
+          "speaker": "gus",
+          "caption": "tut.T01.2",
+          "icon": "item_linen_clean",
+          "complete": {
+            "type": "room_bed",
+            "room": "A",
+            "bed": "Made"
+          },
+          "hint": [
+            "st:linen",
+            "make:A"
+          ],
+          "auto": [
+            {
+              "op": "set_room",
+              "room": "A",
+              "bed": "Made"
+            }
+          ]
+        },
+        {
+          "id": "T01.3",
+          "speaker": "mallow",
+          "caption": "tut.T01.3",
+          "icon": "item_ticket",
+          "ops": [
+            {
+              "op": "spawn_guest",
+              "tag": "mallow",
+              "fam": "slime",
+              "variant": "mallow"
+            }
+          ],
+          "complete": {
+            "type": "guest_in_room",
+            "tag": "mallow"
+          },
+          "hint": [
+            "ped:0",
+            "plaque:A"
+          ],
+          "auto": [
+            {
+              "op": "assign",
+              "tag": "mallow",
+              "room": "A"
+            }
+          ]
+        },
+        {
+          "id": "T01.4",
+          "speaker": "nana",
+          "caption": "tut.T01.4",
+          "icon": "gift_slime",
+          "ops": [
+            {
+              "op": "kiosk",
+              "fam": "slime"
+            }
+          ],
+          "complete": {
+            "type": "welcomed",
+            "tag": "mallow"
+          },
+          "hint": [
+            "st:kiosk",
+            "plinth:A"
+          ],
+          "auto": [
+            {
+              "op": "welcome",
+              "tag": "mallow"
+            }
+          ]
+        },
+        {
+          "id": "T01.5",
+          "speaker": "nana",
+          "caption": "tut.T01.5",
+          "caption_multi": "tut.T01.5m",
+          "icon": "item_towel",
+          "ops": [
+            {
+              "op": "force_request",
+              "tag": "mallow",
+              "kind": "towel"
+            }
+          ],
+          "complete": {
+            "type": "request_done",
+            "tag": "mallow"
+          },
+          "hint": [
+            "st:towels",
+            "guest:mallow"
+          ],
+          "auto": [
+            {
+              "op": "fulfill",
+              "tag": "mallow"
+            }
+          ]
+        },
+        {
+          "id": "T01.6",
+          "speaker": "mallow",
+          "caption": "tut.T01.6",
+          "icon": "sys_wave",
+          "ops": [
+            {
+              "op": "allow_goodbye",
+              "tag": "mallow"
+            }
+          ],
+          "complete": {
+            "type": "guest_departed",
+            "tag": "mallow"
+          },
+          "hint": [
+            "goodbye:mallow"
+          ],
+          "auto": [
+            {
+              "op": "goodbye",
+              "tag": "mallow"
+            }
+          ]
+        },
+        {
+          "id": "T01.7",
+          "speaker": "nana",
+          "caption": "tut.T01.7",
+          "icon": "tool_mop",
+          "complete": {
+            "type": "room_reset",
+            "room": "A"
+          },
+          "hint": [
+            "strip:A",
+            "st:hamper",
+            "dock:mop:0",
+            "mess:A",
+            "st:linen",
+            "make:A"
+          ],
+          "auto": [
+            {
+              "op": "set_room",
+              "room": "A",
+              "bed": "Made",
+              "mess": 0
+            },
+            {
+              "op": "note",
+              "what": "hamper"
+            }
+          ]
+        },
+        {
+          "id": "T01.8",
+          "speaker": "gus",
+          "caption": "tut.T01.8",
+          "icon": "sys_bell",
+          "complete": {
+            "type": "bell"
+          },
+          "hint": [
+            "bell"
+          ],
+          "auto": [
+            {
+              "op": "ring"
+            }
+          ]
+        }
       ]
     },
     {
-      "id": "T02", "layout": "P2", "systems": ["core", "thermal"], "assignable": ["A", "B"],
-      "cast": ["nana", "flurry", "cinder", "dot"], "final_caption": "tut.T02.final",
+      "id": "T02",
+      "layout": "P2",
+      "systems": [
+        "core",
+        "thermal"
+      ],
+      "assignable": [
+        "A",
+        "B"
+      ],
+      "cast": [
+        "nana",
+        "flurry",
+        "cinder",
+        "dot"
+      ],
+      "final_caption": "tut.T02.final",
       "init": [],
       "steps": [
-        {"id": "T02.1", "speaker": "dot", "caption": "tut.T02.1", "icon": "sys_inspect",
-         "ops": [{"op": "spawn_guest", "tag": "flurry", "fam": "yeti", "variant": "flurry"},
-                 {"op": "spawn_guest", "tag": "cinder", "fam": "dragon", "variant": "cinder"}],
-         "complete": {"type": "inspect"}, "hint": ["inspect"], "auto": []},
-        {"id": "T02.2", "speaker": "nana", "caption": "tut.T02.2", "icon": "item_ticket",
-         "complete": {"type": "rooms_filled", "rooms": ["A", "B"]}, "hint": ["ped:0", "ped:1", "plaque:A", "plaque:B"],
-         "auto": [{"op": "assign", "tag": "flurry", "room": "A"}, {"op": "assign", "tag": "cinder", "room": "B"}]},
-        {"id": "T02.3", "speaker": "nana", "caption": "tut.T02.3", "icon": "sys_thermo", "pace": 500,
-         "complete": {"type": "guests_comfy", "tags": ["flurry", "cinder"], "streak": 6}, "hint": ["thermo:A", "thermo:B"],
-         "auto": [{"op": "fix_thermostats"}]},
-        {"id": "T02.4", "speaker": "nana", "caption": "tut.T02.4", "icon": "sys_gate",
-         "ops": [{"op": "cloud", "position": [8, 8]}],
-         "complete": {"type": "gate_closed", "edge": "AB"}, "hint": ["gate:AB"],
-         "auto": [{"op": "gate", "edge": "AB", "open": false}]},
-        {"id": "T02.5", "speaker": "gus", "caption": "tut.T02.5", "icon": "tool_breezer",
-         "complete": {"type": "no_clouds"}, "hint": ["dock:breezer:0", "cloud"],
-         "auto": [{"op": "clear_clouds"}]},
-        {"id": "T02.6", "speaker": "nana", "caption": "tut.T02.6", "icon": "sys_frost",
-         "ops": [{"op": "frost", "room": "C"}],
-         "complete": {"type": "frost_cleared", "room": "C"}, "hint": ["frost:C"],
-         "auto": [{"op": "unfrost", "room": "C"}]},
-        {"id": "T02.7", "speaker": "dot", "caption": "tut.T02.7", "icon": "sys_bell",
-         "complete": {"type": "bell"}, "hint": ["bell"], "auto": [{"op": "ring"}]}
+        {
+          "id": "T02.1",
+          "speaker": "dot",
+          "caption": "tut.T02.1",
+          "icon": "sys_inspect",
+          "ops": [
+            {
+              "op": "spawn_guest",
+              "tag": "flurry",
+              "fam": "yeti",
+              "variant": "flurry"
+            },
+            {
+              "op": "spawn_guest",
+              "tag": "cinder",
+              "fam": "dragon",
+              "variant": "cinder"
+            }
+          ],
+          "complete": {
+            "type": "inspect"
+          },
+          "hint": [
+            "inspect"
+          ],
+          "auto": []
+        },
+        {
+          "id": "T02.2",
+          "speaker": "nana",
+          "caption": "tut.T02.2",
+          "icon": "item_ticket",
+          "complete": {
+            "type": "rooms_filled",
+            "rooms": [
+              "A",
+              "B"
+            ]
+          },
+          "hint": [
+            "ped:0",
+            "ped:1",
+            "plaque:A",
+            "plaque:B"
+          ],
+          "auto": [
+            {
+              "op": "assign",
+              "tag": "flurry",
+              "room": "A"
+            },
+            {
+              "op": "assign",
+              "tag": "cinder",
+              "room": "B"
+            }
+          ]
+        },
+        {
+          "id": "T02.3",
+          "speaker": "nana",
+          "caption": "tut.T02.3",
+          "icon": "sys_thermo",
+          "pace": 500,
+          "complete": {
+            "type": "guests_comfy",
+            "tags": [
+              "flurry",
+              "cinder"
+            ],
+            "streak": 6
+          },
+          "hint": [
+            "thermo:A",
+            "thermo:B"
+          ],
+          "auto": [
+            {
+              "op": "fix_thermostats"
+            }
+          ]
+        },
+        {
+          "id": "T02.4",
+          "speaker": "nana",
+          "caption": "tut.T02.4",
+          "icon": "sys_gate",
+          "ops": [
+            {
+              "op": "cloud",
+              "position": [
+                8,
+                8
+              ]
+            }
+          ],
+          "complete": {
+            "type": "gate_closed",
+            "edge": "AB"
+          },
+          "hint": [
+            "gate:AB"
+          ],
+          "auto": [
+            {
+              "op": "gate",
+              "edge": "AB",
+              "open": false
+            }
+          ]
+        },
+        {
+          "id": "T02.5",
+          "speaker": "gus",
+          "caption": "tut.T02.5",
+          "icon": "tool_breezer",
+          "complete": {
+            "type": "no_clouds"
+          },
+          "hint": [
+            "dock:breezer:0",
+            "cloud"
+          ],
+          "auto": [
+            {
+              "op": "clear_clouds"
+            }
+          ]
+        },
+        {
+          "id": "T02.6",
+          "speaker": "nana",
+          "caption": "tut.T02.6",
+          "icon": "sys_frost",
+          "ops": [
+            {
+              "op": "frost",
+              "room": "C"
+            }
+          ],
+          "complete": {
+            "type": "frost_cleared",
+            "room": "C"
+          },
+          "hint": [
+            "frost:C"
+          ],
+          "auto": [
+            {
+              "op": "unfrost",
+              "room": "C"
+            }
+          ]
+        },
+        {
+          "id": "T02.7",
+          "speaker": "dot",
+          "caption": "tut.T02.7",
+          "icon": "sys_bell",
+          "complete": {
+            "type": "bell"
+          },
+          "hint": [
+            "bell"
+          ],
+          "auto": [
+            {
+              "op": "ring"
+            }
+          ]
+        }
       ]
     },
     {
-      "id": "T03", "layout": "P3", "systems": ["core", "thermal", "sound"], "assignable": ["A", "D"],
-      "cast": ["nana", "whisp", "luna"], "final_caption": "tut.T03.final",
+      "id": "T03",
+      "layout": "P3",
+      "systems": [
+        "core",
+        "thermal",
+        "sound"
+      ],
+      "assignable": [
+        "A",
+        "D"
+      ],
+      "cast": [
+        "nana",
+        "whisp",
+        "luna"
+      ],
+      "final_caption": "tut.T03.final",
       "init": [],
       "steps": [
-        {"id": "T03.1", "speaker": "nana", "caption": "tut.T03.1", "icon": "fam_ghost",
-         "ops": [{"op": "spawn_guest", "tag": "whisp", "fam": "ghost", "variant": "whisp"},
-                 {"op": "spawn_guest", "tag": "luna", "fam": "moonwolf", "variant": "luna"}],
-         "complete": {"type": "guests_in_rooms", "tags": ["whisp", "luna"]}, "hint": ["ped:0", "ped:1", "plaque:A", "plaque:D"],
-         "auto": [{"op": "assign", "tag": "whisp", "room": "A"}, {"op": "assign", "tag": "luna", "room": "D"}]},
-        {"id": "T03.2", "speaker": "luna", "caption": "tut.T03.2", "icon": "sys_note",
-         "ops": [{"op": "howl", "tag": "luna"}],
-         "complete": {"type": "howl_landed"}, "hint": ["inspect"], "auto": []},
-        {"id": "T03.3", "speaker": "nana", "caption": "tut.T03.3", "icon": "item_curtain",
-         "complete": {"type": "curtain_any", "rooms": ["A", "D"]}, "hint": ["st:return", "hang:A", "hang:D"],
-         "auto": [{"op": "curtain", "room": "D"}]},
-        {"id": "T03.4", "speaker": "nana", "caption": "tut.T03.4", "icon": "sys_bell",
-         "complete": {"type": "quiet_howl", "tag": "whisp"}, "hint": ["bell"],
-         "on_bell": [{"op": "howl", "tag": "luna"}], "auto": [{"op": "howl", "tag": "luna"}]},
-        {"id": "T03.5", "speaker": "whisp", "caption": "tut.T03.5", "icon": "sys_ping",
-         "ops": [{"op": "force_request", "tag": "whisp", "kind": "towel"}],
-         "complete": {"type": "ping_and_delivery", "tag": "whisp"}, "hint": ["st:towels", "guest:whisp"],
-         "auto": [{"op": "fulfill", "tag": "whisp"}, {"op": "note", "what": "ping"}]},
-        {"id": "T03.6", "speaker": "nana", "caption": "tut.T03.6", "icon": "sys_bell", "preset_choice": true,
-         "complete": {"type": "bell"}, "hint": ["bell"], "auto": [{"op": "ring"}]}
+        {
+          "id": "T03.1",
+          "speaker": "nana",
+          "caption": "tut.T03.1",
+          "icon": "fam_ghost",
+          "ops": [
+            {
+              "op": "spawn_guest",
+              "tag": "whisp",
+              "fam": "ghost",
+              "variant": "whisp"
+            },
+            {
+              "op": "spawn_guest",
+              "tag": "luna",
+              "fam": "moonwolf",
+              "variant": "luna"
+            }
+          ],
+          "complete": {
+            "type": "guests_in_rooms",
+            "tags": [
+              "whisp",
+              "luna"
+            ]
+          },
+          "hint": [
+            "ped:0",
+            "ped:1",
+            "plaque:A",
+            "plaque:D"
+          ],
+          "auto": [
+            {
+              "op": "assign",
+              "tag": "whisp",
+              "room": "A"
+            },
+            {
+              "op": "assign",
+              "tag": "luna",
+              "room": "D"
+            }
+          ]
+        },
+        {
+          "id": "T03.2",
+          "speaker": "luna",
+          "caption": "tut.T03.2",
+          "icon": "sys_note",
+          "ops": [
+            {
+              "op": "howl",
+              "tag": "luna"
+            }
+          ],
+          "complete": {
+            "type": "howl_landed"
+          },
+          "hint": [
+            "inspect"
+          ],
+          "auto": []
+        },
+        {
+          "id": "T03.3",
+          "speaker": "nana",
+          "caption": "tut.T03.3",
+          "icon": "item_curtain",
+          "complete": {
+            "type": "curtain_any",
+            "rooms": [
+              "A",
+              "D"
+            ]
+          },
+          "hint": [
+            "st:return",
+            "hang:A",
+            "hang:D"
+          ],
+          "auto": [
+            {
+              "op": "curtain",
+              "room": "D"
+            }
+          ]
+        },
+        {
+          "id": "T03.4",
+          "speaker": "nana",
+          "caption": "tut.T03.4",
+          "icon": "sys_bell",
+          "complete": {
+            "type": "quiet_howl",
+            "tag": "whisp"
+          },
+          "hint": [
+            "bell"
+          ],
+          "on_bell": [
+            {
+              "op": "howl",
+              "tag": "luna"
+            }
+          ],
+          "auto": [
+            {
+              "op": "howl",
+              "tag": "luna"
+            }
+          ]
+        },
+        {
+          "id": "T03.5",
+          "speaker": "whisp",
+          "caption": "tut.T03.5",
+          "icon": "sys_ping",
+          "ops": [
+            {
+              "op": "force_request",
+              "tag": "whisp",
+              "kind": "towel"
+            }
+          ],
+          "complete": {
+            "type": "ping_and_delivery",
+            "tag": "whisp"
+          },
+          "hint": [
+            "st:towels",
+            "guest:whisp"
+          ],
+          "auto": [
+            {
+              "op": "fulfill",
+              "tag": "whisp"
+            },
+            {
+              "op": "note",
+              "what": "ping"
+            }
+          ]
+        },
+        {
+          "id": "T03.6",
+          "speaker": "nana",
+          "caption": "tut.T03.6",
+          "icon": "sys_bell",
+          "preset_choice": true,
+          "complete": {
+            "type": "bell"
+          },
+          "hint": [
+            "bell"
+          ],
+          "auto": [
+            {
+              "op": "ring"
+            }
+          ]
+        }
       ]
     }
   ]

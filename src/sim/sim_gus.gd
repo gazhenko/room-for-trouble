@@ -10,8 +10,11 @@ static func step(sim: HotelSim) -> void:
 	var gus: Dictionary = sim.s["gus"]
 	if not gus.has("x"):
 		var home: Vector2i = sim.L.fixtures["linen_shelf"]
+		# Gus folds on the lane side of the shelf, whichever hall edge it is on.
+		var hall_mid := float(sim.L.hall.position.y) + (sim.L.hall.size.y - 1) * 0.5
+		var toward := -1 if float(home.y) > hall_mid else 1
 		gus["x"] = home.x * SimC.UM
-		gus["z"] = (home.y + 1) * SimC.UM - 350_000
+		gus["z"] = home.y * SimC.UM + toward * 650_000
 		gus["home"] = [gus["x"], gus["z"]]
 	var task: Dictionary = gus["task"]
 	if not task.is_empty():

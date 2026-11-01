@@ -1566,8 +1566,8 @@
       "id": "L17",
       "title": "The Other Side",
       "chapter": 5,
-      "layout": "P5",
-      "duration_hotel_s": 345,
+      "layout": "P5v2",
+      "duration_hotel_s": 260,
       "waves": [
         {
           "roster": [
@@ -1606,7 +1606,7 @@
       "events": [
         {
           "id": "L17_shutter",
-          "at": 45,
+          "at": 34,
           "type": "shutter_cycle",
           "warning_s": 0,
           "args": {
@@ -1617,7 +1617,7 @@
         },
         {
           "id": "L17_route_coach",
-          "at": 40,
+          "at": 30,
           "type": "coach",
           "warning_s": 0,
           "args": {
@@ -1658,14 +1658,24 @@
           "label": "A Way Through"
         }
       ],
-      "required_goal_ids": []
+      "required_goal_ids": [],
+      "pacing": {
+        "first_s": 4,
+        "gap_s": 14,
+        "announce_s": 3,
+        "reserve_s": 110
+      },
+      "stay_s": 50,
+      "patience_s": 45,
+      "request_s": 20,
+      "linen_start": 3
     },
     {
       "id": "L18",
       "title": "Express-ish Delivery",
       "chapter": 5,
-      "layout": "P5",
-      "duration_hotel_s": 345,
+      "layout": "P5v2",
+      "duration_hotel_s": 260,
       "waves": [
         {
           "roster": [
@@ -1705,7 +1715,7 @@
       "events": [
         {
           "id": "L18_lift_coach",
-          "at": 0,
+          "at": 8,
           "type": "coach",
           "warning_s": 0,
           "args": {
@@ -1715,7 +1725,7 @@
         },
         {
           "id": "L18_shutter",
-          "at": 45,
+          "at": 34,
           "type": "shutter_cycle",
           "warning_s": 0,
           "args": {
@@ -1726,7 +1736,7 @@
         },
         {
           "id": "L18_trip_lift",
-          "at": 145,
+          "at": 109,
           "type": "fixture_trip",
           "warning_s": 5,
           "args": {
@@ -1766,14 +1776,24 @@
           "label": "Unpacked"
         }
       ],
-      "required_goal_ids": []
+      "required_goal_ids": [],
+      "pacing": {
+        "first_s": 4,
+        "gap_s": 14,
+        "announce_s": 3,
+        "reserve_s": 110
+      },
+      "stay_s": 50,
+      "patience_s": 45,
+      "request_s": 20,
+      "linen_start": 3
     },
     {
       "id": "L19",
       "title": "A Change of View",
       "chapter": 5,
-      "layout": "P5",
-      "duration_hotel_s": 360,
+      "layout": "P5v2",
+      "duration_hotel_s": 270,
       "waves": [
         {
           "roster": [
@@ -1814,7 +1834,7 @@
       "events": [
         {
           "id": "L19_shutter",
-          "at": 45,
+          "at": 34,
           "type": "shutter_cycle",
           "warning_s": 0,
           "args": {
@@ -1825,7 +1845,7 @@
         },
         {
           "id": "L19_view_notice",
-          "at": 80,
+          "at": 60,
           "type": "announce",
           "warning_s": 0,
           "args": {
@@ -1835,7 +1855,7 @@
         },
         {
           "id": "L19_heat_B",
-          "at": 130,
+          "at": 98,
           "type": "thermal_pulse",
           "warning_s": 5,
           "args": {
@@ -1876,14 +1896,24 @@
           "label": "Room to Adapt"
         }
       ],
-      "required_goal_ids": []
+      "required_goal_ids": [],
+      "pacing": {
+        "first_s": 4,
+        "gap_s": 13,
+        "announce_s": 3,
+        "reserve_s": 110
+      },
+      "stay_s": 50,
+      "patience_s": 45,
+      "request_s": 20,
+      "linen_start": 3
     },
     {
       "id": "L20",
       "title": "The Big Little Delivery",
       "chapter": 5,
-      "layout": "P6",
-      "duration_hotel_s": 360,
+      "layout": "P6v2",
+      "duration_hotel_s": 270,
       "waves": [
         {
           "roster": [
@@ -1923,28 +1953,28 @@
       "events": [
         {
           "id": "L20_trunk_1",
-          "at": 15,
+          "at": 11,
           "type": "trunk_spawn",
           "warning_s": 0,
           "args": {
             "object_id": "trunk_L20_a",
             "position": [
               2,
-              11
+              6
             ],
             "goal": "festival_stand"
           }
         },
         {
           "id": "L20_trunk_2",
-          "at": 155,
+          "at": 116,
           "type": "trunk_spawn",
           "warning_s": 0,
           "args": {
             "object_id": "trunk_L20_b",
             "position": [
               6,
-              11
+              6
             ],
             "goal": "festival_stand"
           }
@@ -1985,7 +2015,17 @@
       "required_goal_ids": [
         "trunk_L20_a",
         "trunk_L20_b"
-      ]
+      ],
+      "pacing": {
+        "first_s": 4,
+        "gap_s": 13,
+        "announce_s": 3,
+        "reserve_s": 110
+      },
+      "stay_s": 50,
+      "patience_s": 45,
+      "request_s": 20,
+      "linen_start": 3
     },
     {
       "id": "L21",

@@ -28,7 +28,10 @@ dragon or yeti), a sprout's watering as a step on its card, festival trunks as j
 both handles, lane hazards you can see (steam that slows, frost and puddles that slide, howls that
 startle), a lift with a car that sinks and rises, a per-chapter light from late morning to a
 lantern-lit festival night, and continuous arrivals with the first guest at four seconds. A shift
-still never fails. The design is in `docs/DESIGN_V2.md`; decisions D31–D53 in `DECISIONS.md`.
+still never fails. The HUD keeps a readability floor for a 7" screen, every new sound has a cue,
+a caption and a sound mark, and the title wears a proper lockup over the v2 hotel; "What's new in
+2.0" in the main menu lists the changes. The design is in `docs/DESIGN_V2.md`; decisions D31–D57
+in `DECISIONS.md`.
 
 ## What's in the game
 

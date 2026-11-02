@@ -142,6 +142,9 @@ func open_scrapbook() -> void:
 func open_credits() -> void:
 	push(CreditsScreen.new())
 
+func open_whats_new() -> void:
+	push(WhatsNewScreen.new())
+
 func open_wardrobe() -> void:
 	push(WardrobeScreen.new())
 

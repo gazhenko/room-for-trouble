@@ -35,27 +35,16 @@ func _process(dt: float) -> void:
 	queue_redraw()
 
 func _draw() -> void:
-	var c := Vector2(size.x * 0.5, size.y * 0.36)
+	var c := Vector2(size.x * 0.5, size.y * 0.34)
 	var f := UiKit.font()
-	# Luggage-label logo.
-	var w := 620.0
-	var h := 170.0
-	var tilt := 0.0 if Settings.g("reduced_motion") else sin(_t * 0.8) * 0.012
-	draw_set_transform(c, tilt, Vector2.ONE)
-	var r := Rect2(Vector2(-w * 0.5, -h * 0.5), Vector2(w, h))
-	draw_rect(Rect2(r.position + Vector2(6, 10), r.size), UiKit.SHADOW)
-	draw_style_box(UiKit._box(UiKit.PAPER, UiKit.WALNUT, 5, 18, 0), r)
-	draw_style_box(UiKit._box(Color(0, 0, 0, 0), UiKit.CORAL, 3, 12, 0), r.grow(-12))
-	draw_circle(Vector2(-w * 0.5 + 34, 0), 13, UiKit.WALNUT)
-	draw_circle(Vector2(-w * 0.5 + 34, 0), 8, UiKit.CREAM)
-	var title := Loc.t("ui.title.name")
-	var tw := f.get_string_size(title, HORIZONTAL_ALIGNMENT_LEFT, -1, 64).x
-	draw_string_outline(f, Vector2(-tw * 0.5 + 30, 18), title, HORIZONTAL_ALIGNMENT_LEFT, -1, 64, 10, UiKit.CREAM)
-	draw_string(f, Vector2(-tw * 0.5 + 30, 18), title, HORIZONTAL_ALIGNMENT_LEFT, -1, 64, UiKit.INK)
+	# The lockup (LogoLockup): label, two wordmark bands, bunting, bell, edition.
+	var sc := clampf(minf(size.x / 1280.0, size.y / 720.0), 0.6, 1.25)
+	LogoLockup.draw(self, c, sc, _t)
 	var sub := Loc.t("ui.title.tagline")
-	var sw := f.get_string_size(sub, HORIZONTAL_ALIGNMENT_LEFT, -1, 24).x
-	draw_string(f, Vector2(-sw * 0.5 + 16, 62), sub, HORIZONTAL_ALIGNMENT_LEFT, -1, 24, UiKit.CORAL.darkened(0.35))
-	draw_set_transform(Vector2.ZERO, 0, Vector2.ONE)
+	var sw := f.get_string_size(sub, HORIZONTAL_ALIGNMENT_LEFT, -1, 26).x
+	var sr := Rect2(Vector2(c.x - sw * 0.5 - 18, c.y + 128 * sc), Vector2(sw + 36, 40))
+	draw_style_box(UiKit._box(Color(UiKit.PAPER, 0.92), UiKit.WALNUT, 2, 10, 0), sr)
+	draw_string(f, Vector2(c.x - sw * 0.5, sr.position.y + 28), sub, HORIZONTAL_ALIGNMENT_LEFT, -1, 26, UiKit.CORAL.darkened(0.35))
 	var blink := 1.0 if Settings.g("reduced_motion") else (0.55 + 0.45 * absf(sin(_t * 2.0)))
 	var press := Loc.t("ui.title.press")
 	var pw := f.get_string_size(press, HORIZONTAL_ALIGNMENT_LEFT, -1, 26).x

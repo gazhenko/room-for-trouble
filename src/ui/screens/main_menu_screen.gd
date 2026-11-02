@@ -13,7 +13,9 @@ func _build_main() -> void:
 		c.queue_free()
 	_first_focus = null
 	var v := card("", 520)
-	v.add_child(UiKit.title(Loc.t("ui.title.name"), 40))
+	# The lockup heads the card; the tagline sits under it like a postcard caption.
+	v.add_child(LogoLockup.header(0.56))
+	v.add_child(UiKit.label(Loc.t("ui.title.tagline"), 20, UiKit.CORAL.darkened(0.35), HORIZONTAL_ALIGNMENT_CENTER))
 	var susp: Dictionary = SaveService.profile.get("suspended_shift", {})
 	if not susp.is_empty():
 		add_button(v, Loc.t("ui.menu.resume"), "sys_clock", func():
@@ -24,6 +26,7 @@ func _build_main() -> void:
 	add_button(v, Loc.t("ui.menu.playground"), "ui_playground", func(): Session.start_lobby("playground"))
 	add_button(v, Loc.t("ui.menu.settings"), "ui_settings", func(): Session.open_settings())
 	add_button(v, Loc.t("ui.menu.scrapbook"), "ui_scrapbook", func(): Session.open_scrapbook())
+	add_button(v, Loc.t("ui.menu.whats_new"), "sys_star", func(): Session.open_whats_new())
 	add_button(v, Loc.t("ui.menu.credits"), "ui_credits", func(): Session.open_credits())
 	if DevOverlay.enabled():
 		add_button(v, "Developer tools", "sys_help", func():

@@ -310,3 +310,38 @@ the right end of the order rail: the trunk, its two handles with the portrait of
 each, a cue ("Grab a handle" / "Two carry it faster" / "To the stand!") and the way left to the
 stand as the bar. Two carriers move a trunk at 3 m/s against 1.4 alone (§5.6), so the half-held
 state says so.
+
+**D54 — A readability floor for the HUD, and a rail that wraps.** Judged for a 7" 1280×800 panel
+at UI scale 100%: no HUD text under 14 px (Pixelify caps are about 0.7 em, so 14 px is the ~10 px
+glyph floor) and no state icon under 14 px. That raised seat tags (12→14, a wider tag), the
+temper and water badges on cards, held chips and guest bubbles (11/13→14/16), the step check
+marks, the card sub-line and tips (13→14), the inspect panel's second column (12→14) and the
+trunk card's cue (own line under the icon). At UI scales where fewer than four cards fit before
+the clock (175% leaves one), the rail wraps to a second row rather than hiding guests behind a
+"+N"; finished-order cards slide out under the last row. UI01 starts a four-player L24 shift at
+175% and checks that the rail, clock, objective and portraits stay on screen and apart.
+
+**D55 — Accessibility holds for the v2 additions.** Reduced motion gates the new juice (no Quick
+Step stretch, a lean only; the item pop becomes a nudge; half the particles; sound-mark rings
+grow less). Hazards do not rely on hue: puddles carry a dark rim and ripple rings, frost patches a
+rim and white crystals, steam keeps its sock-cloud shape; high contrast darkens the rims and the
+lockup's inks, and icons already come in the colour-vision palettes. Captions ("(whoa: a frosty
+slide)", "(chilled at the open vent)" …) and sound marks, a ring with the event's icon at its
+source, cover slip, startle, temper at the pump, the vent and the helper, watering and trunk
+handles and deliveries; `sound_visuals` finally drives something.
+
+**D56 — One short cue per new verb; music follows the cards.** Counter put/take (wood), temper
+(breath + celesta), vent (air through slats + glockenspiel), trunk grab (latch + heft + squeak),
+slip (falling whistle under a bell), startle (rising yip + knock), order served (four celesta
+notes up the motif) and order late (three marimba notes settling back), all procedural in
+`tools/audio/sfx.py` and rebuilt byte-identically with the rest. The music layer goes up a step
+when a card enters the last third of its lobby patience or request window, and to busy at two,
+independent of the wave count.
+
+**D57 — A title lockup and a "What's new".** `LogoLockup` draws the luggage label (brass eyelet,
+ROOM FOR on a walnut band, TROUBLE in coral with a pixel shadow, six family pennants as bunting,
+the bell, a "Version 2" tag) with the UI kit, so palettes and high contrast apply; the title uses
+it at 1.0, the main menu and hub menu as their header. The title and menu backdrop is the v2
+hotel (P1v2 behind the title, P6v2 behind the menus), with everyone placed from the layout. A
+"What's new in 2.0" page lists the changes from the main menu and the hub menu, and UI01 walks
+it like any other screen.

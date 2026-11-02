@@ -118,7 +118,9 @@ func _process(dt: float) -> void:
 	super._process(dt)
 
 func open_pause(router_seat := 0) -> void:
-	# The hub's pause button opens the conventional hub menu.
+	# The hub's pause button opens the conventional hub menu; Nana's greeting
+	# would otherwise sit across its lower buttons.
+	captions.clear()
 	_menu(func(): Session.push(HubMenu.new()))
 
 func _finish() -> void:

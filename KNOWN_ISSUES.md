@@ -39,6 +39,15 @@ than it is.
 - **The lift car is a view-side animation.** The simulation still teleports the item or rider
   after the transit time; the cage sinking and rising is derived from the lift state, so a
   player who steps onto the arriving pad early sees the car come up under their feet.
+- **Readability was judged on renders, not on the Deck.** The HUD floor (14 px text and icons at
+  UI scale 100%, D54) was set from 1280×800 frames read as a 7" panel; the Deck itself is still
+  unmeasured. At UI scale 175% the order rail shows two rows of one card each (plus "+N"); the
+  cards do not shrink.
+- **Sound marks and captions cover the listed v2 events** (slip, startle, temper, vent, water,
+  trunk); pass-counter put/take and the Quick Step have cues but no caption, by design (they
+  would caption every few seconds).
+- **The title lockup's wordmark is English** ("ROOM FOR" / "TROUBLE" are two separate strings);
+  a translation gets the same two bands.
 - **Walking share.** Even with instant take/put, roughly 70% of a job is still walking on the
   v2 floors (hands-on steps are 0.2–1.7 s); the warm/chill middle step is the lever that adds
   hands-on time without adding waiting.

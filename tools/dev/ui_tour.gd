@@ -32,12 +32,16 @@ func _ready() -> void:
 		["opening_5", func():
 			for i in 4: Session.screen._next()],
 		["hub", func(): Session.show_hub()],
+		["hub_menu", func():
+			Session.show_hub()
+			Session.screen.open_pause(0)],
 		["shift_select", func(): Session.open_shift_select()],
 		["quick", func(): Session.open_quick_shift()],
 		["settings", func(): Session.open_settings()],
 		["scrapbook", func(): Session.open_scrapbook()],
 		["wardrobe", func(): Session.open_wardrobe()],
 		["credits", func(): Session.open_credits()],
+		["whats_new", func(): Session.open_whats_new()],
 		["licences", func():
 			Session.open_credits()
 			Session.screen._licences(Session.screen.body_box)],

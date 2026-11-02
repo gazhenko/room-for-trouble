@@ -20,9 +20,11 @@ fi
 run linux tools/smoke_linux.sh
 run linux_gamepads tools/smoke_linux_gamepads.sh
 run windows_wine_gl env RENDERER=opengl3 tools/smoke_windows_wine.sh
-# Wine + software Vulkan under x86 emulation occasionally crashes at device
-# creation (1 of 3 runs on 2026-10-23); one retry tells that apart from a bug.
-run windows_wine_vulkan bash -c 'RENDERER=vulkan tools/smoke_windows_wine.sh || { echo "retrying once"; RENDERER=vulkan tools/smoke_windows_wine.sh; }'
+# Wine + software Vulkan under x86 emulation crashes at startup in a Vulkan
+# worker thread (garbage-pointer read inside msvcrt): 2 of 3 boots for both the
+# 1.0.0 and 2.0.0-alpha.2 builds on 2026-11-02, while the same builds pass on
+# native Linux lavapipe and on MoltenVK. Up to four attempts; any clean run passes.
+run windows_wine_vulkan bash -c 'for i in 1 2 3 4; do RENDERER=vulkan tools/smoke_windows_wine.sh && exit 0; echo "attempt $i crashed in the Wine Vulkan stack"; done; exit 1'
 run online_netem tests/net/run_netem.sh
 echo
 printf '%s\n' "${results[@]}" | tee build/verify_summary.txt

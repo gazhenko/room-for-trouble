@@ -46,14 +46,15 @@ mv "$tmp/game" "$DEST"
 rm -rf "$DEST.old"
 echo "Installed $(head -2 "$DEST/VERSION.txt" | tr '\n' ' ')to $DEST"
 
-# Desktop Mode menu entry.
+# Use the same launcher for the desktop entry and Steam, so adding the desktop
+# entry to Steam does not create a second shortcut targeting the raw executable.
 mkdir -p "$HOME/.local/share/applications"
 cat > "$HOME/.local/share/applications/room-for-trouble.desktop" <<EOF
 [Desktop Entry]
 Type=Application
 Name=$NAME
 Comment=Cozy co-op monster hotel
-Exec=$DEST/RoomForTrouble.x86_64
+Exec="$DEST/$NAME"
 Path=$DEST
 Icon=$DEST/steam/icon.png
 Categories=Game;

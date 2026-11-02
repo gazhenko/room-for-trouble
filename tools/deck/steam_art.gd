@@ -6,8 +6,10 @@ extends Node
 ## logo: Steam draws logo.png over it) and logo.png (transparent), plus icon.png.
 
 const SIZES := {"capsule": Vector2i(600, 900), "wide": Vector2i(920, 430), "hero": Vector2i(1920, 620)}
-# The title draws its label centred at 36% height, 620×170 plus a drop shadow.
-const LOGO_RECT := Rect2i(322, 166, 642, 196)
+# The lockup drawn at the centre of a 1280×720 canvas: the label, its drop
+# shadow, the eyelet string on the left and the pennants below.
+const LOGO_RECT := Rect2i(640 - int(LogoLockup.W * 0.5) - 44, 360 - int(LogoLockup.H * 0.5) - 8,
+	int(LogoLockup.W) + 64, int(LogoLockup.H) + 40)
 var out := "build/steam_art"
 
 func _ready() -> void:
@@ -43,7 +45,7 @@ func _ready() -> void:
 	print("steam art: ", dir)
 	get_tree().quit(0)
 
-## The title's own label, drawn at 2× into a transparent viewport and cropped.
+## The title's lockup, drawn at 2× into a transparent viewport and cropped.
 func _logo() -> Image:
 	var vp := SubViewport.new()
 	vp.transparent_bg = true
@@ -52,9 +54,10 @@ func _logo() -> Image:
 	vp.size_2d_override_stretch = true
 	vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	add_child(vp)
-	var t := TitleScreen.new()
-	t.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	vp.add_child(t)
+	var c := Control.new()
+	c.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	c.draw.connect(func(): LogoLockup.draw(c, Vector2(640, 360), 1.0, 0.0, true))
+	vp.add_child(c)
 	await _wait(0.3)
 	var img := vp.get_texture().get_image()
 	img.convert(Image.FORMAT_RGBA8)

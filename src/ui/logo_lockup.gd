@@ -34,10 +34,17 @@ static func draw(ci: CanvasItem, center: Vector2, scale: float, t: float, editio
 	var top := Loc.t("ui.title.top")
 	var tw := f.get_string_size(top, HORIZONTAL_ALIGNMENT_LEFT, -1, 28).x
 	ci.draw_string(f, Vector2(band.get_center().x - tw * 0.5, band.position.y + 30), top, HORIZONTAL_ALIGNMENT_LEFT, -1, 28, UiKit.CREAM)
-	# Band two: TROUBLE, coral with a pixel drop shadow and an ink outline.
+	# Band two: TROUBLE, coral with a pixel drop shadow and an ink outline. With
+	# the edition tag in the bottom-right corner, it centres in the space left of it.
+	var ed := Loc.t("ui.title.edition")
+	var ew := f.get_string_size(ed, HORIZONTAL_ALIGNMENT_LEFT, -1, 18).x
+	var er := Rect2(Vector2(W * 0.5 - ew - 48, H * 0.5 - 44), Vector2(ew + 26, 30))
 	var main := Loc.t("ui.title.main")
 	var mw := f.get_string_size(main, HORIZONTAL_ALIGNMENT_LEFT, -1, 86).x
-	var mp := Vector2(band.get_center().x - mw * 0.5, 64)
+	var mid := band.get_center().x
+	if edition:
+		mid = minf(mid, (band.position.x + er.position.x - 14) * 0.5)
+	var mp := Vector2(mid - mw * 0.5, 64)
 	ci.draw_string(f, mp + Vector2(6, 6), main, HORIZONTAL_ALIGNMENT_LEFT, -1, 86, UiKit.WALNUT.darkened(0.25))
 	ci.draw_string_outline(f, mp, main, HORIZONTAL_ALIGNMENT_LEFT, -1, 86, 8, ink)
 	ci.draw_string(f, mp, main, HORIZONTAL_ALIGNMENT_LEFT, -1, 86, UiKit.CORAL.darkened(0.45) if hc else UiKit.CORAL)
@@ -50,9 +57,6 @@ static func draw(ci: CanvasItem, center: Vector2, scale: float, t: float, editio
 		ci.draw_polyline(PackedVector2Array([tri[0], tri[2], tri[1]]), ink, 2.0)
 	UiKit.draw_icon(ci, "sys_bell", Vector2(W * 0.5 - 54, -H * 0.5 + 46), 36)
 	if edition:
-		var ed := Loc.t("ui.title.edition")
-		var ew := f.get_string_size(ed, HORIZONTAL_ALIGNMENT_LEFT, -1, 18).x
-		var er := Rect2(Vector2(W * 0.5 - ew - 48, H * 0.5 - 44), Vector2(ew + 26, 30))
 		ci.draw_style_box(UiKit._box(Art.GOLD, ink if hc else UiKit.WALNUT, 2, 6, 0), er)
 		ci.draw_string(f, er.position + Vector2(13, 21), ed, HORIZONTAL_ALIGNMENT_LEFT, -1, 18, ink)
 	ci.draw_set_transform(Vector2.ZERO, 0, Vector2.ONE)

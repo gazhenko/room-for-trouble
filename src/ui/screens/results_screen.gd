@@ -82,6 +82,10 @@ func _ready() -> void:
 		stats_box.add_child(h)
 	var guests := UiKit.label(Loc.t("ui.res.guests", {"n": int(res.get("admitted", 0)), "of": sched}), 18, UiKit.INK, HORIZONTAL_ALIGNMENT_CENTER)
 	v.add_child(guests)
+	# A roster the rooms could not have turned over in time was trimmed before
+	# the shift (ArrivalPlan.schedule); say so, or "they never showed" is the read.
+	if int(res.get("trimmed", 0)) > 0:
+		v.add_child(UiKit.label(Loc.t("ui.res.trimmed", {"n": int(res["trimmed"])}), 15, Color("#7A7268"), HORIZONTAL_ALIGNMENT_CENTER))
 	var rb_box := UiKit.vbox(4)
 	v.add_child(rb_box)
 	for rb in res.get("ribbons", []):

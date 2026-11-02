@@ -773,6 +773,7 @@
  "ui.res.service": "Little extras",
  "ui.res.tips": "Tips for speed",
  "ui.res.title": "Look what you made room for",
+ "ui.res.trimmed": "The roster had {n} more, but the rooms could not have turned over in time.",
  "ui.res.try_again": "Try Again",
  "ui.res.unlock": "New outfit: {name}",
  "ui.res.welcome": "Welcome gifts",

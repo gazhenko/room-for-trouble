@@ -24,9 +24,13 @@ than it is.
   family playtests; expect tuning after the owner plays on the Deck (tips weight, request
   windows, chapter density).
 - **Story scenes are mapped, not re-authored.** Actors and cameras are authored on the classic
-  28×20 floor and mapped onto the v2 floors at load (`LayoutDef.classic_to_local`). Close-ups keep
-  their authored framing; a few group shots may place an actor against a station. The content
-  validator warns when a mapped actor would stand in a wall.
+  28×20 floor and staged onto the v2 floors at load (`StoryStaging`, D48): the framing scales with
+  the bigger toys, groups keep their shape, and any hotel station between the camera and a face
+  is hidden for that panel. Every beat passes the frame check (`ui_tour` CHECK lines), but the
+  set behind a close-up is the compact hall, not the classic one: a desk-side chat shows the
+  reception desk behind Nana rather than in front of her, and the lane's counter row can frame
+  the bottom of a shot. The content validator warns when an actor would stand in a wall or a
+  station footprint.
 - **Classic templates P1–P6 remain in the data** only as the authoring frame for scenes and for
   the mirror test; nothing plays on them.
 - **v1 replays and per-level bests are not comparable** with v2 (different floors, pacing and

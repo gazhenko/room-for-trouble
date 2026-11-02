@@ -49,7 +49,7 @@ func _ready() -> void:
 		["tutorial", func(): Session.start_tutorial("T01")],
 		["results", func():
 			var res := {"level": "L06", "percent": 82, "stars": 2, "components": {"admission": 140000, "welcome": 120000, "service": 110000, "comfort": 204000},
-				"scheduled": 7, "admitted": 7, "ribbons": [{"label": "Two Kinds of Cozy", "earned": true, "value": 2, "target": 2}, {"label": "A Little Separation", "earned": false, "value": 1, "target": 2}],
+				"scheduled": 7, "admitted": 7, "roster": 8, "trimmed": 1, "ribbons": [{"label": "Two Kinds of Cozy", "earned": true, "value": 2, "target": 2}, {"label": "A Little Separation", "earned": false, "value": 1, "target": 2}],
 				"staff": ["pip", "moss"], "gus": false, "result_id": "tour"}
 			var rs := ResultsScreen.new()
 			rs.setup(res, {"unlocks": [], "postcard": "", "ribbons": []}, {"mode": "campaign"})

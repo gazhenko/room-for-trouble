@@ -133,7 +133,7 @@ func _on_event(e: Dictionary) -> void:
 			var gid := int(e.get("guest", e.get("id", 0)))
 			var g: Dictionary = s.get("guests", {}).get(gid, {})
 			if not g.is_empty():
-				done_cards.append({"gid": gid, "outcome": "missed" if e["type"] == "guest_cozy" else SimScore.order_outcome(g), "t": 1.6, "fam": g["fam"]})
+				done_cards.append({"gid": gid, "outcome": "missed" if e["type"] == "guest_cozy" else SimScore.order_outcome(g), "t": DONE_CARD_S, "fam": g["fam"]})
 
 func _warn_vars(args: Dictionary) -> Dictionary:
 	var v := {}
@@ -662,6 +662,8 @@ func _draw_top() -> void:
 ## patience, then the open request's window, then the stay.
 const CARD_W := 112.0
 const CARD_H := 70.0
+const DONE_CARD_S := 1.4             # a finished order's card stays this long below the rail
+const DONE_FADE_S := 0.3             # and fades only in its last moment
 
 func _order_cards() -> Array:
 	var cards: Array = []
@@ -760,23 +762,31 @@ func _draw_orders() -> void:
 		var r2 := Rect2(Vector2(x, y + 10), Vector2(44, 48))
 		draw_style_box(UiKit._box(Color("#EFE6D8"), UiKit.WALNUT, 2, 8, 0), r2)
 		draw_string(_font, r2.position + Vector2(8, 32), "+%d" % (cards.size() - shown), HORIZONTAL_ALIGNMENT_LEFT, -1, 20, UiKit.INK)
-	# Finished orders slide out below the rail.
+	# Finished orders slide out below the rail: readable at full strength for a
+	# beat, then gone in a quick fade. A slow linear fade left a translucent grey
+	# slab under the rail for most of the card's life (very visible on the night
+	# floors), and the card is as wide as its label so the text never overruns.
 	var dx := 14.0
 	for c in done_cards:
-		var k2: float = 1.0 - float(c["t"]) / 1.6
-		var cr := Rect2(Vector2(dx, y + CARD_H + 6.0 + k2 * 10.0), Vector2(CARD_W, 26))
-		var a := clampf(1.6 - k2 * 1.6, 0.0, 1.0)
+		var tl: float = c["t"]
+		var a := clampf(tl / DONE_FADE_S, 0.0, 1.0)
+		a = a * a * (3.0 - 2.0 * a)
+		if a < 0.03:
+			continue
+		var k2: float = 1.0 - tl / DONE_CARD_S
+		var t := Loc.t("ui.order." + str(c["outcome"]))
+		var cw := maxf(CARD_W, _font.get_string_size(t, HORIZONTAL_ALIGNMENT_LEFT, -1, 14).x + 38.0)
+		var cr := Rect2(Vector2(dx, y + CARD_H + 6.0 + k2 * 10.0), Vector2(cw, 26))
 		var oc: Color = Color("#8BD17C") if c["outcome"] == "served" else (Art.GOLD if c["outcome"] == "late" else Art.CORAL)
 		oc.a = a
 		var bg := UiKit.PAPER
 		bg.a = a
 		draw_style_box(UiKit._box(bg, oc, 2, 6, 0), cr)
 		UiKit.draw_icon(self, "fam_" + str(c["fam"]), cr.position + Vector2(14, 13), 18, Color(1, 1, 1, a))
-		var t := Loc.t("ui.order." + str(c["outcome"]))
 		var tc := UiKit.INK
 		tc.a = a
 		draw_string(_font, cr.position + Vector2(28, 18), t, HORIZONTAL_ALIGNMENT_LEFT, -1, 14, tc)
-		dx += CARD_W + 8.0
+		dx += cw + 8.0
 
 static func _family_need_icon(fam: String) -> String:
 	match fam:

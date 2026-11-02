@@ -201,8 +201,13 @@ static func team_result(sim: HotelSim) -> Dictionary:
 	for gid in sim.s["guests"]:
 		if sim.s["guests"][gid]["admitted"]:
 			admitted += 1
+	# The roster this party size was dealt, before the schedule dropped guests
+	# that could not have been housed before the reserve (ArrivalPlan.schedule).
+	var roster := 0
+	for wave in ArrivalPlan.expand_waves(sim.level, int(sim.s.get("humans", 1)), sim.L.active_rooms.size()):
+		roster += (wave as Array).size()
 	return {"percent": percent, "stars": stars, "total_milli": total, "components": comp, "guests": per_guest,
-		"scheduled": count, "admitted": admitted, "orders": orders}
+		"scheduled": count, "admitted": admitted, "orders": orders, "roster": roster, "trimmed": maxi(0, roster - count)}
 
 ## Records a speed tip on a guest's order and tells the presentation.
 static func tip(sim: HotelSim, g: Dictionary, amount_milli: int, seat: int, why: String) -> void:

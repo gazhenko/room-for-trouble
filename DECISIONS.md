@@ -242,9 +242,10 @@ item is refused with a reason, and tempered requests get 8 s more window. The pu
 middle of the counter row so the detour stays short.
 
 **D45 — Story scenes stay authored on the classic floor and are mapped at load.**
-`LayoutDef.classic_to_local` maps a classic (28×20) point onto a v2 floor band by band; the story
-player maps actors, props, focus points and the look target of absolute camera presets, keeps the
-authored camera offset for close-ups and shrinks it with the floor for the two wide shots.
+`LayoutDef.classic_to_local` maps a classic (28×20) point onto a v2 floor band by band. How a
+panel is staged around that mapping is D48 (`StoryStaging`): the two wide shots map every
+position floor-wide and shrink the camera offset with the floor; close and group shots map only
+the anchor and keep their composition.
 `validate_content.gd` warns when a mapped actor would stand in a wall.
 
 **D46 — Per-chapter light lives on the template.** A `light` block (sun colour, energy, elevation,
@@ -254,4 +255,20 @@ direction, only the elevation moves. Chapter 1 late morning, 2 noon, 3 dusk, 4 g
 
 **D47 — Arrival density follows the rooms.** Besides the reserve, the arrival gap is at least
 (stay + 8 s) / room cap and rosters that cannot be housed before the reserve are truncated from
-the end (solo on a four-room floor houses 5 of L03's 6 guests). Appendix A is a ceiling.
+the end (solo on a four-room floor houses 5 of L03's 6 guests). Appendix A is a ceiling. The
+results screen says how many were trimmed, so "they never showed" is not the read.
+
+**D48 — Story framing scales with the toys; nothing stands between the camera and a face.**
+Scenes were framed with actors at scale 1.45; the toys are now 2.0. Rather than re-author 87
+panels or give story its own actor scale (a size jump into the shift), `StoryStaging` applies a
+similarity transform about each panel's anchor (the camera's look point, or the focus of a
+relative preset): the composition around the anchor is scaled by the actor-size ratio and the
+camera rig scales about the same ground point, which reproduces the v1 framing exactly. Actors
+are kept on the free lane rows of the compact halls, the whole group slides sideways to stay
+inside the hall, the camera pulls back (never in, at most 1.6×) until every head and face sits
+inside the safe frame (letterbox, caption band, postcard border), and the photo set scales with
+the toys. Hotel stations in the line from the camera to a face are hidden for the panel (story
+sets keep station bodies unmerged); authored props and actors are never hidden. The story owns
+the camera FOV while it is up. The content validator stages beats the same way and warns about
+actors in walls or station footprints; `ui_tour` prints a per-beat CHECK report and every beat
+has to pass it.

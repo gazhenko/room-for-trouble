@@ -243,6 +243,7 @@ UI = {
     "ui.verb.temper_warm": "Warm it up",
     "ui.verb.temper_cool": "Chill it",
     "ui.res.guests": "{n} of {of} guests found a room",
+    "ui.res.trimmed": "The roster had {n} more, but the rooms could not have turned over in time.",
     "ui.res.gus": "Gus lent a hand",
     "ui.res.try_again": "Try Again",
     "ui.res.keep_going": "Keep Going",

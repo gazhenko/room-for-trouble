@@ -5,6 +5,8 @@ extends Node3D
 
 const SEAT_COLORS := [Color("#F2C14E"), Color("#5FB6E8"), Color("#F07AA8"), Color("#8BD17C")]
 const FIXTURE_Y := {"ped": 0.62, "plinth": 0.56, "dock": 0.0, "liftpad": 0.06}
+const LIFT_DROP := 1.3               # how far the lift car sinks into the floor
+var _car_pad := 0                     # pad the lift car waits at between rides
 
 var stage: PixelStage
 var L: LayoutDef
@@ -46,6 +48,7 @@ func build(p_stage: PixelStage, layout: LayoutDef, sys: Dictionary, p_cfg: Dicti
 	fx_root = Node3D.new()
 	fx_root.name = "FX"
 	add_child(fx_root)
+	_build_particle_pools()
 	_build_stations()
 	_build_room_dressing()
 	if not cfg.get("story", false):   # story sets hide single stations in a sightline
@@ -343,8 +346,28 @@ func _sync_stations(dt: float) -> void:
 	_apply("stand", {"enabled": fest, "parcels": parcels, "trunks": trunks})
 	_apply("goal_pad", {"enabled": fest, "active": not s.get("trunks", {}).is_empty()})
 	var lf: Dictionary = s.get("lifts", {})
+	var lift_busy := bool(lf.get("busy", false))
+	if lift_busy:
+		_car_pad = int(lf.get("to", _car_pad))
 	for i in L.lift_pads.size():
-		_apply("lift:%d" % i, {"enabled": systems.has("lift"), "busy": bool(lf.get("busy", false)), "tripped": trips.has("lift_pair")})
+		# One car for the pair: it waits where it last arrived, sinks at the
+		# sending pad over the first 40% of the transit and rises at the other
+		# over the last 40%.
+		var car_on := false
+		var car_y := 0.0
+		if systems.has("lift") and not lf.is_empty():
+			if lift_busy:
+				var k := 1.0 - float(lf.get("t", 0)) / float(SimC.T_LIFT_TRANSIT)
+				var to := int(lf.get("to", 0))
+				if i == 1 - to and k < 0.42:
+					car_on = true
+					car_y = -LIFT_DROP * clampf(k / 0.4, 0.0, 1.0)
+				elif i == to and k > 0.58:
+					car_on = true
+					car_y = -LIFT_DROP * (1.0 - clampf((k - 0.6) / 0.4, 0.0, 1.0))
+			else:
+				car_on = i == _car_pad
+		_apply("lift:%d" % i, {"enabled": systems.has("lift"), "busy": lift_busy, "tripped": trips.has("lift_pair"), "car": car_on, "car_y": car_y})
 	if stations.has("shutter"):
 		_apply("shutter", {"state": s.get("shutter", {}).get("state", "open")})
 	for e in L.thermal_edges:
@@ -607,6 +630,18 @@ func _sync_items(alpha: float) -> void:
 				var p := _ip("i%d" % key, alpha)
 				n.position = Vector3(p.x, 0.0, p.y)
 				n.rotation = Vector3(0, float((key * 37) % 360) * 0.0174, 0)
+			"lift":
+				# In transit: ride the car down at the sending pad, up at the other.
+				var lf2: Dictionary = s.get("lifts", {})
+				var k2 := 1.0 - float(lf2.get("t", 0)) / float(SimC.T_LIFT_TRANSIT)
+				var to2 := int(lf2.get("to", 0))
+				var pad_i := (1 - to2) if k2 < 0.5 else to2
+				var ln2: Node3D = stations.get("lift:%d" % pad_i, null)
+				n.rotation = Vector3.ZERO
+				if ln2 != null:
+					var cy := -LIFT_DROP * clampf(k2 / 0.4, 0.0, 1.0) if k2 < 0.5 else -LIFT_DROP * (1.0 - clampf((k2 - 0.6) / 0.4, 0.0, 1.0))
+					n.position = ln2.position + Vector3(0, FIXTURE_Y["liftpad"] + cy, 0)
+				n.visible = ln2 != null and (k2 < 0.42 or k2 > 0.58)
 			"sock":
 				var sock: String = it["sock"]
 				n.rotation = Vector3.ZERO
@@ -1098,41 +1133,70 @@ func _note_mesh(col: Color) -> Mesh:
 	mk.box(Vector3(0.22, 0.45, 0), Vector3(0.18, 0.06, 0.04), col.darkened(0.2))
 	return mk.commit()
 
+# Particle effects (sparkles, confetti, dash dust, ribbons) are instances of two
+# pooled MultiMeshes, one unit box and one unit ball: two draw calls for every
+# particle on the floor instead of one per flake. At a busy four-player moment
+# flakes alone were ~35 of the floor's draw calls (docs/PERFORMANCE.md).
+const PART_BOX_N := 192
+const PART_BALL_N := 96
+var _part_box: MultiMeshInstance3D
+var _part_ball: MultiMeshInstance3D
+var _parts: Array = []       # {shape, kind, origin, v, t, life, col, size, spin, i, to}
+
+func _build_particle_pools() -> void:
+	var mkb := MeshKit.new()
+	mkb.jitter = 0.0
+	mkb.box(Vector3.ZERO, Vector3.ONE, Color.WHITE)
+	_part_box = _make_pool(mkb.commit(), PART_BOX_N)
+	var mks := MeshKit.new()
+	mks.jitter = 0.0
+	mks.sphere(Vector3.ZERO, 1.0, Color.WHITE, 2, 5)
+	_part_ball = _make_pool(mks.commit(), PART_BALL_N)
+
+func _make_pool(mesh: Mesh, n: int) -> MultiMeshInstance3D:
+	var mm := MultiMesh.new()
+	mm.transform_format = MultiMesh.TRANSFORM_3D
+	mm.use_colors = true
+	mm.mesh = mesh
+	mm.instance_count = n
+	mm.visible_instance_count = 0
+	var mmi := MultiMeshInstance3D.new()
+	mmi.name = "Particles"
+	mmi.multimesh = mm
+	mmi.material_override = Art.fx(Color.WHITE, 1.0)
+	mmi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	fx_root.add_child(mmi)
+	return mmi
+
+func _particle(shape: int, kind: String, origin: Vector3, v: Vector3, life: float, col: Color, size: Vector3, i: int, to := Vector3.ZERO) -> void:
+	_parts.append({"shape": shape, "kind": kind, "origin": origin, "v": v, "t": 0.0, "life": life, "col": col, "size": size, "spin": 0.0, "i": i, "to": to})
+
 func _spawn_fx(kind: String, pos: Vector3, col: Color, data := {}) -> void:
 	if reduced_motion and kind in ["confetti"]:
 		kind = "sparkle"
-	var node := Node3D.new()
-	node.position = pos
-	var life := 1.0
 	match kind:
 		"sparkle", "confetti":
 			var n := 6 if kind == "sparkle" else 12
 			for i in n:
-				var mk := MeshKit.new()
-				mk.jitter = 0.0
 				var c: Color = col if kind == "sparkle" else [Art.CORAL, Art.GOLD, Art.SKY, Art.SAGE, Art.PLUM][i % 5]
-				mk.box(Vector3.ZERO, Vector3(0.08, 0.08, 0.02), c)
-				var mi := MeshInstance3D.new()
-				mi.mesh = mk.commit()
-				mi.material_override = Art.fx(Color.WHITE, 1.0)
-				mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 				var a := TAU * i / n
-				mi.set_meta("v", Vector3(cos(a) * 1.2, 1.6 + 0.4 * (i % 3), sin(a) * 1.2) * (0.6 if kind == "sparkle" else 1.0))
-				node.add_child(mi)
-			life = 0.8 if kind == "sparkle" else 1.2
+				_particle(0, kind, pos, Vector3(cos(a) * 1.2, 1.6 + 0.4 * (i % 3), sin(a) * 1.2) * (0.6 if kind == "sparkle" else 1.0),
+					0.8 if kind == "sparkle" else 1.2, c, Vector3(0.08, 0.08, 0.02), i)
+			return
 		"dust":
 			for i4 in 5:
-				var mkd := MeshKit.new()
-				mkd.jitter = 0.0
-				mkd.sphere(Vector3.ZERO, 0.07 + 0.02 * (i4 % 2), col.lightened(0.08 * (i4 % 3)), 2, 5)
-				var mid := MeshInstance3D.new()
-				mid.mesh = mkd.commit()
-				mid.material_override = Art.fx(Color.WHITE, 0.9)
-				mid.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 				var ad := TAU * i4 / 5.0 + 0.4
-				mid.set_meta("v", Vector3(cos(ad) * 0.9, 0.35 + 0.1 * (i4 % 2), sin(ad) * 0.9))
-				node.add_child(mid)
-			life = 0.45
+				_particle(1, kind, pos, Vector3(cos(ad) * 0.9, 0.35 + 0.1 * (i4 % 2), sin(ad) * 0.9), 0.45,
+					col.lightened(0.08 * (i4 % 3)), Vector3.ONE * (0.07 + 0.02 * (i4 % 2)), i4)
+			return
+		"ribbon":
+			for i3 in 5:
+				_particle(0, kind, pos, Vector3.ZERO, 0.6, col.lightened(i3 * 0.08), Vector3(0.12, 0.05, 0.03), i3, data["to"])
+			return
+	var node := Node3D.new()
+	node.position = pos
+	var life := 1.0
+	match kind:
 		"heart", "puff", "note":
 			var mk2 := MeshKit.new()
 			mk2.jitter = 0.0
@@ -1158,16 +1222,6 @@ func _spawn_fx(kind: String, pos: Vector3, col: Color, data := {}) -> void:
 			node.add_child(mi3)
 			node.scale = Vector3.ONE * float(data.get("scale", 1.0))
 			life = 1.4
-		"ribbon":
-			for i3 in 5:
-				var mk3 := MeshKit.new()
-				mk3.jitter = 0.0
-				mk3.box(Vector3.ZERO, Vector3(0.12, 0.05, 0.03), col.lightened(i3 * 0.08))
-				var mi4 := MeshInstance3D.new()
-				mi4.mesh = mk3.commit()
-				mi4.material_override = Art.fx(Color.WHITE, 1.0)
-				node.add_child(mi4)
-			life = 0.6
 	fx_root.add_child(node)
 	_fx.append({"node": node, "t": 0.0, "life": life, "kind": kind, "data": data, "origin": pos})
 
@@ -1181,32 +1235,62 @@ func _tick_fx(dt: float) -> void:
 			n.queue_free()
 			continue
 		match f["kind"]:
-			"sparkle", "confetti":
-				for c in n.get_children():
-					var v: Vector3 = c.get_meta("v")
-					c.position = v * f["t"] + Vector3(0, -2.5 * f["t"] * f["t"], 0)
-					c.rotation.z += dt * 8.0
 			"heart", "note":
 				n.position = f["origin"] + Vector3(0, k * 0.6, 0)
 				var sc := (1.0 - k * 0.4) * float(f["data"].get("scale", 1.0))
 				n.scale = Vector3.ONE * sc
 			"puff":
 				n.scale = Vector3.ONE * (0.6 + k)
-			"dust":
-				for cd in n.get_children():
-					var vd: Vector3 = cd.get_meta("v")
-					cd.position = vd * f["t"] * 1.6 + Vector3(0, 0.3 * f["t"] - 0.9 * f["t"] * f["t"], 0)
-					(cd as Node3D).scale = Vector3.ONE * (1.0 + k * 1.4) * (1.0 - k * 0.6)
 			"note_travel":
 				var to: Vector3 = f["data"]["to"]
 				n.position = f["origin"].lerp(to, k) + Vector3(0, sin(k * PI) * 0.6, 0)
 				n.scale = Vector3.ONE * lerpf(float(f["data"].get("scale", 1.0)), float(f["data"].get("end_scale", 0.5)), k)
-			"ribbon":
-				var to2: Vector3 = f["data"]["to"]
-				var i := 0
-				for c2 in n.get_children():
-					var kk := clampf(k * 1.4 - i * 0.08, 0.0, 1.0)
-					c2.position = (f["origin"].lerp(to2, kk) + Vector3(0, sin(kk * PI) * 0.5, 0)) - n.position
-					i += 1
 		keep.append(f)
 	_fx = keep
+	_tick_particles(dt)
+
+## Moves every pooled particle and writes the live ones into the two MultiMeshes.
+func _tick_particles(dt: float) -> void:
+	if _parts.is_empty() and _part_box.multimesh.visible_instance_count == 0 and _part_ball.multimesh.visible_instance_count == 0:
+		return
+	var keep: Array = []
+	var box: Array = []
+	var ball: Array = []
+	for p in _parts:
+		p["t"] += dt
+		var t: float = p["t"]
+		var k: float = t / float(p["life"])
+		if k >= 1.0:
+			continue
+		var origin: Vector3 = p["origin"]
+		var pos := origin
+		var basis := Basis()
+		var size: Vector3 = p["size"]
+		match p["kind"]:
+			"sparkle", "confetti":
+				pos = origin + (p["v"] as Vector3) * t + Vector3(0, -2.5 * t * t, 0)
+				p["spin"] = float(p["spin"]) + dt * 8.0
+				basis = Basis(Vector3(0, 0, 1), float(p["spin"]))
+			"dust":
+				pos = origin + (p["v"] as Vector3) * t * 1.6 + Vector3(0, 0.3 * t - 0.9 * t * t, 0)
+				size = size * (1.0 + k * 1.4) * (1.0 - k * 0.6)
+			"ribbon":
+				var kk := clampf(k * 1.4 - int(p["i"]) * 0.08, 0.0, 1.0)
+				pos = origin.lerp(p["to"], kk) + Vector3(0, sin(kk * PI) * 0.5, 0)
+		var entry := [Transform3D(basis.scaled(size), pos), p["col"]]
+		if int(p["shape"]) == 0:
+			box.append(entry)
+		else:
+			ball.append(entry)
+		keep.append(p)
+	_parts = keep
+	_write_pool(_part_box, box)
+	_write_pool(_part_ball, ball)
+
+static func _write_pool(mmi: MultiMeshInstance3D, list: Array) -> void:
+	var mm := mmi.multimesh
+	var n := mini(list.size(), mm.instance_count)
+	for i in n:
+		mm.set_instance_transform(i, list[i][0])
+		mm.set_instance_color(i, list[i][1])
+	mm.visible_instance_count = n

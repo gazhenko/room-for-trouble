@@ -1263,9 +1263,25 @@ static func _lift_pad(st: StationNode) -> void:
 	_mesh(st, "arrows_mesh", _c("st_lift_arrows_" + rc.to_html(), _lift_arrows.bind(rc)), arrows, Vector3.ZERO, ModelItems.lit_mat())
 	_trip_switch(st, Vector3(0.0, 0.0, -0.4))
 	_mesh(st, "cover", _c("st_lift_cover", _lift_cover))
+	# The car: a dumbwaiter cage that sinks at the sending pad and rises at the
+	# other (the view drives car / car_y from the lift state, DESIGN_V2 §7).
+	var car := _pivot(st, "car", Vector3.ZERO)
+	_mesh(st, "car_mesh", _c("st_lift_car", _lift_car), car)
 	st.apply_fn = _lift_apply
 	st.tick_fn = _lift_tick
-	st.apply({"enabled": true, "busy": false, "tripped": false})
+	st.apply({"enabled": true, "busy": false, "tripped": false, "car": false, "car_y": 0.0})
+
+static func _lift_car(mk: MeshKit) -> void:
+	mk.rbox(Vector3(0, 0.035, 0), Vector3(0.62, 0.03, 0.62), Art.WALNUT.lightened(0.1), 0.04, Art.WALNUT.lightened(0.25))
+	for sx in [-0.28, 0.28]:
+		for sz in [-0.28, 0.28]:
+			mk.cyl(Vector3(sx, 0.05, sz), 0.018, 0.96, Art.BRASS, 5)
+	for sz2 in [-0.28, 0.28]:
+		mk.box(Vector3(0, 1.02, sz2), Vector3(0.6, 0.03, 0.03), Art.BRASS)
+	for sx2 in [-0.28, 0.28]:
+		mk.box(Vector3(sx2, 1.02, 0), Vector3(0.03, 0.03, 0.6), Art.BRASS)
+	mk.box(Vector3(0, 1.08, 0), Vector3(0.34, 0.08, 0.34), Art.CORAL, Art.CORAL.lightened(0.15))
+	mk.sphere(Vector3(0, 1.16, 0), 0.05, Art.GOLD, 2, 6)
 
 static func _lift_mesh(mk: MeshKit, idx: int) -> void:
 	mk.cyl(Vector3.ZERO, 0.44, 0.04, Art.STONE.lightened(0.1), 16, Art.CREAM.darkened(0.1), 0.42)
@@ -1314,6 +1330,10 @@ static func _lift_apply(st: StationNode, s: Dictionary) -> void:
 		st.show_part("arrows", busy and not trip)
 		st.set_part_material("ring", ModelItems.dim_mat() if trip else (ModelItems.lit_mat() if busy else Art.toon()))
 		st.anim["busy"] = busy and not trip
+	var car_on := bool(s.get("car", false)) and en
+	st.show_part("car", car_on)
+	if car_on:
+		(st.parts["car"] as Node3D).position.y = float(s.get("car_y", 0.0))
 	_trip_set(st, trip, false)
 
 static func _lift_tick(st: StationNode, dt: float) -> void:
@@ -1447,8 +1467,9 @@ static func _thermostat(st: StationNode) -> void:
 	var south := String(st.opts.get("side", "north")) == "south"
 	_mesh(st, "body", _c("st_thermo_post", _thermo_post))
 	var head := _pivot(st, "head", Vector3(0, 0.84, 0), null, Vector3(-32.0 if south else 32.0, 0, 0))
-	_mesh(st, "housing", _c("st_thermo_housing", _thermo_housing), head)
-	_mesh(st, "face", _c("st_thermo_face_neutral", _thermo_face.bind("neutral")), head)
+	# Housing and face are one mesh per mode (four cached variants): one draw
+	# call per thermostat instead of two, six per floor.
+	_mesh(st, "face", _c("st_thermo_head_neutral", _thermo_head.bind("neutral")), head)
 	var needle := _pivot(st, "needle", Vector3(0, 0.035, 0), head)
 	_mesh(st, "needle_mesh", _c("st_thermo_needle", _thermo_needle), needle)
 	var sw := _pivot(st, "switch", Vector3(0.17, 0.0, 0.0), head)
@@ -1494,6 +1515,11 @@ static func _thermo_face(mk: MeshKit, mode: String) -> void:
 		_:
 			ModelItems.poly_flat(mk, Vector3(0, 0.026, 0.05), ModelItems.circle_pts(0.03, 8), 0.006, Art.SAGE, Art.SAGE)
 
+## Housing plus the face for one mode, as a single mesh.
+static func _thermo_head(mk: MeshKit, mode: String) -> void:
+	_thermo_housing(mk)
+	_thermo_face(mk, mode)
+
 static func _thermo_needle(mk: MeshKit) -> void:
 	mk.box(Vector3(0, 0, -0.055), Vector3(0.022, 0.01, 0.11), Art.INK)
 	mk.sphere(Vector3.ZERO, 0.026, Art.BRASS.darkened(0.15), 2, 6, Vector3(1, 0.6, 1))
@@ -1519,7 +1545,7 @@ static func _thermo_apply(st: StationNode, s: Dictionary) -> void:
 	if face != "warm" and face != "cool" and face != "tripped":
 		face = "neutral"
 	if st.changed("face", face):
-		st.set_part_mesh("face", _c("st_thermo_face_" + face, _thermo_face.bind(face)))
+		st.set_part_mesh("face", _c("st_thermo_head_" + face, _thermo_head.bind(face)))
 		var sw: Node3D = st.parts["switch"]
 		sw.rotation.z = -1.7 if trip else 0.0
 		st.show_part("needle", not trip)

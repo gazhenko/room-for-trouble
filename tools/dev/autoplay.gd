@@ -13,6 +13,8 @@ var bot: ReferenceBot
 var t := 0.0
 var shot_i := 0
 var perf := false
+var _max_fdc := 0
+var _max_census := ""
 var samples: Array = []
 var _perf_t := 0.0
 var _skip := 0
@@ -74,16 +76,32 @@ func _process(dt: float) -> void:
 			for e in shift.sim.events:
 				kinds.append(e["type"])
 			print("SPIKE %.1fms hotel %ds events %s" % [dt * 1000.0, int(shift.sim.s["hotel_q"]) / SimC.HOTEL_Q_PER_S, kinds])
+		var fdc := _floor_draw_calls()
+		if "--census" in OS.get_cmdline_user_args() and fdc > _max_fdc:
+			# Name what is on screen at the busiest frame so far (the §17.4 budget moment).
+			_max_fdc = fdc
+			_max_census = "CENSUS at floor draw calls %d (hotel %ds)\n%s" % [fdc, int(shift.sim.s["hotel_q"]) / SimC.HOTEL_Q_PER_S, _census_text()]
 		samples.append({"frame_ms": dt * 1000.0 / maxf(0.01, Engine.time_scale), "hotel_s": int(shift.sim.s["hotel_q"]) / SimC.HOTEL_Q_PER_S,
 			"process_ms": Performance.get_monitor(Performance.TIME_PROCESS) * 1000.0,
 			"draw_calls": Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME),
-			"floor_draw_calls": _floor_draw_calls(),
+			"floor_draw_calls": fdc,
 			"objects": Performance.get_monitor(Performance.RENDER_TOTAL_OBJECTS_IN_FRAME),
 			"primitives": Performance.get_monitor(Performance.RENDER_TOTAL_PRIMITIVES_IN_FRAME),
 			"mem_mb": Performance.get_monitor(Performance.MEMORY_STATIC) / 1048576.0,
 			"vram_mb": Performance.get_monitor(Performance.RENDER_VIDEO_MEM_USED) / 1048576.0})
 	var due := secs * float(shot_i + 1) / float(shots)
 	var hotel_t := float(shift.sim.s["hotel_q"]) / SimC.HOTEL_Q_PER_S
+	# --lift-demo: at hotel 3 s put the first loose item on lift pad 0 and send it,
+	# so frames around 3.6 / 4.8 / 6.0 s show the car sinking, rising and arrived.
+	if "--lift-demo" in OS.get_cmdline_user_args() and not has_meta("lift_demo") and hotel_t >= 3.0:
+		set_meta("lift_demo", true)
+		for iid in shift.sim.s["items"]:
+			var it: Dictionary = shift.sim.s["items"][iid]
+			if it["loc"] in ["world", "sock"]:
+				SimInteract.sock_item(shift.sim, int(iid), "liftpad:0")
+				SimGoals.lift_send(shift.sim, 0, 0)
+				print("lift demo: sent item %d (%s)" % [int(iid), it["k"]])
+				break
 	if not has_meta("p"):
 		set_meta("p", true)
 		print("sizes ui=%s shift=%s hud=%s" % [shift.get_parent().size, shift.size, shift.hud.size])
@@ -95,6 +113,7 @@ func _process(dt: float) -> void:
 		var path := out if shots == 1 else out.replace(".png", "_%d.png" % shot_i)
 		img.save_png(ProjectSettings.globalize_path("res://").path_join(path))
 		print("saved %s at hotel %.0fs phase %s" % [path, hotel_t, shift.sim.s["phase"]])
+		print("done_cards at shot: %s" % JSON.stringify(shift.hud.done_cards))
 		shot_i += 1
 		_skip = 3
 		Engine.time_scale = speed
@@ -113,20 +132,30 @@ func _floor_draw_calls() -> int:
 ## Visible MeshInstance3D count per top-level group under the stage world,
 ## and how many cast shadows (each caster adds a shadow-pass draw).
 func _census() -> void:
+	print(_census_text())
+
+## Visible meshes per group; groups that are not stations also list their
+## mesh paths, so an unexpected draw call can be named.
+func _census_text() -> String:
 	var groups := {}
+	var names := {}
 	for top in shift.stage.world.get_children():
-		_census_walk(top, str(top.name), groups, 0)
+		_census_walk(top, str(top.name), groups, names, 0)
 	var keys := groups.keys()
 	keys.sort_custom(func(a, b): return groups[a][0] > groups[b][0])
 	var tm := 0
 	var tc := 0
+	var lines: Array = []
 	for k in keys:
 		tm += groups[k][0]
 		tc += groups[k][1]
-		print("CENSUS %-28s meshes %4d casters %4d" % [k, groups[k][0], groups[k][1]])
-	print("CENSUS TOTAL meshes %d casters %d" % [tm, tc])
+		lines.append("CENSUS %-28s meshes %4d casters %4d" % [k, groups[k][0], groups[k][1]])
+		if not str(k).begins_with("st:") and names.has(k):
+			lines.append("CENSUS   %s: %s" % [k, ", ".join((names[k] as Array).slice(0, 16))])
+	lines.append("CENSUS TOTAL meshes %d casters %d" % [tm, tc])
+	return "\n".join(lines)
 
-func _census_walk(n: Node, label: String, groups: Dictionary, depth: int) -> void:
+func _census_walk(n: Node, label: String, groups: Dictionary, names: Dictionary, depth: int) -> void:
 	if n is Node3D and not (n as Node3D).visible:
 		return
 	var lab := label
@@ -141,8 +170,12 @@ func _census_walk(n: Node, label: String, groups: Dictionary, depth: int) -> voi
 		if (n as MeshInstance3D).cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF:
 			e[1] += 1
 		groups[lab] = e
+		var nl: Array = names.get(lab, [])
+		var mi := n as MeshInstance3D
+		nl.append("%s/%s(%d)" % [String(n.get_parent().name), String(n.name), mi.mesh.get_surface_count() if mi.mesh != null else 0])
+		names[lab] = nl
 	for c in n.get_children():
-		_census_walk(c, lab, groups, depth + 1)
+		_census_walk(c, lab, groups, names, depth + 1)
 
 func _report_perf() -> void:
 	if "--census" in OS.get_cmdline_user_args():
@@ -183,4 +216,6 @@ func _report_perf() -> void:
 	for smp2 in by_time.slice(0, 5):
 		spikes.append("%.1fms@%ds" % [smp2["frame_ms"], smp2["hotel_s"]])
 	print("PERF spikes ", ", ".join(spikes))
+	if _max_census != "":
+		print(_max_census)
 	print("PERF level=%s humans=%d size=%s renderer=%s adapter=%s frames=%d avg_ms=%.2f p95_ms=%.2f max_ms=%.2f sim_tick_ms=%.3f max=%s" % [level, humans, DisplayServer.window_get_size(), RenderingServer.get_current_rendering_method(), RenderingServer.get_video_adapter_name(), n, avg, fr[int(n * 0.95)], fr[n - 1], sim_ms, JSON.stringify(mx)])

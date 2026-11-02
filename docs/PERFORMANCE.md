@@ -28,14 +28,24 @@ per-item outlines and the per-chapter light. One measurement so far, the densest
 
 | Scenario | Renderer / graphics | Frame avg | p95 | Max | Sim per tick | Floor DC (max) | Total DC (max) | Primitives | Static mem | VRAM |
 |---|---|---|---|---|---|---|---|---|---|---|
-| L24, 4 players, 1280x800, 120 s | Forward+ / Standard | 10.5 ms | 11.1 ms | 175 ms (one spike at 114 s; others <= 60 ms) | 0.85 ms | 175 | 404 | 86k | 115 MB | 79 MB |
+| L24, 4 players, 1280x800, 120 s (first M2 measurement) | Forward+ / Standard | 10.5 ms | 11.1 ms | 175 ms (one spike at 114 s; others <= 60 ms) | 0.85 ms | 175 | 404 | 86k | 115 MB | 79 MB |
+| L24, 4 players, 1280x800, 200 s (before the fixes below) | Forward+ / **Low** | 10.6 ms | 11.1 ms | 168 ms | 0.78 ms | **153** | 382 | 57k | 125 MB | 69 MB |
+| L24, 4 players, 1280x800, 200 s (D49: pooled particles, one mesh per thermostat head) | Forward+ / **Low** | 8.9 ms | 11.1 ms | 208 ms (one spike; rig builds + the synchronous screenshot) | 0.75 ms | **120** | 370 | 57k | 129 MB | 69 MB |
+| L24, 4 players, 1280x800, 200 s (D49) | Forward+ / Standard | 10.3 ms | 11.1 ms | 129 ms | 0.76 ms | **146** | 404 | 88k | 126 MB | 79 MB |
 
-- Floor draw calls on Standard (175) sit above the brief's 150 low-preset budget; the Low
-  preset drops the shadow pass (about a sixth of the floor calls) and is expected near the
-  v1 figure, **unmeasured** on v2 so far. The Deck is unmeasured.
-- The spikes coincide with guest arrivals that build rigs and with the synchronous screenshot;
-  average and p95 are unchanged from v1 (10.8 ms max then).
-- Raw log: `build/shots/fable/m2/perf/L24_4p_perf.log`.
+- The busiest frame was named with `--census` (a census of visible meshes is taken whenever the
+  floor's draw calls reach a new maximum): before D49 the particle effects alone were 37 meshes
+  at the 150-call frame (four players dashing: five dust puffs each, plus sparkles). Particles
+  are now two pooled MultiMeshes (a unit box and a unit ball), and a thermostat's housing and
+  face are one mesh; Low lands at 120 and Standard at 146, both under the §17.4 budget of 150.
+  Low drops the sun's shadow pass and the outlines; the remaining Low/Standard gap (26 calls) is
+  the shadow casters.
+- The average and p95 did not move; the max frames are the synchronous screenshot and the first
+  guest rigs of a family being built. The Deck is still unmeasured.
+- Raw logs: `build/shots/fable/m2/perf/L24_4p_perf.log`, `build/shots/fable/m2fix/ghost/autoplay.log`
+  (Low at 153, before the fixes), `build/shots/fable/m2fix/perf/low_census2.log` (Low at 150 with
+  only the thermostat merge, and the census that named the particles) and
+  `build/shots/fable/m2fix/perf/verify3.log` (Low and Standard after D49).
 
 ## Results (2026-10-23, final build)
 

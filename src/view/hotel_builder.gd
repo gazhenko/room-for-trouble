@@ -391,6 +391,29 @@ func _template_decor() -> void:
 	if "moon_lamps" in deco:
 		for x in [xe * 0.11, xe * 0.44, xe * 0.78]:
 			mk.sphere(Vector3(x + 2.0, 1.95, 0.6), 0.16, Color("#FFF3C8"), 3, 6)
+	if L.lift_pads.size() == 2:
+		# Lobby dressing for the split floor: a lift sign at each pad (post,
+		# plate, suitcase, up arrow) against the outer wall, and a luggage cart
+		# parked by reception, so the pads read as a dumbwaiter in a busy hall.
+		for i in L.lift_pads.size():
+			var lp: Vector2i = L.lift_pads[i]
+			var sx := -0.62 if float(lp.x) < xe * 0.5 else 0.62
+			var sp := Vector3(lp.x + sx, 0, lp.y)
+			mk.cyl(sp, 0.035, 1.5, Art.BRASS, 6)
+			mk.box(sp + Vector3(0, 1.58, 0), Vector3(0.34, 0.28, 0.04), Art.CREAM, Art.WALNUT)
+			mk.box(sp + Vector3(0, 1.52, 0.025), Vector3(0.14, 0.1, 0.02), Art.WALNUT.lightened(0.1))
+			mk.box(sp + Vector3(0, 1.585, 0.025), Vector3(0.05, 0.035, 0.02), Art.WALNUT.lightened(0.1))
+			mk.cone(sp + Vector3(0, 1.62, 0.03), 0.05, 0.09, Art.CORAL, 4)
+		var rp: Vector2i = L.fixtures["reception"]
+		var cart := Vector3(rp.x + 1.1, 0, hz0 - 0.42)
+		mk.box(cart + Vector3(0, 0.3, 0), Vector3(0.7, 0.05, 0.42), Art.WALNUT)
+		for px in [-0.33, 0.33]:
+			mk.box(cart + Vector3(px, 0.6, 0), Vector3(0.04, 0.6, 0.42), Art.BRASS)
+		mk.box(cart + Vector3(0, 0.9, 0), Vector3(0.7, 0.04, 0.42), Art.BRASS)
+		for w in [Vector3(-0.25, 0.1, 0.17), Vector3(0.25, 0.1, 0.17), Vector3(-0.25, 0.1, -0.17), Vector3(0.25, 0.1, -0.17)]:
+			mk.sphere(cart + w, 0.07, Art.INK, 2, 6)
+		mk.rbox(cart + Vector3(-0.12, 0.47, 0), Vector3(0.36, 0.28, 0.3), Art.CORAL, 0.03, Art.CORAL.lightened(0.15))
+		mk.rbox(cart + Vector3(0.2, 0.44, 0.02), Vector3(0.26, 0.22, 0.26), Art.SKY, 0.03, Art.SKY.lightened(0.15))
 	if not mk.is_empty():
 		_add(mk, Art.toon(), "Decor")
 

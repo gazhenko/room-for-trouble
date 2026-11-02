@@ -117,6 +117,12 @@ func _process(dt: float) -> void:
 				{"type": "watered", "room": room0, "seat": seat0}]
 			shift.hud.feed(shift.sim.s, demo)
 			shift._feedback(demo)
+			# And the three lane hazards side by side on the lane, for palette frames.
+			var lane_z: int = (shift.sim.L.hall.position.y + 1) * SimC.UM
+			var hx0: int = (shift.sim.L.hall.position.x + 2) * SimC.UM
+			SimEnv.add_puddle(shift.sim, hx0, lane_z, "demo")
+			SimEnv.add_cloud(shift.sim, hx0 + 3 * SimC.UM, lane_z, "demo")
+			shift.sim.room(room0)["frost"] = true
 		await get_tree().process_frame
 		await get_tree().process_frame
 		var img := get_viewport().get_texture().get_image()

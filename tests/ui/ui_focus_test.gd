@@ -28,6 +28,7 @@ func _ready() -> void:
 		["scrapbook", func(): Session.open_scrapbook(), true],
 		["wardrobe", func(): Session.open_wardrobe(), true],
 		["credits", func(): Session.open_credits(), true],
+		["whats_new", func(): Session.open_whats_new(), true],
 		["online", func(): Session.start_lobby("online"), false],
 	]
 	var only := OS.get_environment("UI01_ONLY")
@@ -52,6 +53,7 @@ func _ready() -> void:
 	await _rebind()
 	await _keyboard()
 	await _large_ui_fits()
+	await _hud_fits_175()
 	print("== UI01: %d checks, %d failures ==" % [checks, failures.size()])
 	for f in failures:
 		print("   ✗ ", f)
@@ -324,3 +326,36 @@ func _large_ui_fits() -> void:
 	Settings.data["ui_scale"] = 1.0
 	main._layout_ui()
 	print("UI01 ui_scale 175%: checked")
+
+func _hud_fits_175() -> void:
+	# §11.3 UI scale 175% in play: the shift HUD's fixed blocks (order rail,
+	# clock, objective, staff portraits) stay on screen and clear of each other.
+	Settings.data["ui_scale"] = 1.75
+	main._layout_ui()
+	Session._run_shift(Session._base_cfg({"mode": "campaign", "level_id": "L24", "seed": 3}))
+	await _frames(20)
+	var sh: ShiftScreen = Session.screen as ShiftScreen
+	_check(sh != null, "175%: a shift runs for the HUD check")
+	if sh != null:
+		sh.sim.start_now()
+		Engine.time_scale = 20.0   # ~60 hotel seconds: several cards on the rail
+		await _frames(180)
+		Engine.time_scale = 1.0
+		await _frames(2)
+		var hud: Hud = sh.hud
+		var vr := Rect2(Vector2.ZERO, hud.size).grow(1.0)
+		for k in ["rail", "clock", "bottom"]:
+			_check(hud.last_rects.has(k), "175%%: HUD drew its %s" % k)
+			if hud.last_rects.has(k):
+				_check(vr.encloses(hud.last_rects[k]), "175%%: HUD %s fits on screen (%s in %s)" % [k, hud.last_rects[k], vr])
+		if hud.last_rects.has("objective"):
+			_check(vr.encloses(hud.last_rects["objective"]), "175%%: HUD objective fits on screen (%s)" % hud.last_rects["objective"])
+			if hud.last_rects.has("clock"):
+				_check(not (hud.last_rects["objective"] as Rect2).intersects(hud.last_rects["clock"]), "175%: the objective stays clear of the clock")
+		if hud.last_rects.has("rail") and hud.last_rects.has("clock"):
+			_check(not (hud.last_rects["rail"] as Rect2).intersects(hud.last_rects["clock"]), "175%: the order rail stays clear of the clock")
+	Session.leave_shift()
+	await _frames(10)
+	Settings.data["ui_scale"] = 1.0
+	main._layout_ui()
+	print("UI01 HUD at 175%: checked")

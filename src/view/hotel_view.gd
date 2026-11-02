@@ -611,7 +611,7 @@ func _sync_items(alpha: float) -> void:
 		if pop > 0.0:
 			pop = maxf(0.0, pop - get_process_delta_time() * 6.0)
 			n.set_meta("pop", pop)
-			var k := sin(pop * PI)
+			var k := sin(pop * PI) * (0.3 if reduced_motion else 1.0)   # a nudge, not a bounce
 			n.scale = Vector3(1.0 + 0.3 * k, 1.0 + 0.45 * k, 1.0 + 0.3 * k)
 		elif n.scale != Vector3.ONE:
 			n.scale = Vector3.ONE
@@ -757,9 +757,14 @@ func _make_puddle() -> Node3D:
 	var mk := MeshKit.new()
 	mk.jitter = 0.0
 	mk.push_at(Vector3.ZERO, Vector3.ZERO, Vector3(1.0, 1.0, 0.75))
+	# A dark rim keeps the puddle visible on light floors and in high contrast;
+	# the ripple rings say "water" without relying on blue (colour-blind palettes).
+	mk.disc(Vector3(0, 0.012, 0), 0.47 if Settings.g("high_contrast") else 0.445, Color("#2C4F60") if Settings.g("high_contrast") else Color("#5E9CB8"), 12)
 	mk.disc(Vector3(0, 0.015, 0), 0.42, Color("#8FCBE0"), 12)
-	mk.disc(Vector3(0.08, 0.02, -0.06), 0.18, Color("#CDEFF8"), 8)
-	mk.disc(Vector3(-0.2, 0.018, 0.12), 0.07, Color("#CDEFF8"), 6)
+	mk.torus(Vector3(0, 0.02, 0), 0.3, 0.012, Color("#5E9CB8"), 12, 3)
+	mk.torus(Vector3(0, 0.02, 0), 0.17, 0.01, Color("#5E9CB8"), 10, 3)
+	mk.disc(Vector3(0.08, 0.022, -0.06), 0.1, Color("#CDEFF8"), 8)
+	mk.disc(Vector3(-0.2, 0.021, 0.12), 0.05, Color("#CDEFF8"), 6)
 	mk.pop()
 	var mi := Art.mesh_instance(mk.commit())
 	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
@@ -791,10 +796,13 @@ func _make_frost(letter: String) -> Node3D:
 	var root := Node3D.new()
 	root.position = Vector3(d.x, 0.0, d.y)
 	var mk := MeshKit.new()
+	# Frost reads by its crystals and its pale, rimmed disc, not by hue alone.
+	mk.disc(Vector3(0, 0.017, 0), 0.65 if Settings.g("high_contrast") else 0.63, Color("#2C4F60") if Settings.g("high_contrast") else Color("#8FB9CC"), 10)
 	mk.disc(Vector3(0, 0.02, 0), 0.6, Color("#D7F0FA"), 10)
 	for i in 6:
 		var a := TAU * i / 6.0
 		mk.cone(Vector3(cos(a) * 0.35, 0.02, sin(a) * 0.35), 0.06, 0.18, Color("#BFE6F5"), 4)
+		mk.cone(Vector3(cos(a) * 0.35, 0.02, sin(a) * 0.35), 0.03, 0.26, Color("#FFFFFF"), 4)
 	# Frozen bell ornament on the frame ("ting…k").
 	mk.sphere(Vector3(0.0, 1.2, 0.0), 0.12, Color("#E6F7FD"), 3, 6)
 	mk.cone(Vector3(0.0, 1.05, 0.0), 0.05, -0.18, Color("#BFE6F5"), 4)
@@ -1175,9 +1183,11 @@ func _particle(shape: int, kind: String, origin: Vector3, v: Vector3, life: floa
 func _spawn_fx(kind: String, pos: Vector3, col: Color, data := {}) -> void:
 	if reduced_motion and kind in ["confetti"]:
 		kind = "sparkle"
+	# Reduced motion: half the flakes, same places, so an event still reads.
+	var rmq := 2 if reduced_motion else 1
 	match kind:
 		"sparkle", "confetti":
-			var n := 6 if kind == "sparkle" else 12
+			var n := (6 if kind == "sparkle" else 12) / rmq
 			for i in n:
 				var c: Color = col if kind == "sparkle" else [Art.CORAL, Art.GOLD, Art.SKY, Art.SAGE, Art.PLUM][i % 5]
 				var a := TAU * i / n
@@ -1185,13 +1195,13 @@ func _spawn_fx(kind: String, pos: Vector3, col: Color, data := {}) -> void:
 					0.8 if kind == "sparkle" else 1.2, c, Vector3(0.08, 0.08, 0.02), i)
 			return
 		"dust":
-			for i4 in 5:
+			for i4 in 5 / rmq:
 				var ad := TAU * i4 / 5.0 + 0.4
 				_particle(1, kind, pos, Vector3(cos(ad) * 0.9, 0.35 + 0.1 * (i4 % 2), sin(ad) * 0.9), 0.45,
 					col.lightened(0.08 * (i4 % 3)), Vector3.ONE * (0.07 + 0.02 * (i4 % 2)), i4)
 			return
 		"ribbon":
-			for i3 in 5:
+			for i3 in 5 / rmq:
 				_particle(0, kind, pos, Vector3.ZERO, 0.6, col.lightened(i3 * 0.08), Vector3(0.12, 0.05, 0.03), i3, data["to"])
 			return
 	var node := Node3D.new()

@@ -24,6 +24,8 @@ var ui_scale := 1.0
 var bubbles: Array = []              # transient text bubbles [{seat, text, icon, t}]
 var floats: Array = []               # rising "+N" tip texts [{text, pos, t, col}]
 var done_cards: Array = []           # order cards sliding out [{gid, outcome, t}]
+var sound_marks: Array = []          # sound visualisations [{icon, pos: Vector3, t}] (§11.2)
+const SOUND_MARK_S := 0.9
 var notices: Array = []              # top-right notices [{icon, text, t, prio}]
 var banner := {}                     # {text, sub, t, icon}
 var coach := {}
@@ -61,6 +63,9 @@ func _process(dt: float) -> void:
 	for c in done_cards:
 		c["t"] -= dt
 	done_cards = done_cards.filter(func(c): return c["t"] > 0.0)
+	for m in sound_marks:
+		m["t"] -= dt
+	sound_marks = sound_marks.filter(func(m): return m["t"] > 0.0)
 	if banner.has("t") and float(banner["t"]) < 900.0:
 		banner["t"] = float(banner["t"]) - dt
 		if banner["t"] <= 0.0:
@@ -134,6 +139,22 @@ func _on_event(e: Dictionary) -> void:
 			var g: Dictionary = s.get("guests", {}).get(gid, {})
 			if not g.is_empty():
 				done_cards.append({"gid": gid, "outcome": "missed" if e["type"] == "guest_cozy" else SimScore.order_outcome(g), "t": DONE_CARD_S, "fam": g["fam"]})
+		# Sound visualisations for the v2 verbs (§11.2): a ring with the icon at
+		# the spot the sound came from, for players who play without sound.
+		"slip", "startled":
+			var rigm: ActorRig = view.staff_rigs.get(int(e.get("seat", -1)), null)
+			if rigm != null:
+				_sound_mark("sys_frost" if e["type"] == "slip" else "sys_noise", rigm.position + Vector3(0, 0.3, 0))
+		"tempered":
+			var rigt: ActorRig = view.staff_rigs.get(int(e.get("seat", -1)), null)
+			if rigt != null:
+				_sound_mark("sys_cold" if str(e.get("temp", "")) == "cool" else "sys_warm", rigt.position + Vector3(0, 1.5, 0))
+		"watered":
+			_sound_mark("sys_water", view.anchor_for_key("tray:" + str(e.get("room", ""))))
+		"grip", "trunk_delivered":
+			var tn: Node3D = view.trunk_nodes.get(int(e.get("trunk", e.get("id", 0))), null)
+			if tn != null:
+				_sound_mark("item_trunk", tn.position + Vector3(0, 0.9, 0))
 
 func _warn_vars(args: Dictionary) -> Dictionary:
 	var v := {}
@@ -191,6 +212,7 @@ func _draw() -> void:
 		_draw_inspect()
 	_draw_prompts()
 	_draw_floats()
+	_draw_sound_marks()
 	_draw_top()
 	_draw_bottom()
 	_draw_center()
@@ -331,7 +353,7 @@ func _draw_guests() -> void:
 			UiKit.draw_ring(self, c, sz * 0.62 + 3, _req_frac(_open_req(g)), Art.GOLD, 3.0)
 			var tp := str(_open_req(g).get("temp", ""))
 			if tp != "":
-				UiKit.draw_icon(self, "sys_warm" if tp == "warm" else "sys_cold", c + Vector2(-sz * 0.45, -sz * 0.45), 13)
+				UiKit.draw_icon(self, "sys_warm" if tp == "warm" else "sys_cold", c + Vector2(-sz * 0.5, -sz * 0.5), 16)
 
 func _comfort_icon(g: Dictionary) -> String:
 	var r: Dictionary = s["rooms"].get(g["room"], {})
@@ -426,6 +448,26 @@ func _draw_floats() -> void:
 		col.a = a
 		UiKit.draw_text_outlined(self, p, f["text"], 22, col, Color(1, 1, 1, a * 0.9))
 
+func _sound_mark(icon: String, pos: Vector3) -> void:
+	if not Settings.g("sound_visuals") or pos == Vector3.ZERO:
+		return
+	sound_marks.append({"icon": icon, "pos": pos, "t": SOUND_MARK_S})
+	if sound_marks.size() > 8:
+		sound_marks.pop_front()
+
+## A ring that widens and fades around the sound's source, with its icon, so
+## a sound event reads without audio (§11.2). Rings are palette-neutral.
+func _draw_sound_marks() -> void:
+	for m in sound_marks:
+		var k := clampf(float(m["t"]) / SOUND_MARK_S, 0.0, 1.0)
+		var p := _w2s(m["pos"])
+		var a := k
+		var rad := 16.0 + (1.0 - k) * (10.0 if Settings.g("reduced_motion") else 22.0)
+		draw_arc(p, rad, 0.0, TAU, 28, Color(UiKit.INK, a * 0.9), 3.0)
+		draw_arc(p, rad, 0.0, TAU, 28, Color(UiKit.CREAM, a), 1.5)
+		UiKit.draw_bubble(self, p, 12, Color(UiKit.PAPER, a), Color(UiKit.INK, a))
+		UiKit.draw_icon(self, m["icon"], p, 18, Color(1, 1, 1, a))
+
 func _draw_prompts() -> void:
 	# Seat tags (P1..P4) sit at the feet, beside the seat ring, so they never
 	# cover a face or a prompt (§11.1 asked for tags; the head was the wrong place).
@@ -435,9 +477,9 @@ func _draw_prompts() -> void:
 			continue
 		var feet0 := _w2s(rig0.position)
 		var col0: Color = SEAT_COLORS[int(st0["seat"]) % 4]
-		var tr := Rect2(feet0 + Vector2(10, 2), Vector2(24, 16))
+		var tr := Rect2(feet0 + Vector2(10, 2), Vector2(28, 18))
 		draw_style_box(UiKit._box(col0, UiKit.INK, 1, 3, 0), tr)
-		UiKit.draw_text_outlined(self, tr.get_center() + Vector2(0, 5), "P%d" % (int(st0["seat"]) + 1), 12, UiKit.INK, Color(0, 0, 0, 0))
+		UiKit.draw_text_outlined(self, tr.get_center() + Vector2(0, 6), "P%d" % (int(st0["seat"]) + 1), MIN_TEXT, UiKit.INK, Color(0, 0, 0, 0))
 	# With four players the prompts pile up around one spot, so: a target that two
 	# players highlight is prompted only for the nearer one, and every prompt box
 	# is pushed up until it overlaps no box drawn before it.
@@ -526,7 +568,7 @@ func _draw_prompts() -> void:
 				UiKit.draw_icon(self, ITEM_ICON.get(it["k"], "sys_help"), hp, 18, Color(1, 1, 1, 0.9))
 				var htp := str(it.get("temp", ""))
 				if htp != "":
-					UiKit.draw_icon(self, "sys_warm" if htp == "warm" else "sys_cold", hp + Vector2(9, -9), 11)
+					UiKit.draw_icon(self, "sys_warm" if htp == "warm" else "sys_cold", hp + Vector2(11, -11), MIN_ICON)
 
 func _verb(kind: String, key: String, st: Dictionary) -> String:
 	var k := key.split(":")[0]
@@ -613,7 +655,7 @@ func _draw_inspect() -> void:
 			UiKit.draw_icon(self, row[0], Vector2(rect.position.x + 14, y), 16)
 			draw_string(_font, Vector2(rect.position.x + 26, y + 6), row[1], HORIZONTAL_ALIGNMENT_LEFT, -1, 16, UiKit.CREAM)
 			if row[2] != "":
-				draw_string(_font, Vector2(rect.position.x + 54, y + 6), row[2], HORIZONTAL_ALIGNMENT_LEFT, 40, 12, Color("#D9D2C5"))
+				draw_string(_font, Vector2(rect.position.x + 54, y + 6), row[2], HORIZONTAL_ALIGNMENT_LEFT, w - 60, MIN_TEXT, Color("#D9D2C5"))
 			y += 18
 
 func _room_center(letter: String) -> Vector2:
@@ -632,6 +674,7 @@ func _draw_top() -> void:
 	var dur := int(level.get("duration_hotel_s", 0))
 	var hs := float(s.get("hotel_q", 0)) / SimC.HOTEL_Q_PER_S
 	var r := Rect2(Vector2(cx - 92, 10), Vector2(184, 54))
+	last_rects["clock"] = r
 	draw_style_box(UiKit._box(UiKit.CREAM, UiKit.WALNUT, 3, 10, 0), r)
 	if dur > 0:
 		var frac := clampf(hs / float(dur), 0.0, 1.0)
@@ -664,6 +707,12 @@ const CARD_W := 112.0
 const CARD_H := 70.0
 const DONE_CARD_S := 1.4             # a finished order's card stays this long below the rail
 const DONE_FADE_S := 0.3             # and fades only in its last moment
+## Readability floor on a 7" 1280x800 panel at UI scale 100% (§11.3): no HUD
+## text below 14 px (Pixelify caps ~10 px) and no state icon below 14 px.
+const MIN_TEXT := 14
+const MIN_ICON := 14
+## Last drawn rects of the fixed HUD blocks, for the UI01 fit check at 175%.
+var last_rects: Dictionary = {}
 
 func _order_cards() -> Array:
 	var cards: Array = []
@@ -675,6 +724,12 @@ func _order_cards() -> Array:
 			cards.append(g)
 	cards.sort_custom(func(a, b): return int(a["ai"]) < int(b["ai"]))
 	return cards
+
+## Rect of the i-th slot on the rail (row-major, `per_row` slots per row).
+func _rail_slot(i: int, per_row: int) -> Rect2:
+	var col := i % maxi(1, per_row)
+	var row := i / maxi(1, per_row)
+	return Rect2(Vector2(14.0 + col * (CARD_W + 8.0), 10.0 + row * (CARD_H + 8.0)), Vector2(CARD_W, CARD_H))
 
 ## Festival trunks still on the floor are jobs on the rail too (DESIGN_V2 §5.6):
 ## a card with the two handles, who holds each, and the way left to the stand.
@@ -694,14 +749,18 @@ func _draw_orders() -> void:
 	var y := 10.0
 	var hq := float(s.get("hotel_q", 0))
 	var limit_x := size.x * 0.5 - 92.0 - 10.0 if show_clock else size.x * 0.6
-	var fit := clampi(int((limit_x - x - 50.0) / (CARD_W + 8.0)), 1, 5)
-	# Trunk jobs take the rightmost slots; guests keep arrival order on the left.
-	var trunk_slots := mini(trunks.size(), maxi(0, fit - 1))
-	var shown := mini(fit - trunk_slots, cards.size())
+	# Cards per row before the clock; at large UI scales (175% leaves room for
+	# one) the rail wraps to a second row instead of hiding everyone behind "+N".
+	var per_row := clampi(int((limit_x - x - 50.0) / (CARD_W + 8.0)), 1, 5)
+	var rows := 1 if per_row >= 4 else 2
+	var cap := per_row * rows
+	# Trunk jobs take the last slots; guests keep arrival order from the left.
+	var trunk_slots := mini(trunks.size(), maxi(0, cap - 1))
+	var shown := mini(cap - trunk_slots, cards.size())
 	var pat_q := float(int(level.get("patience_s", SimC.PATIENCE_S)) * SimC.HOTEL_Q_PER_S)
 	for i in shown:
 		var g: Dictionary = cards[i]
-		var r := Rect2(Vector2(x, y), Vector2(CARD_W, CARD_H))
+		var r := _rail_slot(i, per_row)
 		var fam_col: Color = Art.FAMILY_COLORS[g["fam"]].darkened(0.35)
 		var urgent := false
 		var frac := 1.0
@@ -759,27 +818,32 @@ func _draw_orders() -> void:
 				UiKit.draw_bubble(self, c, 11, Color("#FFF1C9"), fam_col)
 			UiKit.draw_icon(self, steps[j][0], c, 18, Color(1, 1, 1, 0.45 if (done2 or missed2) else 1.0))
 			if steps[j].size() >= 4 and str(steps[j][3]) != "":
-				UiKit.draw_icon(self, str(steps[j][3]), c + Vector2(-8, -8), 11)
+				UiKit.draw_icon(self, str(steps[j][3]), c + Vector2(-9, -9), MIN_ICON)
 			if done2:
-				UiKit.draw_icon(self, "sys_check", c + Vector2(5, 5), 12)
+				UiKit.draw_icon(self, "sys_check", c + Vector2(6, 6), MIN_ICON)
 			elif missed2:
-				UiKit.draw_icon(self, "sys_soft_no", c + Vector2(5, 5), 12)
+				UiKit.draw_icon(self, "sys_soft_no", c + Vector2(6, 6), MIN_ICON)
 		if sub != "":
-			draw_string(_font, r.position + Vector2(44, 50), sub, HORIZONTAL_ALIGNMENT_LEFT, -1, 13, UiKit.INK)
+			draw_string(_font, r.position + Vector2(44, 50), sub, HORIZONTAL_ALIGNMENT_LEFT, -1, MIN_TEXT, UiKit.INK)
 		var bar := Rect2(r.position + Vector2(8, CARD_H - 11), Vector2(CARD_W - 16, 6))
 		draw_rect(bar, Color("#D9C7AE"))
 		draw_rect(Rect2(bar.position, Vector2(bar.size.x * frac, bar.size.y)), bar_col)
 		if int(g.get("tips", 0)) > 0:
-			UiKit.draw_text_outlined(self, r.position + Vector2(CARD_W - 16, 50), "+%d" % (int(g["tips"]) / 1000), 13, Art.GOLD.darkened(0.3), Color(1, 1, 1, 0.9))
-		x += CARD_W + 8.0
+			UiKit.draw_text_outlined(self, r.position + Vector2(CARD_W - 16, 50), "+%d" % (int(g["tips"]) / 1000), MIN_TEXT, Art.GOLD.darkened(0.3), Color(1, 1, 1, 0.9))
 	for ti in trunk_slots:
-		_draw_trunk_card(Rect2(Vector2(x, y), Vector2(CARD_W, CARD_H)), trunks[ti])
-		x += CARD_W + 8.0
+		_draw_trunk_card(_rail_slot(shown + ti, per_row), trunks[ti])
 	var hidden := (cards.size() - shown) + (trunks.size() - trunk_slots)
+	var rail := Rect2(Vector2(14, 10), Vector2(CARD_W, CARD_H))
+	for i2 in shown + trunk_slots:
+		rail = rail.merge(_rail_slot(i2, per_row))
 	if hidden > 0:
-		var r2 := Rect2(Vector2(x, y + 10), Vector2(44, 48))
+		var slot := _rail_slot(shown + trunk_slots, per_row)
+		var r2 := Rect2(slot.position + Vector2(0, 10), Vector2(44, 48))
 		draw_style_box(UiKit._box(Color("#EFE6D8"), UiKit.WALNUT, 2, 8, 0), r2)
 		draw_string(_font, r2.position + Vector2(8, 32), "+%d" % hidden, HORIZONTAL_ALIGNMENT_LEFT, -1, 20, UiKit.INK)
+		rail = rail.merge(r2)
+	last_rects["rail"] = rail
+	y = rail.end.y - CARD_H   # done cards slide out under the last row
 	# Finished orders slide out below the rail: readable at full strength for a
 	# beat, then gone in a quick fade. A slow linear fade left a translucent grey
 	# slab under the rail for most of the card's life (very visible on the night
@@ -830,7 +894,7 @@ func _draw_trunk_card(r: Rect2, tr: Dictionary) -> void:
 			UiKit.draw_bubble(self, c, 11, Color("#FFF1C9"), SEAT_COLORS[seat % 4])
 			UiKit.draw_icon(self, "staff_" + _char_of_seat(seat), c, 20)
 	var cue := "ui.order.trunk_grab" if grips == 0 else ("ui.order.trunk_two" if grips == 1 else "ui.order.trunk_go")
-	draw_string(_font, r.position + Vector2(44, 50), Loc.t(cue), HORIZONTAL_ALIGNMENT_LEFT, CARD_W - 48, 11, UiKit.INK)
+	draw_string(_font, r.position + Vector2(8, 56), Loc.t(cue), HORIZONTAL_ALIGNMENT_LEFT, CARD_W - 16, MIN_TEXT, UiKit.INK)
 	var frac := 0.0
 	var gp = view.L.fixtures.get("goal_pad", null)
 	if gp is Vector2i:
@@ -840,7 +904,7 @@ func _draw_trunk_card(r: Rect2, tr: Dictionary) -> void:
 			d0 = maxf(d, 0.01)
 			_trunk_d0[tid] = d0
 		frac = clampf(1.0 - d / d0, 0.0, 1.0)
-	var bar := Rect2(r.position + Vector2(8, CARD_H - 11), Vector2(CARD_W - 16, 6))
+	var bar := Rect2(r.position + Vector2(8, CARD_H - 8), Vector2(CARD_W - 16, 5))
 	draw_rect(bar, Color("#D9C7AE"))
 	draw_rect(Rect2(bar.position, Vector2(bar.size.x * frac, bar.size.y)), Art.GOLD if grips == 2 else UiKit.WALNUT)
 
@@ -870,6 +934,7 @@ func _draw_objectives() -> void:
 		var txt := "%s  %d/%d" % [rb["label"], int(rb["value"]), int(rb["target"])]
 		var tw := _font.get_string_size(txt, HORIZONTAL_ALIGNMENT_LEFT, -1, 16).x
 		var r := Rect2(Vector2(x - tw - 46, y), Vector2(tw + 46, 30))
+		last_rects["objective"] = r
 		draw_style_box(UiKit._box(UiKit.PAPER, UiKit.PLUM, 2, 8, 0), r)
 		UiKit.draw_icon(self, "sys_ribbon", r.position + Vector2(16, 15), 20)
 		draw_string(_font, r.position + Vector2(32, 21), txt, HORIZONTAL_ALIGNMENT_LEFT, -1, 16, UiKit.INK)
@@ -914,6 +979,7 @@ func _draw_bottom() -> void:
 		var seat: int = st["seat"]
 		var col: Color = SEAT_COLORS[seat % 4]
 		var r := Rect2(Vector2(x, y), Vector2(w, 48))
+		last_rects["bottom"] = r if st == staff[0] else (last_rects.get("bottom", r) as Rect2).merge(r)
 		draw_style_box(UiKit._box(UiKit.PAPER, col.darkened(0.35), 3, 10, 0), r)
 		UiKit.draw_icon(self, "staff_" + st["char"], r.position + Vector2(26, 24), 40)
 		draw_string(_font, r.position + Vector2(48, 20), "P%d" % (seat + 1), HORIZONTAL_ALIGNMENT_LEFT, -1, 16, col.darkened(0.45))

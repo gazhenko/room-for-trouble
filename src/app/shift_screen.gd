@@ -255,8 +255,8 @@ const SFX := {"pickup": "pickup", "place": "place", "handoff": "handoff", "work_
 	"request_open": "request_appear", "request_done": "request_done", "request_missed": "request_late",
 	"checkout": "goodbye", "trip_reset": "trip_reset", "bell": "bell_ring", "lift_depart": "lift_depart",
 	"lift_arrive": "lift_arrive", "trunk_delivered": "trunk_open", "parcel_installed": "parcel_place",
-	"wet_feet": "wet_squeak", "slip": "frost_ting", "startled": "wet_squeak", "tempered": "work_finish", "quick_step": "quick_step", "frost": "frost_ting", "cloud": "steam_puff",
-	"trip": "trip", "puddle": "overflow", "grip": "pickup", "release": "place", "kiosk_cycle": "ui_move",
+	"wet_feet": "wet_squeak", "slip": "slip", "startled": "startle", "quick_step": "quick_step", "frost": "frost_ting", "cloud": "steam_puff",
+	"trip": "trip", "puddle": "overflow", "grip": "trunk_grab", "release": "place", "kiosk_cycle": "ui_move",
 	"pressed_linen": "linen_fold", "dock": "place", "frost_cleared": "work_finish", "cloud_gone": "fan",
 	"relocate": "ticket_assign", "move_ticket": "pickup", "tool_home": "gus_rattle", "find_tools": "gus_rattle"}
 
@@ -267,6 +267,38 @@ func _feedback(events: Array) -> void:
 		if SFX.has(t):
 			Audio.sfx(SFX[t])
 		match t:
+			# The v2 verbs: a distinct cue each, and a caption line for players who
+			# play without sound (§11.2); the HUD draws the sound mark.
+			"slip":
+				captions.push("", Loc.t("cap.slip"), "bark", 1.6)
+				_rumble(seat, 0.4, 0.2, 0.15)
+			"startled":
+				captions.push("", Loc.t("cap.startled"), "bark", 1.6)
+				_rumble(seat, 0.5, 0.3, 0.12)
+			"tempered":
+				var how := "_vent" if e.has("vent") else ("_helper" if e.get("helper", false) else "")
+				captions.push("", Loc.t("cap.tempered_%s%s" % [str(e.get("temp", "warm")), how]), "bark", 1.4)
+				Audio.sfx("vent" if e.has("vent") else "temper")
+			"watered":
+				captions.push("", Loc.t("cap.watered"), "bark", 1.4)
+			"grip":
+				captions.push("", Loc.t("cap.trunk_grip"), "bark", 1.4)
+			"trunk_delivered":
+				captions.push("", Loc.t("cap.trunk_delivered"), "bark", 2.0)
+			"place":
+				if e.has("counter"):
+					Audio.sfx("counter_put")
+			"pickup":
+				if e.has("counter"):
+					Audio.sfx("counter_take")
+			"checkout":
+				var gco: Dictionary = sim.guest(int(e.get("guest", 0))) if sim else {}
+				if not gco.is_empty():
+					var oc := SimScore.order_outcome(gco)
+					if oc == "served":
+						Audio.sfx("order_served", -2.0)
+					elif oc == "late":
+						Audio.sfx("order_late", -2.0)
 			"invalid":
 				if _invalid_cd <= 0.0:
 					Audio.sfx("target_invalid")
@@ -363,15 +395,31 @@ func _feedback(events: Array) -> void:
 					captions.push("nana", Loc.t(tk), "story", 4.0)
 			"tool_home":
 				pass
-	# Music intensity from pending useful tasks and active guests.
+	# Music intensity from pending useful tasks, and from order pressure: a
+	# card in the last third of its lobby patience or request window lifts the
+	# music a step, two or more lift it to busy, whatever the wave count says.
 	if sim and sim.s["phase"] == "active":
 		var tasks := 0
+		var urgent := 0
+		var hq := float(sim.s["hotel_q"])
+		var pat_q := float(SimGuests.patience_s(sim) * SimC.HOTEL_Q_PER_S)
 		for gid in sim.s["guests"]:
 			var g2: Dictionary = sim.s["guests"][gid]
-			if g2["state"] == "lobby": tasks += 1
+			if g2["state"] == "lobby":
+				tasks += 1
+				if float(g2["patience_q"]) < pat_q * 0.34:
+					urgent += 1
 			elif g2["state"] == "staying":
-				tasks += 1 if SimGuests.any_open_request(sim, g2) else 0
+				var open := false
+				for rq in g2["reqs"]:
+					if rq["st"] == "open":
+						open = true
+						var span := maxf(1.0, float(rq["dl"]) - float(rq["at"]))
+						if (float(rq["dl"]) - hq) / span < 0.34:
+							urgent += 1
+				tasks += 1 if open else 0
 		var lvl := 0 if tasks <= 1 else (1 if tasks <= 3 else 2)
+		lvl = maxi(lvl, mini(2, urgent))
 		if sim.s["cues"].has("level.L24.music"):
 			lvl = 3
 		if lvl != _last_music_level:

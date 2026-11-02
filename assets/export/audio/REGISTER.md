@@ -178,6 +178,15 @@ recordings, no recognisable commercial melodies). Regenerate with
 | `sfx/ping_ready.ogg` | original procedural synthesis, tools/audio/synth.py | project-original (CC0-compatible, owned by project) | yes |
 | `sfx/ping_thanks.ogg` | original procedural synthesis, tools/audio/synth.py | project-original (CC0-compatible, owned by project) | yes |
 | `sfx/countdown_go.ogg` | original procedural synthesis, tools/audio/synth.py | project-original (CC0-compatible, owned by project) | yes |
+| `sfx/counter_put.ogg` | original procedural synthesis, tools/audio/synth.py | project-original (CC0-compatible, owned by project) | yes |
+| `sfx/counter_take.ogg` | original procedural synthesis, tools/audio/synth.py | project-original (CC0-compatible, owned by project) | yes |
+| `sfx/temper.ogg` | original procedural synthesis, tools/audio/synth.py | project-original (CC0-compatible, owned by project) | yes |
+| `sfx/vent.ogg` | original procedural synthesis, tools/audio/synth.py | project-original (CC0-compatible, owned by project) | yes |
+| `sfx/trunk_grab.ogg` | original procedural synthesis, tools/audio/synth.py | project-original (CC0-compatible, owned by project) | yes |
+| `sfx/slip.ogg` | original procedural synthesis, tools/audio/synth.py | project-original (CC0-compatible, owned by project) | yes |
+| `sfx/startle.ogg` | original procedural synthesis, tools/audio/synth.py | project-original (CC0-compatible, owned by project) | yes |
+| `sfx/order_served.ogg` | original procedural synthesis, tools/audio/synth.py | project-original (CC0-compatible, owned by project) | yes |
+| `sfx/order_late.ogg` | original procedural synthesis, tools/audio/synth.py | project-original (CC0-compatible, owned by project) | yes |
 | `voice/syl_01.ogg` | original procedural synthesis, tools/audio/synth.py | project-original (CC0-compatible, owned by project) | yes |
 | `voice/syl_02.ogg` | original procedural synthesis, tools/audio/synth.py | project-original (CC0-compatible, owned by project) | yes |
 | `voice/syl_03.ogg` | original procedural synthesis, tools/audio/synth.py | project-original (CC0-compatible, owned by project) | yes |

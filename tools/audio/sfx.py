@@ -750,6 +750,72 @@ def c_trunk_open():
                        (0.42, shimmer(0.7, "trunkopen"), 0.05)])
 
 
+# ---------------------------------------------------------------- v2 verbs
+# One short cue per new verb, each in the kit's own voice (wood, mallets, air),
+# so pass counters, the middle step, trunks and the lane hazards read by ear.
+
+def c_counter_put():
+    # setting something down on the pass counter: a flat wooden tap, brighter than "place"
+    return place(0.24, [(0.0, thud(210.0, 0.12, "cput", 0.25, 1100.0, 0.3, 0.03), 0.7),
+                        (0.004, I.woodblock(1320.0, 0.35, 0, 0.5), 0.35),
+                        (0.06, click(3600.0, 1.4, 0.008, "cput_c", 0.001), 0.15)])
+
+
+def c_counter_take():
+    # taking from the counter: the same wood, a rising flick
+    return place(0.22, [(0.0, I.woodblock(1760.0, 0.4, 1, 0.3), 0.3),
+                        (0.004, tone(0.12, [(0, 700), (0.06, 1100), (0.12, 1250)],
+                                     [(0, 0), (0.01, 1), (0.06, 0.5), (0.12, 0)],
+                                     ((1, 1.0), (2, 0.12)), seed="ctake"), 0.7)])
+
+
+def c_temper():
+    # the heat pump's middle step: a soft breath, then two celesta notes as the badge appears
+    return place(0.8, [(0.0, lp_noise(0.35, 900.0, [(0, 0), (0.05, 1), (0.35, 0)], "temper_n"), 0.35),
+                       (0.1, mallets([(0.0, 84, 0.5), (0.1, 91, 0.6)], "celesta"), 0.45),
+                       (0.2, shimmer(0.5, "temper_s"), 0.06)])
+
+
+def c_vent():
+    # the same step at an open vent: air through slats and one glockenspiel note
+    return place(0.7, [(0.0, bp_noise(0.45, 1800.0, 1.0, [(0, 0), (0.08, 1), (0.45, 0)], "vent_n"), 0.4),
+                       (0.18, I.glock(91, 0.5, 0, 0.6), 0.3)])
+
+
+def c_trunk_grab():
+    # a trunk handle: a latch click, a low wooden heft, a short squeak of the leather
+    return place(0.3, [(0.0, click(1800.0, 1.6, 0.01, "tg_latch", 0.002), 0.4),
+                       (0.03, thud(140.0, 0.2, "tg_thud", 0.4, 600.0, 0.3, 0.05), 0.8),
+                       (0.08, I.squeak(520.0, 0.14, 0.4, 0, 1.0), 0.15)])
+
+
+def c_slip():
+    # a frosty slide: a glassy whistle falling away under a tiny bell
+    return place(0.6, [(0.0, small_bell(0.3, [(0.0, 0.5)], 3100.0, "slip_b"), 0.35),
+                       (0.02, whistle(0.45, [(0, 1900), (0.45, 700)], [(0, 0), (0.05, 1), (0.45, 0)], "slip_w", 0.4), 0.5),
+                       (0.3, _foot(200.0, "slip_f", 0.5), 0.3)])
+
+
+def c_startle():
+    # a startled hop: a quick rising "yip", then the dropped item's little knock
+    return place(0.55, [(0.0, tone(0.16, [(0, 420), (0.06, 980), (0.16, 820)], [(0, 0), (0.01, 1), (0.16, 0)],
+                                   ((1, 1.0), (2, 0.3), (3, 0.1)), seed="startle"), 0.6),
+                        (0.22, thud(230.0, 0.12, "startle_d", 0.3, 1000.0, 0.3, 0.03), 0.5),
+                        (0.22, click(2600.0, 1.6, 0.008, "startle_c", 0.001), 0.2)])
+
+
+def c_order_served():
+    # an order served in full: four celesta notes up the motif and a shimmer
+    return place(0.9, [(0.0, mallets([(0.0, 84, 0.5), (0.08, 91, 0.6), (0.16, 96, 0.7), (0.26, 103, 0.75)], "celesta"), 0.5),
+                       (0.26, shimmer(0.5, "served_s"), 0.05)])
+
+
+def c_order_late():
+    # served late, happily: three marimba notes that go up and settle back a step
+    return place(0.8, [(0.0, mallets([(0.0, 84, 0.5), (0.1, 89, 0.55), (0.28, 86, 0.5)], "marimba"), 0.5),
+                       (0.1, I.celesta(89, 0.3, 0, 0.3), 0.2)])
+
+
 def c_parcel_place():
     return place(0.4, [(0.0, thud(150.0, 0.18, "parcel", 0.7, 650.0, 0.2, 0.04), 0.7),
                        (0.0, rustle(0.15, "parcel_r", 260.0, 1200.0, 5000.0, [(0, 1), (0.15, 0)]), 0.15)])
@@ -1507,5 +1573,9 @@ for _cid, _bus, _t in [("staff_effort", V, -5.0), ("staff_thanks", V, -5.0), ("s
                        ("unready", U, -8.0), ("photo_timer", U, -8.0), ("photo_shutter", E, -5.0),
                        ("postcard", E, -5.0), ("ribbon", E, -5.0), ("unlock", E, -4.5), ("cheer", E, -4.5),
                        ("confetti", E, -5.0), ("ping_help", U, -8.0), ("ping_bringing", U, -8.0),
-                       ("ping_ready", U, -8.0), ("ping_thanks", U, -8.0), ("countdown_go", U, -8.0)]:
+                       ("ping_ready", U, -8.0), ("ping_thanks", U, -8.0), ("countdown_go", U, -8.0),
+                       # v2 verbs
+                       ("counter_put", E, -5.0), ("counter_take", E, -5.0), ("temper", E, -4.5), ("vent", E, -4.5),
+                       ("trunk_grab", E, -4.5), ("slip", E, -4.5), ("startle", E, -4.5),
+                       ("order_served", E, -4.0), ("order_late", E, -5.0)]:
     _reg(_cid, _bus, globals()["c_" + _cid], _t)

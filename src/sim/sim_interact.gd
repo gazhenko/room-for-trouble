@@ -628,7 +628,7 @@ static func _do_carry(sim: HotelSim, st: Dictionary, key: String) -> void:
 					return
 				hold(sim, st, on_c)
 				_lock(st, "take", SimC.T_TAKE)
-				sim.emit("pickup", {"seat": seat, "id": on_c, "k": sim.item(on_c)["k"]})
+				sim.emit("pickup", {"seat": seat, "id": on_c, "k": sim.item(on_c)["k"], "counter": ci})
 			else:
 				if _counter_item(sim, ci) != 0:
 					return

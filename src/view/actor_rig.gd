@@ -221,9 +221,11 @@ func tick(dt: float) -> void:
 		# Lean into the run: more at speed, a nod forward when accelerating.
 		torso_lean = 0.06 + 0.16 * clampf(speed / 3.6, 0.0, 1.0) + clampf(dv * 0.12, -0.1, 0.2) * rm
 	if dash_t > 0.0:
+		# Quick Step stretch; under reduced motion only a small lean, no stretch.
 		var k := dash_t / 0.22
-		sq = sq * Vector3(1.0 - 0.16 * k, 1.0 + 0.22 * k, 1.0 - 0.16 * k)
-		torso_lean = 0.4 * k
+		if not reduced_motion:
+			sq = sq * Vector3(1.0 - 0.16 * k, 1.0 + 0.22 * k, 1.0 - 0.16 * k)
+		torso_lean = 0.4 * k * rm
 	elif dv < -1.6 and not reduced_motion:
 		# Hard stop: a quick squash the scale lerp below recovers from.
 		body.scale = Vector3(1.16, 0.86, 1.16)

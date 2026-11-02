@@ -107,6 +107,16 @@ func _process(dt: float) -> void:
 		print("sizes ui=%s shift=%s hud=%s" % [shift.get_parent().size, shift.size, shift.hud.size])
 	if hotel_t >= due or t > 600.0:
 		Engine.time_scale = 1.0
+		# --a11y-demo: fire the v2 sound events at the shot so the frame shows
+		# their captions and sound marks (evidence for §11.2, not gameplay).
+		if "--a11y-demo" in OS.get_cmdline_user_args():
+			var seat0: int = shift.sim.s["staff"][0]["seat"] if not shift.sim.s["staff"].is_empty() else 0
+			var room0: String = shift.sim.L.active_rooms[0]
+			var demo := [{"type": "slip", "seat": seat0, "kind": "frost", "room": room0},
+				{"type": "tempered", "seat": seat0, "id": 0, "temp": "cool", "vent": "AB"},
+				{"type": "watered", "room": room0, "seat": seat0}]
+			shift.hud.feed(shift.sim.s, demo)
+			shift._feedback(demo)
 		await get_tree().process_frame
 		await get_tree().process_frame
 		var img := get_viewport().get_texture().get_image()

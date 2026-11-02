@@ -1,0 +1,12 @@
+{
+  "name": "Room for Trouble",
+  "repo": "room-for-trouble",
+  "id": "RoomForTrouble",
+  "prefix": "RoomForTrouble",
+  "version": "v2.0.0",
+  "app": "Room for Trouble.app",
+  "exe": "RoomForTrouble.exe",
+  "mac_root": ".",
+  "windows_root": ".",
+  "checksums": "SHA256SUMS.txt"
+}

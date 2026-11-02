@@ -104,6 +104,25 @@ quick tunnel (needs `cloudflared`; the tunnel closes when the script ends).
 `tools/verify_artifacts.sh` runs all of the above (and the macOS smoke test on a Mac) and
 writes `build/verify_summary.txt`.
 
+## Publishing a release
+
+After `tools/build.sh` and `tools/verify_artifacts.sh` pass on the commit to release:
+
+```sh
+RFT_NO_PUBLISH=1 tools/release.sh v2.0.0   # stage archives, build and verify installers
+tools/release.sh v2.0.0                    # same, then gh release create with docs/RELEASE_NOTES.md
+```
+
+`tools/release.sh` refuses to run if `project.godot`'s version doesn't match the tag, if
+`build/` came from a different commit, or if `build/verify_summary.txt` has a failure. It
+stages these files in `build/release/TAG/`:
+- the macOS, Windows, Linux and server archives
+- the offline Mac DMG and Windows Setup.exe (`tools/installers/`, see its README)
+- `START-HERE.txt` and the installer manifest and validation
+- `SHA256SUMS.txt`
+
+Before publishing, update the README's installer links and `docs/RELEASE_NOTES.md` for the new tag.
+
 ## Installing on a Steam Deck over the network
 
 1. On the build machine, render the library art once

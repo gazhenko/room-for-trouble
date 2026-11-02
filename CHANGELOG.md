@@ -4,7 +4,7 @@ All notable changes to *Room for Trouble*. Versions follow `config/version` in
 `project.godot`. Protocol and content changes are noted, because mismatched clients cannot
 share an online room.
 
-## 2.0.0-alpha — unreleased (branch)
+## 2.0.0 — 2026-11-02
 
 The Overcooked-scale rebuild (`docs/DESIGN_V2.md`, decisions D31–D53). Simulation version
 2.0.1 and protocol 2: 1.x and 2.0.0 replays are refused, and 1.x clients cannot share a room.

@@ -109,7 +109,8 @@ func _process(dt: float) -> void:
 		Engine.time_scale = 1.0
 		# --a11y-demo: fire the v2 sound events at the shot so the frame shows
 		# their captions and sound marks (evidence for §11.2, not gameplay).
-		if "--a11y-demo" in OS.get_cmdline_user_args():
+		if "--a11y-demo" in OS.get_cmdline_user_args() and not has_meta("a11y_demo"):
+			set_meta("a11y_demo", true)
 			var seat0: int = shift.sim.s["staff"][0]["seat"] if not shift.sim.s["staff"].is_empty() else 0
 			var room0: String = shift.sim.L.active_rooms[0]
 			var demo := [{"type": "slip", "seat": seat0, "kind": "frost", "room": room0},
@@ -117,12 +118,17 @@ func _process(dt: float) -> void:
 				{"type": "watered", "room": room0, "seat": seat0}]
 			shift.hud.feed(shift.sim.s, demo)
 			shift._feedback(demo)
-			# And the three lane hazards side by side on the lane, for palette frames.
+			# And the three lane hazards in the open middle of the lane, for palette frames.
 			var lane_z: int = (shift.sim.L.hall.position.y + 1) * SimC.UM
-			var hx0: int = (shift.sim.L.hall.position.x + 2) * SimC.UM
-			SimEnv.add_puddle(shift.sim, hx0, lane_z, "demo")
-			SimEnv.add_cloud(shift.sim, hx0 + 3 * SimC.UM, lane_z, "demo")
-			shift.sim.room(room0)["frost"] = true
+			var hx0: int = (shift.sim.L.hall.position.x + shift.sim.L.hall.size.x / 2) * SimC.UM
+			SimEnv.add_puddle(shift.sim, hx0 - 2 * SimC.UM, lane_z, "demo")
+			shift.sim.s["cloud_cap"] = maxi(int(shift.sim.s.get("cloud_cap", 0)), 2)   # levels without steam have a cap of 0
+			SimEnv.add_cloud(shift.sim, hx0 + 2 * SimC.UM, lane_z, "demo")
+			var frost_room: String = shift.sim.L.active_rooms[mini(1, shift.sim.L.active_rooms.size() - 1)]
+			shift.sim.room(frost_room)["frost"] = true
+			print("a11y demo: puddles %d clouds %d frost %s" % [shift.sim.s["puddles"].size(), shift.sim.s["clouds"].size(), frost_room])
+			for i in 24:   # let the puddle grow and the cloud settle before the shot
+				await get_tree().process_frame
 		await get_tree().process_frame
 		await get_tree().process_frame
 		var img := get_viewport().get_texture().get_image()

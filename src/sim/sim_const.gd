@@ -8,7 +8,7 @@ const TICK_HZ := 30
 const UM := 1_000_000                 # µm per metre
 const HOTEL_Q_PER_S := 30_000         # hotel quanta per hotel second
 const PROTOCOL_VERSION := 2          # v2 floors, pacing and scoring: v1 clients and replays are refused
-const SIM_VERSION := "2.0.0"
+const SIM_VERSION := "2.0.1"         # 2.0.1: sprout water step, vent/helper tempering
 
 # Buttons in an InputFrame bitmask.
 const BTN_CARRY := 1
@@ -79,6 +79,7 @@ const T_LIFT_TRANSIT := 60
 const T_GOODBYE := 24
 const T_RING := 1
 const T_TEMPER := 30                 # warm a towel / chill a snack at the heat pump (1.0 s)
+const VENT_TEMPER_HEAT := 20         # |room heat| from which an open vent warms a towel / chills a snack
 
 # Lane hazards (DESIGN_V2 §7)
 const CLOUD_SLOW_MILLI := 400        # run speed inside a steam cloud

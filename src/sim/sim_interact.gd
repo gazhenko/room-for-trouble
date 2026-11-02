@@ -117,6 +117,25 @@ static func gate_pos(sim: HotelSim, edge: String) -> Vector2i:
 	var north := p.y <= sim.L.hall.position.y * SimC.UM
 	return Vector2i(p.x, p.y + (-250_000 if north else 250_000))
 
+## What an open vent on this edge can do to a held item: "warm" when a room on
+## the edge is warm, "cool" when one is cold (|heat| >= VENT_TEMPER_HEAT), else "".
+static func vent_offers(sim: HotelSim, edge: String) -> String:
+	if not sim.s["gates"].get(edge, false):
+		return ""
+	var warm := false
+	var cool := false
+	for letter in sim.L.edge_rooms(edge):
+		var h: int = sim.room(letter)["heat"]
+		if h >= SimC.VENT_TEMPER_HEAT:
+			warm = true
+		elif h <= -SimC.VENT_TEMPER_HEAT:
+			cool = true
+	if warm and not cool:
+		return "warm"
+	if cool and not warm:
+		return "cool"
+	return ""
+
 ## A howl startles staff near the room's door: half a second frozen and the
 ## held item set down at their feet (never lost).
 static func startle_near(sim: HotelSim, x: int, z: int, radius: int) -> void:
@@ -388,6 +407,17 @@ static func work_candidates(sim: HotelSim, st: Dictionary) -> Array:
 	if sim.has_sys("thermal"):
 		for e in sim.L.thermal_edges:
 			out.append(_cand("gate:" + e, gate_pos(sim, e), true, "", RANK_STATION))
+			# An open vent on a warm room's edge warms a towel, on a cold room's
+			# edge chills a snack: the middle step without the walk to the pump
+			# (DESIGN_V2 §5.4). Its own work key: a key shared with the pump made
+			# the reference bot start the work at every vent it walked past.
+			if hk in ["towel", "snack"] and sim.s["gates"].get(e, false):
+				var want := "warm" if hk == "towel" else "cool"
+				if vent_offers(sim, e) == want:
+					var it_v: Dictionary = sim.item(st["held"])
+					var done_v := str(it_v.get("temp", "")) != ""
+					out.append(_cand("vent:%s:%d" % [e, st["held"]], gate_pos(sim, e), not plan and not done_v,
+						wp if plan else "ui.reason.already_tempered", RANK_SOCKET))
 		if F.has("heat_pump"):
 			if hk in ["towel", "snack"]:
 				# The middle step: warm a towel / chill a snack (one second at the pump).
@@ -781,7 +811,7 @@ static func work_duration(sim: HotelSim, key: String) -> int:
 		"puddle": return SimC.T_MOP_PUDDLE
 		"cloud": return SimC.T_BREEZER
 		"frost": return SimC.T_FROST
-		"temper": return SimC.T_TEMPER
+		"temper", "vent": return SimC.T_TEMPER
 		"thermo": return SimC.T_THERMO
 		"tray": return SimC.T_WATER
 		"gate": return SimC.T_GATE
@@ -917,6 +947,15 @@ static func _commit_work(sim: HotelSim, key: String, seats: Array) -> void:
 			else:
 				it_t["temp"] = "warm" if it_t["k"] == "towel" else "cool"
 				sim.emit("tempered", {"seat": seat, "id": int(parts[1]), "temp": it_t["temp"]})
+		"vent":
+			# vent:<edge>:<item>: the same middle step at an open vent (D51).
+			var it_x := sim.item(int(parts[2]))
+			var want_x := "warm" if it_x.get("k", "") == "towel" else "cool"
+			if it_x.is_empty() or not it_x["k"] in ["towel", "snack"] or vent_offers(sim, parts[1]) != want_x:
+				ok = false
+			else:
+				it_x["temp"] = want_x
+				sim.emit("tempered", {"seat": seat, "id": int(parts[2]), "temp": want_x, "vent": parts[1]})
 		"thermo":
 			var r4 := sim.room(parts[1])
 			var order := ["neutral", "warm", "cool"]
@@ -937,6 +976,12 @@ static func _commit_work(sim: HotelSim, key: String, seats: Array) -> void:
 				r5["hum"] = mini(100, r5["hum"] + 20)
 				SimScore.note_watered(sim, parts[1])
 				sim.emit("watered", {"room": parts[1], "seat": seat})
+				# A sprout's "water" step on its card is this watering (DESIGN_V2 §5.4).
+				var wg := sim.guest(int(r5.get("guest", 0))) if int(r5.get("guest", 0)) != 0 else {}
+				if not wg.is_empty() and wg["state"] == "staying":
+					var wi := SimGuests.open_request(sim, wg, "water")
+					if wi >= 0:
+						SimGuests.fulfill(sim, wg, wi, seat, 0)
 		"gate":
 			var e := parts[1]
 			sim.s["gates"][e] = not sim.s["gates"][e]

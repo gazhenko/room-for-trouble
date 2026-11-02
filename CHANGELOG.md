@@ -4,6 +4,39 @@ All notable changes to *Room for Trouble*. Versions follow `config/version` in
 `project.godot`. Protocol and content changes are noted, because mismatched clients cannot
 share an online room.
 
+## 2.0.0-alpha — unreleased (branch)
+
+The Overcooked-scale rebuild (`docs/DESIGN_V2.md`, decisions D31–D53). Simulation version
+2.0.1 and protocol 2: 1.x and 2.0.0 replays are refused, and 1.x clients cannot share a room.
+
+### Game
+
+- New floors: 13×13 four-room chapter 1, 19×13 six-room chapters 2–6, 19×14 split lobby for
+  chapter 5; all 24 shifts, the three tutorials, the hub, the Playground and every story scene
+  play on them. Characters at twice the scale, a tighter camera, instant take and put, a real
+  Quick Step.
+- One **order card** per guest on a rail (key, gift, requests, timer), per-order scoring with
+  tips for speed, continuous arrivals paced by the rooms, a results screen that says how many
+  orders were served, late or missed and when the roster was trimmed.
+- The middle step: warm towels and chilled snacks at the heat pump, at an open vent on a warm or
+  cold room's edge, or from a helping dragon or yeti; a sprout's watering as a card step;
+  festival trunks as job cards showing both handles.
+- Lane hazards: steam slows, frost and puddles slide, howls startle; faster shutters; the lift
+  has a visible car; the split lobby is dressed with lift signs and a luggage cart.
+- Per-chapter light (late morning, noon, dusk, greenhouse, evening, lantern-lit night).
+
+### Story and presentation
+
+- Story scenes stay authored on the classic floor and are staged onto the v2 floors with the
+  framing scaled to the toys; a hotel station in the line to a face is hidden for that panel;
+  every beat passes the frame check (D48).
+- Finished-order cards fade in their last moment instead of lingering as a grey slab.
+
+### Performance
+
+- Pooled particle effects and one mesh per thermostat head: L24 with four players at 1280×800
+  renders 120 floor draw calls on Low and 146 on Standard (`docs/PERFORMANCE.md`).
+
 ## 1.0.0 — 2026-10-23
 
 First complete build of the game described in `docs/DESIGN_BRIEF.md`.

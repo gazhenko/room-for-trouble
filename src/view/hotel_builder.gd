@@ -399,11 +399,11 @@ func _template_decor() -> void:
 			var lp: Vector2i = L.lift_pads[i]
 			var sx := -0.62 if float(lp.x) < xe * 0.5 else 0.62
 			var sp := Vector3(lp.x + sx, 0, lp.y)
-			mk.cyl(sp, 0.035, 1.5, Art.BRASS, 6)
-			mk.box(sp + Vector3(0, 1.58, 0), Vector3(0.34, 0.28, 0.04), Art.CREAM, Art.WALNUT)
-			mk.box(sp + Vector3(0, 1.52, 0.025), Vector3(0.14, 0.1, 0.02), Art.WALNUT.lightened(0.1))
-			mk.box(sp + Vector3(0, 1.585, 0.025), Vector3(0.05, 0.035, 0.02), Art.WALNUT.lightened(0.1))
-			mk.cone(sp + Vector3(0, 1.62, 0.03), 0.05, 0.09, Art.CORAL, 4)
+			mk.cyl(sp, 0.045, 1.7, Art.BRASS, 6)
+			mk.box(sp + Vector3(0, 1.8, 0), Vector3(0.44, 0.36, 0.05), Art.CREAM, Art.WALNUT)
+			mk.box(sp + Vector3(0, 1.72, 0.03), Vector3(0.18, 0.13, 0.03), Art.WALNUT.lightened(0.1))
+			mk.box(sp + Vector3(0, 1.805, 0.03), Vector3(0.06, 0.04, 0.03), Art.WALNUT.lightened(0.1))
+			mk.cone(sp + Vector3(0, 1.85, 0.035), 0.07, 0.11, Art.CORAL, 4)
 		var rp: Vector2i = L.fixtures["reception"]
 		var cart := Vector3(rp.x + 1.1, 0, hz0 - 0.42)
 		mk.box(cart + Vector3(0, 0.3, 0), Vector3(0.7, 0.05, 0.42), Art.WALNUT)

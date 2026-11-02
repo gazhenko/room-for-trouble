@@ -385,7 +385,7 @@ func _deliver(st: Dictionary, hk: String) -> Dictionary:
 				return _task("tap", "work", _um(F["tap"]), "", func(): return int(sim.item(st["held"]).get("ch", 0)) < 3)
 			var room2 := _dry_sprout_room()
 			if room2 != "":
-				return _task("tray:" + room2, "work", _um(sim.L.rooms[room2]["tray"]), "tray:" + room2, func(): return sim.room(room2)["tray"] < 30)
+				return _task("tray:" + room2, "work", _um(sim.L.rooms[room2]["tray"]), "tray:" + room2, func(): return _water_wanted(room2))
 			return _dock_task("can")
 		"curtain_roll":
 			var target := _curtain_room()
@@ -440,7 +440,14 @@ func _mop_target(st: Dictionary) -> Dictionary:
 		return _task("puddle:%d" % pid, "work", Vector2i(p["x"], p["z"]), "puddle:%d" % pid, func(): return sim.s["puddles"].has(pid))
 	return {}
 
+## The room a watering can should go to: a sprout with an open "water" step on
+## its card first (DESIGN_V2 §5.4), then a dry sprout room with an empty tray.
 func _dry_sprout_room() -> String:
+	for gid in sim.s["guests"]:
+		var g: Dictionary = sim.s["guests"][gid]
+		if g["fam"] == "sprout" and g["state"] == "staying" and g["room"] != "" and SimGuests.open_request(sim, g, "water") >= 0:
+			if sim.room(g["room"])["tray"] < 60:
+				return g["room"]
 	for gid in sim.s["guests"]:
 		var g: Dictionary = sim.s["guests"][gid]
 		if g["fam"] == "sprout" and g["state"] in ["staying", "walking"] and g["room"] != "":
@@ -448,6 +455,16 @@ func _dry_sprout_room() -> String:
 			if r["hum"] < 62 and r["tray"] < 30:
 				return g["room"]
 	return ""
+
+## True while the room still wants the can: an open water step, or a dry tray.
+func _water_wanted(room: String) -> bool:
+	var r := sim.room(room)
+	var gid: int = int(r.get("guest", 0))
+	if gid != 0:
+		var g := sim.guest(gid)
+		if not g.is_empty() and SimGuests.open_request(sim, g, "water") >= 0 and r["tray"] < 60:
+			return true
+	return r["hum"] < 62 and r["tray"] < 30
 
 func _curtain_room() -> String:
 	for gid in sim.s["guests"]:
@@ -508,15 +525,15 @@ func _job_request(st: Dictionary) -> Dictionary:
 		var g0: Dictionary = sim.s["guests"][gid0]
 		if g0["state"] == "staying":
 			for rq0 in g0["reqs"]:
-				if rq0["st"] == "open":
+				if rq0["st"] == "open" and open.has(rq0["k"]):
 					open[rq0["k"]] += 1
 	for gid in sim.s["guests"]:
 		var g: Dictionary = sim.s["guests"][gid]
 		if g["state"] != "staying":
 			continue
 		for rq in g["reqs"]:
-			if rq["st"] != "open":
-				continue
+			if rq["st"] != "open" or not open.has(rq["k"]):
+				continue   # "water" is _job_water's (the can, not stock)
 			var c := "req:%d:%s" % [gid, rq["k"]]
 			if _claimed(c, st["seat"]) or int(open[rq["k"]]) <= int(intent.get(rq["k"], 0)):
 				continue

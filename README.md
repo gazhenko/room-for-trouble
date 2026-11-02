@@ -23,10 +23,12 @@ Version 2 rebuilds the moment-to-moment game at Overcooked density: small floors
 at a glance on a 7" screen (13×13 tiles for chapter 1, 19×13 for six rooms), staff about 70 px
 tall at 1280×800, instant pick-up and put-down, a real dash, one **order card** per guest with
 the steps in order and a timer, tips for speed, pass counters to hand things across, warm towels
-and chilled snacks at the heat pump, lane hazards you can see (steam that slows, frost and puddles
-that slide, howls that startle), a per-chapter light from late morning to a lantern-lit festival
-night, and continuous arrivals with the first guest at four seconds. A shift still never fails.
-The design is in `docs/DESIGN_V2.md`; decisions D31–D47 in `DECISIONS.md`.
+and chilled snacks (at the heat pump, at an open vent on a warm or cold room, or from a helping
+dragon or yeti), a sprout's watering as a step on its card, festival trunks as job cards with
+both handles, lane hazards you can see (steam that slows, frost and puddles that slide, howls that
+startle), a lift with a car that sinks and rises, a per-chapter light from late morning to a
+lantern-lit festival night, and continuous arrivals with the first guest at four seconds. A shift
+still never fails. The design is in `docs/DESIGN_V2.md`; decisions D31–D53 in `DECISIONS.md`.
 
 ## What's in the game
 

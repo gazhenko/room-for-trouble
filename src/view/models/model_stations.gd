@@ -1272,16 +1272,17 @@ static func _lift_pad(st: StationNode) -> void:
 	st.apply({"enabled": true, "busy": false, "tripped": false, "car": false, "car_y": 0.0})
 
 static func _lift_car(mk: MeshKit) -> void:
-	mk.rbox(Vector3(0, 0.035, 0), Vector3(0.62, 0.03, 0.62), Art.WALNUT.lightened(0.1), 0.04, Art.WALNUT.lightened(0.25))
-	for sx in [-0.28, 0.28]:
-		for sz in [-0.28, 0.28]:
-			mk.cyl(Vector3(sx, 0.05, sz), 0.018, 0.96, Art.BRASS, 5)
-	for sz2 in [-0.28, 0.28]:
-		mk.box(Vector3(0, 1.02, sz2), Vector3(0.6, 0.03, 0.03), Art.BRASS)
-	for sx2 in [-0.28, 0.28]:
-		mk.box(Vector3(sx2, 1.02, 0), Vector3(0.03, 0.03, 0.6), Art.BRASS)
-	mk.box(Vector3(0, 1.08, 0), Vector3(0.34, 0.08, 0.34), Art.CORAL, Art.CORAL.lightened(0.15))
-	mk.sphere(Vector3(0, 1.16, 0), 0.05, Art.GOLD, 2, 6)
+	# Chunky enough to read at the game's pixel size: posts and rails ~6 cm.
+	mk.rbox(Vector3(0, 0.035, 0), Vector3(0.66, 0.04, 0.66), Art.WALNUT.lightened(0.1), 0.04, Art.WALNUT.lightened(0.25))
+	for sx in [-0.29, 0.29]:
+		for sz in [-0.29, 0.29]:
+			mk.cyl(Vector3(sx, 0.05, sz), 0.032, 0.98, Art.BRASS, 6)
+	for sz2 in [-0.29, 0.29]:
+		mk.box(Vector3(0, 1.04, sz2), Vector3(0.66, 0.06, 0.06), Art.BRASS)
+	for sx2 in [-0.29, 0.29]:
+		mk.box(Vector3(sx2, 1.04, 0), Vector3(0.06, 0.06, 0.66), Art.BRASS)
+	mk.box(Vector3(0, 1.12, 0), Vector3(0.42, 0.1, 0.42), Art.CORAL, Art.CORAL.lightened(0.15))
+	mk.sphere(Vector3(0, 1.22, 0), 0.07, Art.GOLD, 2, 6)
 
 static func _lift_mesh(mk: MeshKit, idx: int) -> void:
 	mk.cyl(Vector3.ZERO, 0.44, 0.04, Art.STONE.lightened(0.1), 16, Art.CREAM.darkened(0.1), 0.42)

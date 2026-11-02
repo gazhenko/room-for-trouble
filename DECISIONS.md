@@ -272,3 +272,41 @@ sets keep station bodies unmerged); authored props and actors are never hidden. 
 the camera FOV while it is up. The content validator stages beats the same way and warns about
 actors in walls or station footprints; `ui_tour` prints a per-beat CHECK report and every beat
 has to pass it.
+
+**D49 — Floor draw calls: pooled particles and one mesh per thermostat head.** Every sparkle,
+confetti flake, dash-dust puff and ribbon piece was its own MeshInstance3D; at a busy four-player
+moment the flakes alone were about 35 of the floor's draw calls. They are now instances of two
+pooled MultiMeshes (a unit box and a unit ball, per-instance transform and colour, the same
+dithered FX shader): two draw calls for every particle on the floor. A thermostat's housing and
+face are one cached mesh per mode instead of two parts (six fewer calls per floor). Hearts, puffs
+and notes stay individual nodes; they are rare. Measured numbers are in `docs/PERFORMANCE.md`.
+
+**D50 — The lift has a car.** One dumbwaiter cage for the pair: it waits at the pad it last
+arrived at, sinks into the floor at the sending pad over the first 40% of the transit and rises
+at the other pad over the last 40%, and the item in transit rides it. The view derives the whole
+animation from the lift state (`busy`, `t`, `to`), so replays and remote peers show the same
+car. The split lobby gets a lift sign at each pad and a luggage cart by reception
+(`HotelBuilder._template_decor`), decoration only, no collision.
+
+**D51 — The middle step has three doors.** Besides the heat pump, an open thermal vent on a
+warm room's edge (heat ≥ 20) warms a towel and one on a cold room's edge (heat ≤ −20) chills a
+snack (`vent:<edge>:<item>` work, one second, the same badges and +8 s request window); and
+asking a comfortable yeti (dragon) for help also chills the snack (warms the towel) in the
+asker's hands. The reasons name all three. The vent has its own work key on purpose: a first
+version reused `temper:<item>` and the reference bot, which presses Work whenever the sim's
+best candidate carries its task key, started the work at every vent it walked past on the way
+to the pump (L06–L19 lost 4–13 requests per level in the matrix). The bot keeps using the pump;
+the alternatives are for people who are already standing there.
+
+**D52 — A sprout's first request is a watering.** On moisture floors a sprout's first planned
+request is "water": a tool-can step on the card, fulfilled by watering the tray in its room with
+a filled can (the tap fills the can), with the +8 s window of a middle step. Humidity comfort is
+unchanged; the step makes the sprout chain visible and scored like any other request. The bot
+sends the can to a sprout with an open water step before dry rooms. `SIM_VERSION` is 2.0.1:
+2.0.0 replays are refused.
+
+**D53 — Trunks are cards on the rail.** A festival trunk still on the floor is a job card at
+the right end of the order rail: the trunk, its two handles with the portrait of whoever holds
+each, a cue ("Grab a handle" / "Two carry it faster" / "To the stand!") and the way left to the
+stand as the bar. Two carriers move a trunk at 3 m/s against 1.4 alone (§5.6), so the half-held
+state says so.

@@ -34,7 +34,11 @@ than it is.
 - **Classic templates P1–P6 remain in the data** only as the authoring frame for scenes and for
   the mirror test; nothing plays on them.
 - **v1 replays and per-level bests are not comparable** with v2 (different floors, pacing and
-  score); `SIM_VERSION` is 2.0.0 and v1 replays are refused with a message.
+  score); `SIM_VERSION` is 2.0.1 (2.0.0 added the floors, 2.0.1 the sprout water step and
+  vent/helper tempering) and replays from other simulation versions are refused with a message.
+- **The lift car is a view-side animation.** The simulation still teleports the item or rider
+  after the transit time; the cage sinking and rising is derived from the lift state, so a
+  player who steps onto the arriving pad early sees the car come up under their feet.
 - **Walking share.** Even with instant take/put, roughly 70% of a job is still walking on the
   v2 floors (hands-on steps are 0.2–1.7 s); the warm/chill middle step is the lever that adds
   hands-on time without adding waiting.

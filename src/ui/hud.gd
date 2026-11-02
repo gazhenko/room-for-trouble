@@ -13,7 +13,7 @@ const ITEM_ICON := {"ticket": "item_ticket", "move_ticket": "item_move_ticket", 
 	"welcome_yeti": "gift_yeti", "welcome_dragon": "gift_dragon", "welcome_ghost": "gift_ghost",
 	"welcome_moonwolf": "gift_moonwolf", "welcome_sprout": "gift_sprout", "curtain_roll": "item_curtain",
 	"mop": "tool_mop", "watering_can": "tool_can", "breezer": "tool_breezer", "festival_trunk": "item_trunk",
-	"festival_parcel": "item_parcel"}
+	"festival_parcel": "item_parcel", "water": "tool_can"}
 
 var view: HotelView
 var s: Dictionary = {}
@@ -549,7 +549,7 @@ func _verb(kind: String, key: String, st: Dictionary) -> String:
 			return Loc.t("ui.verb.take_tool" if held == "" else "ui.verb.dock_tool")
 		"counter":
 			return Loc.t("ui.verb.counter_take" if held == "" else "ui.verb.counter_put")
-		"temper":
+		"temper", "vent":
 			return Loc.t("ui.verb.temper_warm" if held == "towel" else "ui.verb.temper_cool")
 		"lift":
 			return Loc.t("ui.verb.lift_load" if held != "" else "ui.verb.take")
@@ -676,14 +676,28 @@ func _order_cards() -> Array:
 	cards.sort_custom(func(a, b): return int(a["ai"]) < int(b["ai"]))
 	return cards
 
+## Festival trunks still on the floor are jobs on the rail too (DESIGN_V2 §5.6):
+## a card with the two handles, who holds each, and the way left to the stand.
+func _trunk_cards() -> Array:
+	var out: Array = []
+	for tid in s.get("trunks", {}):
+		var tr: Dictionary = s["trunks"][tid]
+		if not tr.get("delivered", false):
+			out.append(tr)
+	out.sort_custom(func(a, b): return int(a["id"]) < int(b["id"]))
+	return out
+
 func _draw_orders() -> void:
 	var cards := _order_cards()
+	var trunks := _trunk_cards()
 	var x := 14.0
 	var y := 10.0
 	var hq := float(s.get("hotel_q", 0))
 	var limit_x := size.x * 0.5 - 92.0 - 10.0 if show_clock else size.x * 0.6
 	var fit := clampi(int((limit_x - x - 50.0) / (CARD_W + 8.0)), 1, 5)
-	var shown := mini(fit, cards.size())
+	# Trunk jobs take the rightmost slots; guests keep arrival order on the left.
+	var trunk_slots := mini(trunks.size(), maxi(0, fit - 1))
+	var shown := mini(fit - trunk_slots, cards.size())
 	var pat_q := float(int(level.get("patience_s", SimC.PATIENCE_S)) * SimC.HOTEL_Q_PER_S)
 	for i in shown:
 		var g: Dictionary = cards[i]
@@ -758,10 +772,14 @@ func _draw_orders() -> void:
 		if int(g.get("tips", 0)) > 0:
 			UiKit.draw_text_outlined(self, r.position + Vector2(CARD_W - 16, 50), "+%d" % (int(g["tips"]) / 1000), 13, Art.GOLD.darkened(0.3), Color(1, 1, 1, 0.9))
 		x += CARD_W + 8.0
-	if cards.size() > shown:
+	for ti in trunk_slots:
+		_draw_trunk_card(Rect2(Vector2(x, y), Vector2(CARD_W, CARD_H)), trunks[ti])
+		x += CARD_W + 8.0
+	var hidden := (cards.size() - shown) + (trunks.size() - trunk_slots)
+	if hidden > 0:
 		var r2 := Rect2(Vector2(x, y + 10), Vector2(44, 48))
 		draw_style_box(UiKit._box(Color("#EFE6D8"), UiKit.WALNUT, 2, 8, 0), r2)
-		draw_string(_font, r2.position + Vector2(8, 32), "+%d" % (cards.size() - shown), HORIZONTAL_ALIGNMENT_LEFT, -1, 20, UiKit.INK)
+		draw_string(_font, r2.position + Vector2(8, 32), "+%d" % hidden, HORIZONTAL_ALIGNMENT_LEFT, -1, 20, UiKit.INK)
 	# Finished orders slide out below the rail: readable at full strength for a
 	# beat, then gone in a quick fade. A slow linear fade left a translucent grey
 	# slab under the rail for most of the card's life (very visible on the night
@@ -787,6 +805,50 @@ func _draw_orders() -> void:
 		tc.a = a
 		draw_string(_font, cr.position + Vector2(28, 18), t, HORIZONTAL_ALIGNMENT_LEFT, -1, 14, tc)
 		dx += cw + 8.0
+
+var _trunk_d0: Dictionary = {}       # trunk id -> distance to the stand when first seen
+
+## A festival trunk as a job card: the trunk, its two handles (who holds which),
+## a one-line cue and the way left to the stand. Two carriers move it twice as
+## fast, so a half-held trunk says so.
+func _draw_trunk_card(r: Rect2, tr: Dictionary) -> void:
+	var tid := int(tr["id"])
+	var grips := 0
+	for h in 2:
+		if int(tr["h"][h]) != -1:
+			grips += 1
+	draw_rect(Rect2(r.position + Vector2(0, 3), r.size), UiKit.SHADOW)
+	draw_style_box(UiKit._box(UiKit.PAPER, UiKit.WALNUT, 3, 8, 0), r)
+	UiKit.draw_icon(self, "item_trunk", r.position + Vector2(20, 24), 30)
+	for h in 2:
+		var c := r.position + Vector2(58 + h * 26, 20)
+		var seat := int(tr["h"][h])
+		if seat == -1:
+			UiKit.draw_bubble(self, c, 10, Color("#EFE6D8"), UiKit.WALNUT)
+			UiKit.draw_icon(self, "sys_assist", c, 14, Color(1, 1, 1, 0.5))
+		else:
+			UiKit.draw_bubble(self, c, 11, Color("#FFF1C9"), SEAT_COLORS[seat % 4])
+			UiKit.draw_icon(self, "staff_" + _char_of_seat(seat), c, 20)
+	var cue := "ui.order.trunk_grab" if grips == 0 else ("ui.order.trunk_two" if grips == 1 else "ui.order.trunk_go")
+	draw_string(_font, r.position + Vector2(44, 50), Loc.t(cue), HORIZONTAL_ALIGNMENT_LEFT, CARD_W - 48, 11, UiKit.INK)
+	var frac := 0.0
+	var gp = view.L.fixtures.get("goal_pad", null)
+	if gp is Vector2i:
+		var d := Vector2(float(tr["x"]) / 1e6 - float(gp.x), float(tr["z"]) / 1e6 - float(gp.y)).length()
+		var d0: float = float(_trunk_d0.get(tid, 0.0))
+		if d0 <= 0.0 or d > d0:
+			d0 = maxf(d, 0.01)
+			_trunk_d0[tid] = d0
+		frac = clampf(1.0 - d / d0, 0.0, 1.0)
+	var bar := Rect2(r.position + Vector2(8, CARD_H - 11), Vector2(CARD_W - 16, 6))
+	draw_rect(bar, Color("#D9C7AE"))
+	draw_rect(Rect2(bar.position, Vector2(bar.size.x * frac, bar.size.y)), Art.GOLD if grips == 2 else UiKit.WALNUT)
+
+func _char_of_seat(seat: int) -> String:
+	for st in s.get("staff", []):
+		if int(st["seat"]) == seat:
+			return str(st.get("char", "pip"))
+	return "pip"
 
 static func _family_need_icon(fam: String) -> String:
 	match fam:

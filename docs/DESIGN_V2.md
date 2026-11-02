@@ -170,7 +170,12 @@ one hazard and one visible thing in the lane (pipes, curtains, drains, lift cars
   story sets, the hub and the Playground on the v2 floors (scenes mapped from classic coordinates
   at load); capsule-aware reachability in the validators; prompts with priority and spacing; the
   reference-run matrix regenerated; v1 replays refused by sim version.
-- **M3 (next)**: owner playtests on the Deck and tuning (tips weight, request windows, chapter
-  density), the lift car and crowd dressing, re-authoring story beats natively on the v2 floors
-  where the map puts an actor awkwardly, cooling via open cold vents and the yeti helper, sprout
-  watering as a card step, two-player trunk carries that read on the card.
+- **M2 fixes (done)**: story beats framed for the toy scale with hotel stations out of the
+  sightline (D48, every beat passes `ui_tour`'s CHECK); the finished-order card fades crisply;
+  the results screen names a trimmed roster; floor draw calls on Low under the 150 budget with
+  pooled particles and one mesh per thermostat head (D49, `docs/PERFORMANCE.md`).
+- **M3 (done in this branch)**: the lift car and split-lobby dressing (D50); the middle step by
+  open vents and guest helpers (D51); a sprout's watering as a card step (D52); trunk job cards
+  on the rail (D53). Story beats stay mapped: with D48 none needs native re-authoring.
+- **M3 (open)**: owner playtests on the Deck and tuning (tips weight, request windows, chapter
+  density) once the feedback arrives.

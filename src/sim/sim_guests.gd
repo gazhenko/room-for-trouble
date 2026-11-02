@@ -22,12 +22,12 @@ static func make_guest(sim: HotelSim, gid: int, fam: String, variant: String, a:
 		"last_fail_q": -999 * Q, "comfortable": true, "dest": [0, 0], "anim": "walk", "face": 1,
 		"cozy_q": 0, "vent_mark_s": -999, "watered": false, "water_comf": false, "quiet_howls": 0,
 		"announced": false, "hold_stay": false,
-		"tips": 0, "plan": planned_requests(sim, int(a.get("arrival_index", 0))),
+		"tips": 0, "plan": planned_requests(sim, int(a.get("arrival_index", 0)), fam),
 	}
 
 ## The service requests a guest will make, known from arrival so the order card
 ## can show every step up front (same rule _build_requests uses).
-static func planned_requests(sim: HotelSim, arrival_index: int) -> Array:
+static func planned_requests(sim: HotelSim, arrival_index: int, fam := "") -> Array:
 	var n := int(sim.level.get("service_count", 1))
 	var order := ["towel", "snack"] if arrival_index % 2 == 0 else ["snack", "towel"]
 	var mods: Array = sim.cfg.get("modifiers", [])
@@ -36,6 +36,10 @@ static func planned_requests(sim: HotelSim, arrival_index: int) -> Array:
 		var k: String = order[i]
 		if "extra_towels" in mods: k = "towel"
 		elif "snack_social" in mods: k = "snack"
+		# On moisture floors a sprout's first request is a watering of its tray
+		# (the tap fills the can: DESIGN_V2 §5.4), a step on the card like any other.
+		if i == 0 and fam == "sprout" and sim.has_sys("moisture"):
+			k = "water"
 		out.append(k)
 	return out
 
@@ -287,16 +291,14 @@ static func _build_requests(sim: HotelSim, g: Dictionary) -> void:
 		var sl: int = g["stay_len"]
 		offs = [sl * 3 / 10] if n == 1 else [sl / 5, sl / 2]
 	var order := ["towel", "snack"] if g["ai"] % 2 == 0 else ["snack", "towel"]
-	var mods: Array = sim.cfg.get("modifiers", [])
 	g["reqs"] = []
+	var kinds := planned_requests(sim, int(g["ai"]), g["fam"])
 	for i in offs.size():
-		var k: String = order[i]
-		if "extra_towels" in mods: k = "towel"
-		elif "snack_social" in mods: k = "snack"
+		var k: String = kinds[i] if i < kinds.size() else order[i]
 		var at: int = g["stay_start_q"] + int(offs[i]) * Q
 		var need_t := needed_temp(sim.has_sys("thermal"), g["fam"], k)
-		# A request with a middle step (warm / chill at the pump) gets 8 s more.
-		var dl: int = at + (request_s(sim) + (8 if need_t != "" else 0)) * Q
+		# A request with a middle step (warm / chill, or fill the can) gets 8 s more.
+		var dl: int = at + (request_s(sim) + (8 if need_t != "" or k == "water" else 0)) * Q
 		var late: int = mini(dl + SimC.LATE_S * Q, g["checkout_q"])
 		g["reqs"].append({"k": k, "at": at, "dl": dl, "late": late, "st": "wait", "i": i, "temp": need_t})
 
@@ -653,6 +655,18 @@ static func _ghost_delivery_item(sim: HotelSim, g: Dictionary) -> int:
 			return iid
 	return 0
 
+## A helping yeti chills the snack in the asker's hands, a dragon warms the
+## towel: the middle step by way of the guest (DESIGN_V2 §5.4).
+static func _temper_held(sim: HotelSim, seat: int, kind: String, temp: String) -> void:
+	var st := sim.staff_by_seat(seat)
+	if st.is_empty() or int(st.get("held", 0)) == 0:
+		return
+	var it := sim.item(int(st["held"]))
+	if it.is_empty() or it["k"] != kind or str(it.get("temp", "")) == temp:
+		return
+	it["temp"] = temp
+	sim.emit("tempered", {"seat": seat, "id": int(st["held"]), "temp": temp, "helper": true})
+
 static func invoke_helper(sim: HotelSim, gid: int, seat: int) -> void:
 	var g := sim.guest(gid)
 	if g.is_empty() or not g["helper_ready"] or g["helper_used"]:
@@ -673,6 +687,7 @@ static func invoke_helper(sim: HotelSim, gid: int, seat: int) -> void:
 			var h: int = r["heat"]
 			r["heat"] = mini(h + 20, -35) if h < -35 else maxi(h - 20, -35)
 			stv["snacks"] = mini(SimC.STOCK_CAP, stv["snacks"] + 1)
+			_temper_held(sim, seat, "snack", "cool")
 		"dragon":
 			if stv["hamper_q"] > 0:
 				stv["hamper_q"] -= 1
@@ -681,6 +696,7 @@ static func invoke_helper(sim: HotelSim, gid: int, seat: int) -> void:
 				SimScore.bump(sim, "laundry_cycles")
 			else:
 				stv["linen"] = mini(SimC.LINEN_CAP, stv["linen"] + 1)
+			_temper_held(sim, seat, "towel", "warm")
 		"ghost":
 			var iid := _ghost_delivery_item(sim, g)
 			var it := sim.item(iid)

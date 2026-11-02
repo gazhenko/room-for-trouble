@@ -3,7 +3,7 @@
   "repo": "room-for-trouble",
   "id": "RoomForTrouble",
   "prefix": "RoomForTrouble",
-  "version": "v2.0.0",
+  "version": "v2.0.1",
   "app": "Room for Trouble.app",
   "exe": "RoomForTrouble.exe",
   "mac_root": ".",

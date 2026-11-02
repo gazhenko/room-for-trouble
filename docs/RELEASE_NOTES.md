@@ -1,14 +1,14 @@
-**Room for Trouble 2.0.0** is a cozy cooperative monster-hotel game for 1–4 players, rebuilt at Overcooked scale.
+**Room for Trouble 2.0.1** is a small update to [2.0.0](https://github.com/gazhenko/room-for-trouble/releases/tag/v2.0.0), the Overcooked-scale rebuild of the cozy co-op monster-hotel game for 1–4 players.
 
 ### Easy installers
 
 | Computer | Download |
 | --- | --- |
-| Mac, Apple Silicon or Intel | [RoomForTrouble-v2.0.0-macOS-universal.dmg](https://github.com/gazhenko/room-for-trouble/releases/download/v2.0.0/RoomForTrouble-v2.0.0-macOS-universal.dmg) |
-| Windows 10/11, Intel/AMD 64-bit | [RoomForTrouble-v2.0.0-Windows-x64-Setup.exe](https://github.com/gazhenko/room-for-trouble/releases/download/v2.0.0/RoomForTrouble-v2.0.0-Windows-x64-Setup.exe) |
+| Mac, Apple Silicon or Intel | [RoomForTrouble-v2.0.1-macOS-universal.dmg](https://github.com/gazhenko/room-for-trouble/releases/download/v2.0.1/RoomForTrouble-v2.0.1-macOS-universal.dmg) |
+| Windows 10/11, Intel/AMD 64-bit | [RoomForTrouble-v2.0.1-Windows-x64-Setup.exe](https://github.com/gazhenko/room-for-trouble/releases/download/v2.0.1/RoomForTrouble-v2.0.1-Windows-x64-Setup.exe) |
 
-Read [START-HERE.txt](https://github.com/gazhenko/room-for-trouble/releases/download/v2.0.0/START-HERE.txt) first if you like. Both installers contain the whole game and work offline.
-- **Mac:** open the disk image and drag the app to Applications. The app is ad-hoc signed but not notarized; if macOS blocks it, use **System Settings → Privacy & Security → Open Anyway**.
+You can read [START-HERE.txt](https://github.com/gazhenko/room-for-trouble/releases/download/v2.0.1/START-HERE.txt) first. Both installers contain the whole game and work offline.
+- **Mac:** open the disk image and drag the app to Applications. The app is ad-hoc signed but not notarized. If macOS blocks it, use **System Settings → Privacy & Security → Open Anyway**.
 - **Windows:** the installer is unsigned and needs no administrator password.
 
 **Portable archives:**
@@ -16,30 +16,14 @@ Read [START-HERE.txt](https://github.com/gazhenko/room-for-trouble/releases/down
 - `-Linux-x64.tar.gz` (also for the Steam Deck)
 - `-Server-Linux-x64.tar.gz`, the dedicated online server; see `OPERATIONS.md`
 
-Every file is listed in `SHA256SUMS.txt`.
+`SHA256SUMS.txt` lists every file.
 
-### What's new in 2.0
+### Changes in 2.0.1
 
-- **Small floors you can read at a glance.** Chapter 1 has four rooms on a 13×13 floor; chapters 2–6 have six rooms on 19×13, and the split lobby is 19×14. Staff are about 70 px tall at 1280×800, up from 28.
-- **Order cards.** Each guest gets a card with their key, gift and requests in order, plus a timer. Fast service earns tips. Arrivals are continuous, and the first guest arrives within four seconds. A missed order costs points, but a shift still never fails.
-- **Snappy hands.**
-  - Picking up and putting down are instant and never stop you moving.
-  - Quick Step is now a real dash.
-  - Pass counters let you hand anything across.
-- **A middle step.**
-  - Towels for dragons are warmed and snacks for yetis are chilled, at the heat pump, at an open vent, or by asking a helping dragon or yeti.
-  - A sprout's watering is a step on its card.
-  - Festival trunks are job cards showing both handles.
-- **Hazards you can see.** Steam slows you, frost and puddles make you slide, and howls startle you. The lift has a car that sinks and rises.
-- **A look for every chapter,** from late morning to a lantern-lit festival night.
-- **New front end.** A new title logo, matching menus over the new hotel, and a "What's new in 2.0" page.
-- **Readability and accessibility.**
-  - The HUD has a minimum text and icon size for a 7" screen and stays clear of overlaps at 175% UI scale.
-  - Reduced motion, colour-safe hazard cues and captions cover every new action.
-- **Sound.** Nine new sound effects. The music rises when orders get close to their deadline.
-- **Story scenes** are reframed for the new floors and the larger characters.
+- **Controller symbols stay right when a pad drops out.** A controller that is unplugged (or a Bluetooth pad that falls asleep) keeps its own button symbols until it comes back or another controller takes its seat. Before, prompts redrawn in the meantime showed Xbox symbols.
+- **Measured on a Steam Deck.** On a Steam Deck OLED the game passes its smoke test and holds 90 fps with four players on every chapter finale, even on first launch, when it is still compiling shaders. See `docs/PERFORMANCE.md`.
 
-Simulation version 2.0.1, protocol 2: 1.x clients can't share an online room with 2.0, and 1.x replays are refused.
+Saves, online rooms and replays are unchanged from 2.0.0 (simulation version 2.0.1, protocol 2), so 2.0.0 and 2.0.1 players can share a room.
 
 ### Verified for this build
 
@@ -47,9 +31,10 @@ Simulation version 2.0.1, protocol 2: 1.x clients can't share an online room wit
 - **macOS:** the app's smoke test on Metal and on Vulkan (MoltenVK).
 - **Linux:**
   - in a clean x86-64 container, on software OpenGL and on software Vulkan at the Steam Deck's 1280×800
-  - with four kernel-level virtual gamepads
+  - with four kernel-level virtual gamepads, including unplugging and reclaiming a seat
+- **Steam Deck OLED:** the smoke test of the exported build on the device.
 - **Windows:** under Wine, with both renderers.
-- **Online:** the server through a 100 ms, 2%-loss link.
+- **Online:** the server through a 100 ms link with 2% packet loss.
 - **Installers:**
   - the DMG mounts and passes `codesign --verify`
   - the Setup.exe extracts
@@ -58,10 +43,10 @@ Simulation version 2.0.1, protocol 2: 1.x clients can't share an online room wit
 ### Not verified yet
 
 - a real Windows PC (neither the game nor the installer has run on one)
-- the Steam Deck itself
+- playing on the Deck in Game Mode with its own controls
 - physical controllers
 - macOS notarization
 - a permanent public online host
 - real family playtests
 
-[KNOWN_ISSUES.md](https://github.com/gazhenko/room-for-trouble/blob/v2.0.0/KNOWN_ISSUES.md) lists everything that remains.
+[KNOWN_ISSUES.md](https://github.com/gazhenko/room-for-trouble/blob/v2.0.1/KNOWN_ISSUES.md) lists everything that remains.

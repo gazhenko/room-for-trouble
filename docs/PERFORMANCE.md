@@ -1,6 +1,6 @@
 # Performance measurements
 
-All numbers on this page are actual measurements from one machine. Targets in §19.6 that
+All numbers on this page are actual measurements, from an M1 Pro and a Steam Deck OLED. Targets in §19.6 that
 could not be measured are listed as **unmeasured**, never as met.
 
 ## Machine and method
@@ -41,11 +41,47 @@ per-item outlines and the per-chapter light. One measurement so far, the densest
   Low drops the sun's shadow pass and the outlines; the remaining Low/Standard gap (26 calls) is
   the shadow casters.
 - The average and p95 did not move; the max frames are the synchronous screenshot and the first
-  guest rigs of a family being built. The Deck is still unmeasured.
+  guest rigs of a family being built. The Deck was measured later (below).
 - Raw logs: `build/shots/fable/m2/perf/L24_4p_perf.log`, `build/shots/fable/m2fix/ghost/autoplay.log`
   (Low at 153, before the fixes), `build/shots/fable/m2fix/perf/low_census2.log` (Low at 150 with
   only the thermostat merge, and the census that named the particles) and
   `build/shots/fable/m2fix/perf/verify3.log` (Low and Standard after D49).
+
+## Steam Deck OLED (2026-11-02, 2.0.0 at 6de89da)
+
+- **Hardware:** Steam Deck OLED (AMD Custom GPU 0932, RADV VANGOGH, Vulkan 1.4), SteamOS
+  3.8.28, on battery. Desktop Mode (KDE Plasma, Wayland), a 1280×800 window on the 90 Hz
+  panel with V-Sync on.
+- **Method:** the same `autoplay.tscn` command and options as above, at Standard graphics (the
+  default). It ran from the 6de89da source with the official Godot 4.7.2 Linux editor binary,
+  whose debug build makes GDScript slower than the exported game. User data went to a
+  throwaway `XDG_DATA_HOME`, so the player's saves and the installed game's shader cache were
+  untouched.
+  - Each finale ran for 60 s with four bot players, in chapter order and starting from an empty
+    shader cache.
+  - The L24 runs were repeated with `--delta-smoothing disable`, so the engine's delta smoothing
+    cannot hide a dropped frame: once warm, and once after deleting the shader cache.
+
+| Scenario | Frames | Frame avg | p95 | Max | Sim per tick (debug) | Floor DC (max) | Total DC (max) | Primitives | Static mem | VRAM |
+|---|---|---|---|---|---|---|---|---|---|---|
+| L04, 4 players (first run, empty shader cache) | 5,409 | 11.11 ms | 11.11 ms | 17.5 ms (one frame, 4 s in) | 1.38 ms | 98 | 288 | 55k | 108 MB | 57 MB |
+| L08, 4 players | 5,410 | 11.11 ms | 11.11 ms | 11.11 ms | 1.92 ms | 122 | 398 | 77k | 111 MB | 59 MB |
+| L12, 4 players | 5,410 | 11.11 ms | 11.11 ms | 11.11 ms | 2.21 ms | 122 | 349 | 78k | 111 MB | 59 MB |
+| L16, 4 players | 5,411 | 11.11 ms | 11.11 ms | 11.11 ms | 1.73 ms | 131 | 406 | 82k | 112 MB | 59 MB |
+| L20, 4 players | 5,411 | 11.11 ms | 11.11 ms | 11.11 ms | 2.38 ms | 142 | 413 | 87k | 111 MB | 60 MB |
+| L24, 4 players | 5,411 | 11.11 ms | 11.11 ms | 11.11 ms | 2.08 ms | 140 | 419 | 86k | 111 MB | 60 MB |
+| L24, 4 players, no delta smoothing, warm cache | 5,409 | 11.11 ms | 11.11 ms | 11.21 ms | 2.06 ms | 140 | 419 | 86k | 111 MB | 60 MB |
+| L24, 4 players, no delta smoothing, **cold cache** | 5,410 | 11.11 ms | 11.11 ms | 11.11 ms | 2.13 ms | 140 | 419 | 86k | 111 MB | 60 MB |
+
+- About 5,410 frames in 60 s means 90 frames each second, so no refresh was missed outside the
+  single 17.5 ms frame on the very first run. Compiling shaders on first use costs nothing
+  visible: the cold-cache L24 run is as smooth as the warm one.
+- The exported 2.0.0 game also ran its `--smoke-test` on the Deck (`--print-fps`) at a steady
+  90 fps through its shift, with the bot playing at several times normal speed.
+- Each simulation tick takes about 2 ms here, against 0.8 ms on the M1 Pro, partly because
+  these runs used the debug editor binary. At 30 ticks a second, at most one tick lands in a
+  90 Hz frame, and the frames above already include it.
+- The LCD Steam Deck (60 Hz panel, an earlier revision of the same APU) was not measured.
 
 ## Results (2026-10-23, final build)
 
@@ -93,7 +129,7 @@ The fixes:
 | Busy floor <150 draw calls (low preset) | ✅ **131 on Low** (no shadows or outlines) and 154 on Standard, in the 3D floor viewport (colour plus shadow passes) on L24 with 4 players. Before D28 it was 622 frame-wide. The HUD adds about 200 2D draw calls (panels, icons and text interleaved), which the floor budget doesn't cover. |
 | 1080p60 on a modest discrete-GPU desktop | ⛔ **unmeasured** (no such machine) |
 | 720p30 low on Intel UHD 630-class iGPU | ⛔ **unmeasured** |
-| 800p60 low on Steam Deck LCD | ⛔ **unmeasured** (no device). 1280×800 runs on the M1 Pro are above. |
+| 800p60 low on Steam Deck LCD | ✅ on a **Steam Deck OLED**: 800p**90** on Standard, never above 11.2 ms after the first frames, with four players on every chapter finale (above). The LCD model itself is unmeasured. |
 | Headless server loads no graphics or audio | ✅ The dedicated-server export (`dedicated_server` feature) runs in a container without GPU, display or audio (`tools/smoke_linux.sh`) |
 
 ## Server

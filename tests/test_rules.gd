@@ -231,3 +231,23 @@ func test_ui01_new_controller_on_reused_device_id_reclaims_missing_seat() -> voi
 	ir.seats[1]["missing"] = false
 	eq(ir.seat_of_device("pad", 1), 1, "a present seat owns its device")
 	ir.free()
+
+func test_ui01_unplugged_pad_keeps_its_glyphs() -> void:
+	# Found on the Deck: the family was read from the device name on every
+	# lookup, so a pad that dropped out showed Xbox glyphs and logged an engine
+	# error until it came back.
+	var ir = load("res://src/app/input_router.gd").new()
+	ir.seats = []
+	for i in 4:
+		ir.seats.append(ir._empty_seat(i))
+	ir.seats[2]["active"] = true
+	ir.seats[2]["device"] = "pad"
+	ir.seats[2]["joy"] = 7
+	ir.seats[2]["family"] = "playstation"
+	ir.seats[2]["missing"] = true
+	eq(ir.pad_family(2), "playstation", "a missing pad keeps the family it joined with")
+	eq(ir.glyph(2, "carry")["text"], "✕", "and its glyphs")
+	eq(ir._family_of(7), "xbox", "an absent device id reads as the default family without a name lookup")
+	ir.seats[2]["family"] = ""
+	eq(ir.pad_family(2), "xbox", "a seat with no recorded family falls back to Xbox glyphs")
+	ir.free()

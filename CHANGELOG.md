@@ -4,6 +4,14 @@ All notable changes to *Room for Trouble*. Versions follow `config/version` in
 `project.godot`. Protocol and content changes are noted, because mismatched clients cannot
 share an online room.
 
+## 2.0.1 — 2026-11-02
+
+- An unplugged controller keeps its button symbols until it's plugged back in or another
+  controller takes its seat. Before, prompts rebuilt during that time showed Xbox symbols, and
+  the engine logged an error for each rebuilt prompt. Found while measuring on the Steam Deck.
+- Measured on a Steam Deck OLED: smoke test passes, and the game holds 90 fps with four players
+  on every chapter finale (`docs/PERFORMANCE.md`).
+
 ## 2.0.0 — 2026-11-02
 
 The Overcooked-scale rebuild (`docs/DESIGN_V2.md`, decisions D31–D53). Simulation version

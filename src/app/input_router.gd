@@ -62,7 +62,7 @@ func _ready() -> void:
 	_strip_ui_actions()
 
 func _empty_seat(i: int) -> Dictionary:
-	return {"id": i, "active": false, "device": "", "joy": -1, "guid": "", "missing": false,
+	return {"id": i, "active": false, "device": "", "joy": -1, "guid": "", "family": "", "missing": false,
 		"held": {}, "pending": 0, "ping_t": -1.0, "ping_pick": -1, "pending_pick": -1,
 		"char": SimC.STAFF_IDS[i], "cos": "default", "ready": false, "remote": false}
 
@@ -151,6 +151,7 @@ func join(dev: String, joy := -1) -> int:
 			s["device"] = dev
 			s["joy"] = joy
 			s["guid"] = Input.get_joy_guid(joy) if dev == "pad" else ""
+			s["family"] = _family_of(joy) if dev == "pad" else "keyboard"
 			s["missing"] = false
 			s["held"] = {}
 			s["pending"] = 0
@@ -185,6 +186,7 @@ func reassign(seat: int, dev: String, joy := -1) -> void:
 	s["device"] = dev
 	s["joy"] = joy
 	s["guid"] = Input.get_joy_guid(joy) if dev == "pad" else ""
+	s["family"] = _family_of(joy) if dev == "pad" else "keyboard"
 	s["missing"] = false
 	s["held"] = {}
 	device_restored.emit(seat)
@@ -495,7 +497,15 @@ func pad_family(seat: int) -> String:
 	var s: Dictionary = seats[seat]
 	if s["device"] != "pad":
 		return "keyboard"
-	var n := Input.get_joy_name(s["joy"]).to_lower()
+	var fam: String = s.get("family", "")
+	return fam if fam != "" else "xbox"
+
+## Read once when a seat takes a controller, so an unplugged pad keeps its
+## glyphs (and has no name to look up) until it comes back.
+func _family_of(joy: int) -> String:
+	if joy not in Input.get_connected_joypads():
+		return "xbox"
+	var n := Input.get_joy_name(joy).to_lower()
 	if "ps" in n or "dualsense" in n or "dualshock" in n or "sony" in n or "playstation" in n:
 		return "playstation"
 	if "nintendo" in n or "pro controller" in n or "joy-con" in n or "switch" in n:

@@ -10,7 +10,7 @@ than it is.
 |---|---|---|
 | **Windows** | Exported (`RoomForTrouble.exe` plus `RoomForTrouble.pck`, x86-64). Under Wine (x86-64 Debian container, Mesa) the shipping smoke test **passes with both renderers**: Forward+ on Vulkan via lavapipe, and Compatibility on OpenGL (`tools/smoke_windows_wine.sh`). Under emulated x86, Forward+ crashes at startup in about 2 of 3 boots: a garbage-pointer read inside Wine's C runtime on a Vulkan worker thread. The 1.0.0 and 2.0.0 builds crash at the same rate (measured 2026-11-02), and the same builds pass on native Linux lavapipe (now part of `tools/smoke_linux.sh`, at 1280×800) and on macOS through MoltenVK, so it is the Wine + lavapipe + emulation stack, not the game. `tools/verify_artifacts.sh` allows four attempts; any clean run passes. It has **never run on real Windows**. | Run `RoomForTrouble.exe -- --smoke-test` on a real Windows 10/11 PC and play couch co-op with controllers. The `.exe` has no embedded icon (`modify_resources=false`, because rcedit is not in the toolchain). |
 | **Linux desktop** | Smoke test passes in a clean x86-64 Debian container under Xvfb, with Mesa llvmpipe and the Compatibility renderer (`tools/smoke_linux.sh`) | Test on a real Linux desktop GPU with the Forward+ renderer. |
-| **Steam Deck** | Not tested | 800p layout, Deck controls and glyphs, suspend/resume and focus changes on the device (§24.4). |
+| **Steam Deck** | On a Steam Deck OLED (SteamOS 3.8, 2026-11-02) the 2.0.0 Linux build installs over the network (`tools/deck/serve.sh`), passes its smoke test on Forward+ / RADV at 1280×800, and holds 90 fps with four players on every chapter finale, with a cold shader cache too (`docs/PERFORMANCE.md`). These runs were driven over SSH in Desktop Mode, with bots playing. | Play it in Game Mode: Deck controls and glyphs through Steam Input, suspend/resume and focus changes (§24.4), readability on the 7" panel, and the LCD model. |
 | **macOS** | Fully played and smoke-tested from the exported `.app` on an M1 Pro, including online. The bundle is **ad-hoc signed** with hardened runtime: `codesign --verify --deep --strict` passes. | It is not notarized, so on a downloaded copy Gatekeeper asks the player to choose Open Anyway (System Settings → Privacy & Security). Notarization needs a paid Developer ID certificate; this machine has only an Apple Development identity. |
 | **Physical controllers** | **No physical controller was available.** The exported Linux build was tested with **four kernel-level virtual gamepads** (uinput/evdev with udev; Xbox 360 and DualShock 4 identities, recognised by Godot's controller database) (`tools/smoke_linux_gamepads.sh`). That covers Carry-to-join, mixed glyph families, each stick moving only its own staff, Start/B, unplug (seat marked missing, team paused) and a different controller reclaiming the seat. Menu traversal and rebinding are covered by UI01. | Test the §24.4 matrix with real hardware: one keyboard plus three pads, four pads, rumble, Bluetooth reconnects, and Steam Input on a Deck. |
 | **Public online endpoint** | **Internet play verified (2026-10-23):** the full two-client e2e suite passed against a public `wss://…trycloudflare.com` endpoint. That covers create, join by code, play, the forged-seat guard, reconnect with token and a shared result, over a real TLS certificate and internet path (`tests/net/run_tunnel.sh`, a temporary Cloudflare quick tunnel, shut down afterwards). Also verified: the Docker + Caddy TLS stack, restart recovery, abuse handling, and a 100 ± 20 ms, 2%-loss link (`tests/net/run_netem.sh`). | No permanent public host is deployed; that's the owner's choice of host and domain (`OPERATIONS.md`). There has been no long-running soak or multi-room load test. |
@@ -57,11 +57,13 @@ than it is.
 - **Draw calls.** The busiest floor (L24, four players) peaks at 154 draw calls on Standard
   graphics and 131 on Low (the brief budgets 150 on the low preset), down from 622. That's
   after merging station bodies and baking each character into one skinned mesh. The HUD
-  adds about 200 2D draws on top. Low-end and integrated GPUs and the Steam Deck are
-  unmeasured.
-- **Frame pacing has only been measured on one machine.** On the M1 Pro, final-build
+  adds about 200 2D draws on top. The Steam Deck OLED renders that at 90 fps; low-end and
+  integrated GPUs are unmeasured.
+- **Frame pacing has been measured on two machines.** On the M1 Pro, final-build
   frame times never exceeded 10.8 ms (Forward+) or 15.8 ms (Compatibility) across seven
-  runs; see `docs/PERFORMANCE.md`.
+  runs. On a Steam Deck OLED, 2.0.0 dropped one 90 Hz frame in eight one-minute runs of the
+  chapter finales with four players: a 17.5 ms frame early in the first run, while the shader
+  cache was empty. See `docs/PERFORMANCE.md`.
 - **The bot scores lower with 2–4 players than solo** in later chapters, because of simple
   bot coordination such as two bots chasing the same job. This reflects the driver, not
   necessarily human play; see `docs/REFERENCE_RUNS.md`.

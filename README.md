@@ -31,12 +31,12 @@ You don't need Godot or a terminal. Both installers contain the whole game and w
 
 | Computer | Installer | How to install |
 | --- | --- | --- |
-| Mac, Apple Silicon or Intel | [Download Mac installer](https://github.com/gazhenko/room-for-trouble/releases/download/v2.0.0/RoomForTrouble-v2.0.0-macOS-universal.dmg) | Open the disk image, drag **Room for Trouble** onto **Applications**, then open it from Applications. |
-| Windows 10/11, Intel/AMD 64-bit | [Download Windows installer](https://github.com/gazhenko/room-for-trouble/releases/download/v2.0.0/RoomForTrouble-v2.0.0-Windows-x64-Setup.exe) | Open Setup, choose **Next → Install → Finish**, then use the desktop or Start menu shortcut. No administrator password is needed. |
+| Mac, Apple Silicon or Intel | [Download Mac installer](https://github.com/gazhenko/room-for-trouble/releases/download/v2.0.1/RoomForTrouble-v2.0.1-macOS-universal.dmg) | Open the disk image, drag **Room for Trouble** onto **Applications**, then open it from Applications. |
+| Windows 10/11, Intel/AMD 64-bit | [Download Windows installer](https://github.com/gazhenko/room-for-trouble/releases/download/v2.0.1/RoomForTrouble-v2.0.1-Windows-x64-Setup.exe) | Open Setup, choose **Next → Install → Finish**, then use the desktop or Start menu shortcut. No administrator password is needed. |
 
-Each installer includes a **START HERE** guide; you can also [read it first](https://github.com/gazhenko/room-for-trouble/releases/download/v2.0.0/START-HERE.txt).
+Each installer includes a **START HERE** guide; you can also [read it first](https://github.com/gazhenko/room-for-trouble/releases/download/v2.0.1/START-HERE.txt).
 Portable archives for macOS, Windows and Linux (including Steam Deck), and the dedicated
-online server, are on the [release page](https://github.com/gazhenko/room-for-trouble/releases/tag/v2.0.0).
+online server, are on the [release page](https://github.com/gazhenko/room-for-trouble/releases/tag/v2.0.1).
 
 Quit the game before updating. Updates and removal keep your saved progress. On Windows, remove
 the game in **Settings → Apps**; on Mac, move it from Applications to the Trash.
@@ -198,7 +198,7 @@ server/deploy Dockerfile, Compose + Caddy, systemd unit
 
 ## Status
 
-Version 2.0.0 is a complete local and online game, built and played on macOS (Apple Silicon).
+Version 2.0.1 is a complete local and online game, built and played on macOS (Apple Silicon).
 Every release build passes its automated checks: about 2,660 headless tests, a controller-only
 walk through every menu (including 175% UI scale), and the online suites. The exported builds are
 also checked automatically:
@@ -208,8 +208,11 @@ also checked automatically:
 - **Windows:** under Wine, with both renderers.
 - **Online:** the service through a 100 ms, 2%-loss link.
 
-Real Windows PCs, the Steam Deck itself, physical controllers, a permanent public host,
-notarization and real family playtests have **not** been verified. [KNOWN_ISSUES.md](KNOWN_ISSUES.md)
+On a Steam Deck OLED, the Linux build passes its smoke test, and 2.0.0 held 90 fps with four
+players on every chapter finale. Bots played those runs; nobody has played it in Game Mode yet.
+
+Real Windows PCs, Deck controls and glyphs in Game Mode, physical controllers, a permanent
+public host, notarization and real family playtests have **not** been verified. [KNOWN_ISSUES.md](KNOWN_ISSUES.md)
 lists exactly what remains.
 
 Built with [Claude Code](https://claude.com/claude-code) for the project owner.
